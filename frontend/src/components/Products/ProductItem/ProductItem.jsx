@@ -8,11 +8,9 @@ import calculateDiscountPercentage from '../../../utils/discountPercentage';
 import { BiCartAdd } from 'react-icons/bi';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
-import HighlightedText from '../../ui/HighlightedText';
-import ProductColorSelector from '../../ui/ProductColorSelector';
-import ProductSizeSelector from '../../ui/ProductSizeSelector';
-import { toast } from 'react-hot-toast';
+
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import placeholderImage from '../../../assets/images/placeholder.png';
 
 export default function ProductItem({ product, itemView }) {
   const { setisOpenProductModal, setProductId } = useContext(GlobalContext);
@@ -62,6 +60,7 @@ export default function ProductItem({ product, itemView }) {
                     alt='image'
                     src={product?.images[0]?.url}
                     effect='opacity'
+                    placeholderSrc={placeholderImage}
                     className='w-100'
                   />
                 </span>
@@ -72,6 +71,7 @@ export default function ProductItem({ product, itemView }) {
                     alt='image'
                     src={product?.images[1]?.url}
                     effect='opacity'
+                    placeholderSrc={placeholderImage}
                     className='w-100'
                   />
                 </span>

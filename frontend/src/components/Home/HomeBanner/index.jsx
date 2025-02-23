@@ -2,10 +2,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import banner1 from '../../../assets/images/banner1.jpg';
-import banner2 from '../../../assets/images/banner4.jpg';
-import banner3 from '../../../assets/images/banner6.jpg';
-import banner4 from '../../../assets/images/banner9.jpg';
+
 import { useHomeBanners } from '../../../hooks/useHomeBanners';
 import bannerLoading from '../../../assets/images/bannerLoading.jpeg';
 const HomeBanner = () => {
