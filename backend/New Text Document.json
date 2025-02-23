@@ -1,0 +1,147 @@
+
+
+      {
+        "title": "Elegant Floral Maxi Dress",
+        "slug": "elegant-floral-maxi-dress",
+        "description": "A beautiful floral-printed maxi dress, perfect for summer outings.",
+        "quantity": 30,
+        "sold": 5,
+        "category": "Dresses",
+        "brand": "Zara",
+        "price": 59.99,
+        "color": "Red",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" },
+          { "star": 4, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Chic High-Waisted Jeans",
+        "slug": "chic-high-waisted-jeans",
+        "description": "Comfortable and stylish high-waisted jeans with a slim fit.",
+        "quantity": 25,
+        "sold": 8,
+        "category": "Jeans",
+        "brand": "Levi's",
+        "price": 49.99,
+        "color": "Blue",
+        "ratings": [
+          { "star": 4, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Casual Cotton T-Shirt",
+        "slug": "casual-cotton-t-shirt",
+        "description": "Soft and breathable cotton T-shirt for daily wear.",
+        "quantity": 40,
+        "sold": 12,
+        "category": "Tops",
+        "brand": "H&M",
+        "price": 19.99,
+        "color": "White",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Bohemian Summer Skirt",
+        "slug": "bohemian-summer-skirt",
+        "description": "Lightweight and stylish bohemian skirt with floral prints.",
+        "quantity": 20,
+        "sold": 6,
+        "category": "Skirts",
+        "brand": "Forever 21",
+        "price": 39.99,
+        "color": "Pink",
+        "ratings": [
+          { "star": 4, "postedBy": "ObjectId()" },
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Formal Blazer for Women",
+        "slug": "formal-blazer-for-women",
+        "description": "Classic black blazer for a professional and elegant look.",
+        "quantity": 15,
+        "sold": 3,
+        "category": "Blazers",
+        "brand": "Mango",
+        "price": 89.99,
+        "color": "Black",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" },
+          { "star": 4, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Cozy Knitted Sweater",
+        "slug": "cozy-knitted-sweater",
+        "description": "Warm and comfortable knitted sweater for winter.",
+        "quantity": 35,
+        "sold": 10,
+        "category": "Sweaters",
+        "brand": "Uniqlo",
+        "price": 44.99,
+        "color": "Beige",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Sporty Yoga Leggings",
+        "slug": "sporty-yoga-leggings",
+        "description": "Stretchable and breathable leggings for yoga and workouts.",
+        "quantity": 50,
+        "sold": 15,
+        "category": "Activewear",
+        "brand": "Nike",
+        "price": 34.99,
+        "color": "Gray",
+        "ratings": [
+          { "star": 4, "postedBy": "ObjectId()" },
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Trendy Faux Leather Jacket",
+        "slug": "trendy-faux-leather-jacket",
+        "description": "Stylish faux leather jacket for a bold and edgy look.",
+        "quantity": 18,
+        "sold": 4,
+        "category": "Jackets",
+        "brand": "Bershka",
+        "price": 79.99,
+        "color": "Brown",
+        "ratings": [
+          { "star": 4, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Classic Midi Pencil Skirt",
+        "slug": "classic-midi-pencil-skirt",
+        "description": "Elegant and chic midi pencil skirt for office wear.",
+        "quantity": 22,
+        "sold": 7,
+        "category": "Skirts",
+        "brand": "Express",
+        "price": 54.99,
+        "color": "Navy Blue",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+      {
+        "title": "Elegant Silk Evening Gown",
+        "slug": "elegant-silk-evening-gown",
+        "description": "Luxurious silk evening gown for special occasions.",
+        "quantity": 12,
+        "sold": 2,
+        "category": "Dresses",
+        "brand": "Gucci",
+        "price": 299.99,
+        "color": "Emerald Green",
+        "ratings": [
+          { "star": 5, "postedBy": "ObjectId()" }
+        ]
+      }
+  
