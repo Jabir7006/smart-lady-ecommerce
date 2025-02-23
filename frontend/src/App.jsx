@@ -19,7 +19,7 @@ const AuthLayout = lazy(() => import('./layouts/AuthLayout'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
-
+const Checkout = lazy(() => import('./pages/Checkout'));
 const ProductModal = lazy(() => import('./components/Modals/ProductModal'));
 
 const queryClient = new QueryClient({
@@ -68,6 +68,7 @@ function App() {
                   <Route path='/wishlist' element={<Wishlist />} />
                   <Route element={<PrivateRoute />}>
                     <Route path='/profile' element={<Profile />} />
+                    <Route path='/checkout' element={<Checkout />} />
                   </Route>
                 </Route>
                 <Route element={<AuthLayout />}>

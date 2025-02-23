@@ -6,10 +6,10 @@ const createAddress = async (req, res) => {
       fullName,
       phone,
       street,
+      area,
       city,
-      state,
-      zipCode,
-      country,
+      division,
+      postCode,
       addressType,
       isDefault,
     } = req.body;
@@ -19,10 +19,10 @@ const createAddress = async (req, res) => {
       fullName,
       phone,
       street,
+      area,
       city,
-      state,
-      zipCode,
-      country,
+      division,
+      postCode,
       addressType,
       isDefault,
     });
@@ -78,11 +78,32 @@ const updateAddress = async (req, res) => {
         .json({ success: false, message: "Address not found" });
     }
 
-    Object.assign(address, req.body);
+    const {
+      fullName,
+      phone,
+      street,
+      area,
+      city,
+      division,
+      postCode,
+      addressType,
+      isDefault,
+    } = req.body;
 
-    if (req.body.isDefault) {
+    // Update address fields
+    address.fullName = fullName;
+    address.phone = phone;
+    address.street = street;
+    address.area = area;
+    address.city = city;
+    address.division = division;
+    address.postCode = postCode;
+    address.addressType = addressType;
+    address.isDefault = isDefault;
+
+    if (isDefault) {
       await Address.updateMany(
-        { user: req.user._id },
+        { user: req.user._id, _id: { $ne: address._id } },
         { $set: { isDefault: false } }
       );
     }
@@ -105,7 +126,7 @@ const deleteAddress = async (req, res) => {
         .json({ success: false, message: "Address not found" });
     }
 
-    await address.remove();
+    await Address.deleteOne({ _id: address._id });
     res
       .status(200)
       .json({ success: true, message: "Address deleted successfully" });

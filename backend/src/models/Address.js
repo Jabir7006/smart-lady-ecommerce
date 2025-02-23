@@ -14,8 +14,16 @@ const addressSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      match: [
+        /^(?:\+88|88)?(01[3-9]\d{8})$/,
+        "Please enter a valid Bangladeshi phone number",
+      ],
     },
     street: {
+      type: String,
+      required: true,
+    },
+    area: {
       type: String,
       required: true,
     },
@@ -23,21 +31,28 @@ const addressSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    state: {
+    division: {
       type: String,
       required: true,
+      enum: [
+        "Dhaka",
+        "Chittagong",
+        "Rajshahi",
+        "Khulna",
+        "Barisal",
+        "Sylhet",
+        "Rangpur",
+        "Mymensingh",
+      ],
     },
-    zipCode: {
+    postCode: {
       type: String,
       required: true,
-    },
-    country: {
-      type: String,
-      required: true,
+      match: [/^\d{4}$/, "Post code must be 4 digits"],
     },
     addressType: {
       type: String,
-      enum: ["Shipping", "Billing"],
+      enum: ["Home", "Office"],
       required: true,
     },
     isDefault: {
@@ -47,6 +62,17 @@ const addressSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Middleware to ensure only one default address per user
+addressSchema.pre("save", async function (next) {
+  if (this.isDefault) {
+    await this.constructor.updateMany(
+      { user: this.user, _id: { $ne: this._id } },
+      { $set: { isDefault: false } }
+    );
+  }
+  next();
+});
 
 const Address = mongoose.model("Address", addressSchema);
 module.exports = Address;

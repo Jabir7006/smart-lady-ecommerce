@@ -6,9 +6,11 @@ import { useCart } from '../../hooks/useCart';
 import ThemedSuspense from '../../components/ThemedSuspense';
 import { useState } from 'react';
 import { IoBagOutline } from 'react-icons/io5';
+import { useAuth } from '../../context/AuthContext';
 
 const Cart = () => {
   const { cart, isLoading, removeFromCart, updateQuantity } = useCart();
+  const { isAuthenticated } = useAuth();
   const [isRemoving, setIsRemoving] = useState(null);
   const [isUpdating, setIsUpdating] = useState(null);
 
@@ -171,15 +173,23 @@ const Cart = () => {
                 <span>Subtotal</span>
                 <span className='text-danger fw-bold'>TK {cartTotal}</span>
               </div>
-              <div className='d-flex justify-content-between mb-2'>
-                <span>Shipping</span>
-                <span className='text-success'>Free</span>
-              </div>
               <div className='d-flex justify-content-between mb-4'>
                 <span>Total</span>
                 <span className='text-danger fw-bold'>TK {cartTotal}</span>
               </div>
-              <button className='btn btn-danger w-100'>Checkout</button>
+              {isAuthenticated ? (
+                <Link to='/checkout'>
+                  <Button variant='contained' color='primary' className='w-100'>
+                    Proceed to Checkout
+                  </Button>
+                </Link>
+              ) : (
+                <Link to='/login'>
+                  <Button variant='contained' color='primary' className='w-100'>
+                    Login to Checkout
+                  </Button>
+                </Link>
+              )}
             </div>
           </div>
         </div>
