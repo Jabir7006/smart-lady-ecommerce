@@ -3,7 +3,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { useState, useEffect } from 'react';
 import { useCategories } from '../../hooks/useCategories';
-import ThemedSuspense from '../ThemedSuspense';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useSearchParams } from 'react-router-dom';
 
 const ScrollableTabs = ({ onCategoryChange }) => {
@@ -53,24 +53,42 @@ const ScrollableTabs = ({ onCategoryChange }) => {
     onCategoryChange(selectedCategory);
   };
 
-  if (isLoading) {
-    return <ThemedSuspense />;
-  }
-
   return (
-    <Box sx={{ maxWidth: { xs: 320, sm: 480 }, bgcolor: 'background.paper' }}>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        variant='scrollable'
-        scrollButtons='auto'
-        aria-label='category tabs'
-      >
-        <Tab label='All' />
-        {categoriesData?.categories?.map(category => (
-          <Tab key={category._id} label={category.name} />
-        ))}
-      </Tabs>
+    <Box
+      sx={{
+        maxWidth: { xs: 320, sm: 480 },
+        bgcolor: 'background.paper',
+        position: 'relative',
+        minHeight: '48px',
+      }}
+    >
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+          }}
+        >
+          <CircularProgress size={24} />
+        </Box>
+      ) : (
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          variant='scrollable'
+          scrollButtons='auto'
+          aria-label='category tabs'
+        >
+          <Tab label='All' />
+          {categoriesData?.categories?.map(category => (
+            <Tab key={category._id} label={category.name} />
+          ))}
+        </Tabs>
+      )}
     </Box>
   );
 };

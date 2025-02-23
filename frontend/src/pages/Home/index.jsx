@@ -129,10 +129,6 @@ const Home = () => {
     return text.replace(regex, '<span class="highlight-match">$1</span>');
   };
 
-  if (featuredLoading || productsLoading) {
-    return <ThemedSuspense />;
-  }
-
   return (
     <>
       <HomeBanner />
@@ -161,13 +157,26 @@ const Home = () => {
             </div>
 
             <div className='col-md-9 productRow'>
-              {featuredProducts?.products && (
-                <ProductSlider
-                  title='FEATURED PRODUCTS'
-                  description='Do not miss the current offers until the end'
-                  itemView={4}
-                  products={featuredProducts.products}
-                />
+              {featuredLoading ? (
+                <div
+                  style={{
+                    minHeight: '200px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <ThemedSuspense />
+                </div>
+              ) : (
+                featuredProducts?.products && (
+                  <ProductSlider
+                    title='FEATURED PRODUCTS'
+                    description='Do not miss the current offers until the end'
+                    itemView={4}
+                    products={featuredProducts.products}
+                  />
+                )
               )}
 
               <div className='d-flex align-items-center mt-4'>
@@ -184,9 +193,25 @@ const Home = () => {
 
               <div
                 className='product_row productRow2 w-100 mt-4 d-flex flex-wrap'
-                style={{ minHeight: '200px' }}
+                style={{ minHeight: '200px', position: 'relative' }}
               >
-                {newProducts?.products?.length > 0 ? (
+                {productsLoading ? (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(255, 255, 255, 0.8)',
+                    }}
+                  >
+                    <ThemedSuspense />
+                  </div>
+                ) : newProducts?.products?.length > 0 ? (
                   newProducts.products.map(product => (
                     <ProductItem
                       key={product._id}
@@ -224,7 +249,6 @@ const Home = () => {
                     <p>No products found in this category.</p>
                   </div>
                 )}
-                
               </div>
 
               {newProducts?.hasNextPage && (
