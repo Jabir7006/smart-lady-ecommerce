@@ -16,6 +16,7 @@ const wishlistRouter = require("./routes/wishlistRoutes");
 const sizeRouter = require("./routes/sizeRoutes");
 const homeBannerRouter = require("./routes/homeBannerRoutes");
 const addressRouter = require("./routes/addressRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 const app = express();
 applyMiddleware(app);
 
@@ -37,6 +38,7 @@ app.use("/api/v1/wishlist", wishlistRouter);
 app.use("/api/v1/sizes", sizeRouter);
 app.use("/api/v1/home-banners", homeBannerRouter);
 app.use("/api/v1/addresses", addressRouter);
+app.use("/api/v1/dashboard", dashboardRoutes);
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",

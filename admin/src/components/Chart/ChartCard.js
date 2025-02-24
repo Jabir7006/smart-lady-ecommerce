@@ -1,14 +1,17 @@
-import React from 'react'
+import React from "react";
 
-function Chart({ children, title }) {
+function ChartCard({ children, title, action }) {
   return (
-    <div className="min-w-0 p-6 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-      <p className="mb-6 text-lg font-semibold text-gray-800 dark:text-gray-300">{title}</p>
-      <div className="relative w-full h-72">
-        {children}
+    <div className="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+      <div className="flex items-center justify-between mb-4">
+        <p className="text-lg font-semibold text-gray-800 dark:text-gray-300">
+          {title}
+        </p>
+        {action && <div className="flex items-center">{action}</div>}
       </div>
+      <div className="relative h-[300px]">{children}</div>
     </div>
-  )
+  );
 }
 
-export default Chart
+export default ChartCard;

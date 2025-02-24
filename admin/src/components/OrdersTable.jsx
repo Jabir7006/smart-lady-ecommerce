@@ -78,9 +78,10 @@ const OrdersTable = ({
       );
     }
 
-    setDisplayData(
-      filteredData.slice((page - 1) * resultsPerPage, page * resultsPerPage)
-    );
+    const start = (page - 1) * resultsPerPage;
+    const end = start + resultsPerPage;
+
+    setDisplayData(filteredData.slice(start, end));
   }, [orders, page, resultsPerPage, filter]);
 
   if (loading) {
