@@ -26,6 +26,12 @@ const Orders = () => {
     pendingOrders: 0,
     completedOrders: 0,
     totalRevenue: 0,
+    processingOrders: 0,
+    shippedOrders: 0,
+    cancelledOrders: 0,
+    todayOrders: 0,
+    todayRevenue: 0,
+    monthlyRevenue: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -72,10 +78,10 @@ const Orders = () => {
 
   return (
     <div>
-      <PageTitle>Orders</PageTitle>
+      <PageTitle>Orders Management</PageTitle>
 
       {/* Breadcrumb */}
-      <div className="flex text-gray-800 dark:text-gray-300">
+      <div className="flex text-gray-800 dark:text-gray-300 mb-6">
         <div className="flex items-center text-purple-600">
           <Icon className="w-5 h-5" aria-hidden="true" icon={HomeIcon} />
           <NavLink exact to="/app/dashboard" className="mx-2">
@@ -86,25 +92,29 @@ const Orders = () => {
         <p className="mx-2">Orders</p>
       </div>
 
-      {/* Cards */}
+      {/* Order Summary Cards */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
+        {/* Today's Overview */}
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardBody className="flex items-center">
-            <div className="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+            <div className="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
               <Icon className="w-5 h-5" aria-hidden="true" icon={CartIcon} />
             </div>
             <div>
               <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Total Orders
+                Today's Orders
               </p>
               <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {stats.totalOrders}
+                {stats.todayOrders}
               </p>
-              <p className="text-sm text-green-500">All time orders</p>
+              <p className="text-sm text-blue-500">
+                ₹{stats.todayRevenue.toLocaleString()} revenue today
+              </p>
             </div>
           </CardBody>
         </Card>
 
+        {/* Order Status Overview */}
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardBody className="flex items-center">
             <div className="p-3 mr-4 text-yellow-500 bg-yellow-100 rounded-full dark:text-yellow-100 dark:bg-yellow-500">
@@ -112,62 +122,78 @@ const Orders = () => {
             </div>
             <div>
               <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Pending Orders
+                Orders in Progress
               </p>
               <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {stats.pendingOrders}
+                {stats.processingOrders + stats.shippedOrders}
               </p>
-              <p className="text-sm text-orange-500">Needs attention</p>
+              <div className="text-xs space-x-2">
+                <span className="text-orange-500">
+                  {stats.processingOrders} processing
+                </span>
+                <span className="text-blue-500">
+                  {stats.shippedOrders} shipped
+                </span>
+              </div>
             </div>
           </CardBody>
         </Card>
 
+        {/* Monthly Performance */}
         <Card className="hover:shadow-lg transition-shadow duration-300">
           <CardBody className="flex items-center">
             <div className="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
-              <Icon className="w-5 h-5" aria-hidden="true" icon={CartIcon} />
-            </div>
-            <div>
-              <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Completed Orders
-              </p>
-              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {stats.completedOrders}
-              </p>
-              <p className="text-sm text-green-500">Successfully delivered</p>
-            </div>
-          </CardBody>
-        </Card>
-
-        <Card className="hover:shadow-lg transition-shadow duration-300">
-          <CardBody className="flex items-center">
-            <div className="p-3 mr-4 text-blue-500 bg-blue-100 rounded-full dark:text-blue-100 dark:bg-blue-500">
               <Icon className="w-5 h-5" aria-hidden="true" icon={MoneyIcon} />
             </div>
             <div>
               <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-                Total Revenue
+                Monthly Revenue
               </p>
               <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                ₹{stats.totalRevenue.toLocaleString()}
+                ৳{stats.monthlyRevenue.toLocaleString()} TK
               </p>
-              <p className="text-sm text-green-500">All time earnings</p>
+              <p className="text-sm text-green-500">
+                {stats.completedOrders} completed orders
+              </p>
+            </div>
+          </CardBody>
+        </Card>
+
+        {/* Order Success Rate */}
+        <Card className="hover:shadow-lg transition-shadow duration-300">
+          <CardBody className="flex items-center">
+            <div className="p-3 mr-4 text-purple-500 bg-purple-100 rounded-full dark:text-purple-100 dark:bg-purple-500">
+              <Icon className="w-5 h-5" aria-hidden="true" icon={CartIcon} />
+            </div>
+            <div>
+              <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                Order Success Rate
+              </p>
+              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                {stats.totalOrders
+                  ? ((stats.completedOrders / stats.totalOrders) * 100).toFixed(
+                      1
+                    ) + "%"
+                  : "0%"}
+              </p>
+              <p className="text-sm text-red-500">
+                {stats.cancelledOrders} cancelled
+              </p>
             </div>
           </CardBody>
         </Card>
       </div>
 
-      {/* Sort */}
+      {/* Filter Section with Enhanced UI */}
       <Card className="mt-5 mb-5 shadow-md">
         <CardBody>
-          <div className="flex items-center">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Filter Orders
-            </p>
-
-            <Label className="mx-3">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Filter Orders
+              </p>
               <Select
-                className="py-3"
+                className="py-3 min-w-[150px]"
                 onChange={(e) => handleFilter(e.target.value)}
               >
                 <option>All</option>
@@ -177,21 +203,26 @@ const Orders = () => {
                 <option>Delivered</option>
                 <option>Cancelled</option>
               </Select>
-            </Label>
+            </div>
 
-            <Label className="">
-              <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
-                <input
-                  className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
-                  type="number"
-                  value={resultsPerPage}
-                  onChange={(e) => setResultPerPage(parseInt(e.target.value))}
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center mr-3 pointer-events-none">
-                  Results on Table
-                </div>
-              </div>
-            </Label>
+            <div className="flex items-center space-x-4">
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Show
+              </p>
+              <Select
+                className="py-3 w-[100px]"
+                value={resultsPerPage}
+                onChange={(e) => setResultPerPage(parseInt(e.target.value))}
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </Select>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                entries
+              </p>
+            </div>
           </div>
         </CardBody>
       </Card>
