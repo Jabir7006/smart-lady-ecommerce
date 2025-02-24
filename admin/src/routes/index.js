@@ -51,7 +51,14 @@ const routes = [
     path: "dashboard",
     component: Dashboard,
   },
- 
+  {
+    path: "home-banner/add",
+    component: AddHomeBanner,
+  },
+  {
+    path: "home-banner/all",
+    component: AllHomeBanners,
+  },
   {
     path: "orders",
     component: Orders,

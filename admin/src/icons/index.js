@@ -1,3 +1,4 @@
+import * as React from "react";
 import { ReactComponent as ButtonsIcon } from "./buttons.svg";
 import { ReactComponent as CardsIcon } from "./cards.svg";
 import { ReactComponent as ChartsIcon } from "./charts.svg";
@@ -41,21 +42,10 @@ import { ReactComponent as CategoryIcon } from "./category.svg";
 import { ReactComponent as BrandIcon } from "./brand.svg";
 
 export {
-  GroupIcon,
-  UserIcon,
-  AddIcon,
-  TruckIcon,
-  StoreIcon,
-  PublishIcon,
-  StarIcon,
-  InvoiceIcon,
-  EyeIcon,
   ButtonsIcon,
   CardsIcon,
   ChartsIcon,
   FormsIcon,
-  GridViewIcon,
-  ListViewIcon,
   HomeIcon,
   ModalsIcon,
   PagesIcon,
@@ -80,6 +70,17 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
+  TruckIcon,
+  UserIcon,
+  InvoiceIcon,
+  GroupIcon,
+  GridViewIcon,
+  ListViewIcon,
+  EyeIcon,
+  StarIcon,
+  AddIcon,
+  PublishIcon,
+  StoreIcon,
   CategoryIcon,
   BrandIcon,
 };
