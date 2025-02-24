@@ -21,7 +21,11 @@ import windmillTheme from "./windmillTheme";
 import "./styles/quill.css";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache,
+} from "@tanstack/react-query";
 
 // import { applySecurityHeaders } from './middleware/security';
 
@@ -45,37 +49,45 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
       retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      cacheTime: 10 * 60 * 1000, // 10 minutes
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 10 * 60 * 1000,
+      suspense: false,
+      networkMode: "offlineFirst",
+      gcTime: 10 * 60 * 1000,
     },
   },
+  queryCache: new QueryCache({
+    onError: (error) => {
+      console.error(`Something went wrong: ${error.message}`);
+    },
+  }),
 });
 
 const container = document.getElementById("root");
 const root = createRoot(container);
 
 root.render(
-  <React.StrictMode>
-    <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter
-          future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-        >
-          <SidebarProvider>
-            <Suspense fallback={<ThemedSuspense />}>
-              <Windmill usePreferences theme={windmillTheme}>
-                <App />
-              </Windmill>
-            </Suspense>
-          </SidebarProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </HelmetProvider>
-  </React.StrictMode>
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
+        <SidebarProvider>
+          <Suspense fallback={<ThemedSuspense />}>
+            <Windmill usePreferences theme={windmillTheme}>
+              <App />
+            </Windmill>
+          </Suspense>
+        </SidebarProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
+  </HelmetProvider>
 );
 
 // Register service worker
