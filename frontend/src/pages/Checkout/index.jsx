@@ -28,6 +28,10 @@ import {
   Collapse,
   Fade,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import {
   LocalShipping,
@@ -52,6 +56,7 @@ const Checkout = () => {
   const [completed, setCompleted] = useState({});
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [error, setError] = useState(null);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
 
   const handleNext = () => {
     if (activeStep === 0 && !selectedAddress) {
@@ -79,7 +84,12 @@ const Checkout = () => {
       return;
     }
 
+    setOpenConfirmModal(true);
+  };
+
+  const handleConfirmOrder = async () => {
     try {
+      setOpenConfirmModal(false);
       await createOrder({
         shippingAddress: selectedAddress._id,
         cartId: cart._id,
@@ -601,6 +611,8 @@ const Checkout = () => {
                         bgcolor: 'success.dark',
                       },
                     }}
+                    disabled={isCreatingOrder || !selectedAddress}
+                    onClick={handlePlaceOrder}
                   >
                     Place Order
                   </Button>
@@ -619,6 +631,100 @@ const Checkout = () => {
             </Fade>
           </Grid>
         </Grid>
+
+        {/* Add Confirmation Modal */}
+        <Dialog
+          open={openConfirmModal}
+          onClose={() => setOpenConfirmModal(false)}
+          maxWidth='sm'
+          fullWidth
+        >
+          <DialogTitle sx={{ pb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <ShoppingBag color='primary' />
+              <Typography variant='h6'>Confirm Order</Typography>
+            </Box>
+          </DialogTitle>
+          <DialogContent>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant='subtitle1' gutterBottom>
+                Delivery Address:
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {selectedAddress?.street}, {selectedAddress?.area}
+                <br />
+                {selectedAddress?.city}, {selectedAddress?.division}{' '}
+                {selectedAddress?.postCode}
+                <br />
+                Phone: {selectedAddress?.phone}
+              </Typography>
+            </Box>
+            <Divider sx={{ my: 2 }} />
+            <Box sx={{ mb: 2 }}>
+              <Typography variant='subtitle1' gutterBottom>
+                Order Summary:
+              </Typography>
+              <Stack spacing={1}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='body2' color='text.secondary'>
+                    Subtotal ({orderSummary.items.length} items)
+                  </Typography>
+                  <Typography variant='body2'>
+                    ৳{orderSummary.subtotal.toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant='body2' color='text.secondary'>
+                    Shipping Fee
+                  </Typography>
+                  <Typography variant='body2'>
+                    ৳{orderSummary.shipping.toFixed(2)}
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    mt: 1,
+                  }}
+                >
+                  <Typography variant='subtitle1'>Total</Typography>
+                  <Typography variant='subtitle1' color='primary.main'>
+                    ৳{orderSummary.total.toFixed(2)}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
+            <Alert severity='info' sx={{ mt: 2 }}>
+              <AlertTitle>Payment Method</AlertTitle>
+              Cash on Delivery - Pay when you receive your order
+            </Alert>
+          </DialogContent>
+          <DialogActions sx={{ p: 2.5, pt: 0 }}>
+            <Button
+              onClick={() => setOpenConfirmModal(false)}
+              variant='outlined'
+              disabled={isCreatingOrder}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleConfirmOrder}
+              variant='contained'
+              color='primary'
+              startIcon={
+                isCreatingOrder ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  <CheckCircle />
+                )
+              }
+              disabled={isCreatingOrder}
+            >
+              {isCreatingOrder ? 'Placing Order...' : 'Confirm Order'}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </Box>
   );
