@@ -1,3 +1,4 @@
+require("dotenv").config();
 const createError = require("http-errors");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
@@ -56,6 +57,15 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const accessToken = createJwt({ userId: user._id }, "15m");
   const refreshToken = createJwt({ userId: user._id }, "7d");
+
+  // Verify the token immediately after creation
+  try {
+    const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+    console.log("Token verified successfully after creation:", decoded);
+  } catch (error) {
+    console.error("Token verification failed:", error.message);
+    console.log("JWT_SECRET used:", process.env.JWT_SECRET);
+  }
 
   user.refreshToken = refreshToken;
   await user.save();

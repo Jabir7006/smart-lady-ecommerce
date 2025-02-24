@@ -108,11 +108,6 @@ const Register = () => {
                 className='col btn-big btn-blue btn-lg'
                 type='submit'
                 disabled={registerIsLoading}
-                startIcon={
-                  registerIsLoading ? (
-                    <CircularProgress size={20} color='inherit' />
-                  ) : null
-                }
               >
                 {registerIsLoading ? (
                   <CircularProgress size={20} color='inherit' />
@@ -139,7 +134,9 @@ const Register = () => {
               </Link>
             </p>
 
-            <h6 className='mt-4 text-center font-weight-bold'>
+            {/* TODO: add google login */}
+
+            {/* <h6 className='mt-4 text-center font-weight-bold'>
               Or continue with social account
             </h6>
             <Button className='mt-2 loginWithGoogle' variant='outlined'>
@@ -148,7 +145,7 @@ const Register = () => {
                 alt='google'
               />
               Login with Google
-            </Button>
+            </Button> */}
           </form>
         </div>
       </div>

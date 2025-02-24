@@ -27,34 +27,28 @@ axiosInstance.interceptors.response.use(
   async error => {
     const originalRequest = error.config;
 
-    // Check specifically for token expiration
+    // Handle token expiration
     if (
       error.response?.status === 401 &&
-      error.response?.data?.error === 'TokenExpired' &&
+      (error.response?.data?.error === 'TokenExpired' ||
+        error.response?.data?.error === 'InvalidToken') &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true;
 
       try {
-        console.log('Token expired, attempting refresh...');
-        const response = await axiosInstance.get('/auth/refresh', {
-          withCredentials: true,
-        });
-
+        // Try to refresh the token
+        const response = await axiosInstance.get('/auth/refresh');
         const { accessToken } = response.data;
 
         if (accessToken) {
-          console.log('Got new access token');
           localStorage.setItem('token', accessToken);
           axiosInstance.defaults.headers.common['Authorization'] =
             `Bearer ${accessToken}`;
           originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-
-          // Retry the original request
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        console.error('Refresh token failed:', refreshError);
         // If refresh fails, clear everything and redirect to login
         localStorage.removeItem('token');
         delete axiosInstance.defaults.headers.common['Authorization'];
@@ -62,6 +56,7 @@ axiosInstance.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );
