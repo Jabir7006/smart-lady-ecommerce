@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 import ImageLight from "../assets/img/login-office.jpeg";
@@ -111,24 +111,7 @@ function Login() {
                 <TwitterIcon className="w-4 h-4 mr-2" aria-hidden="true" />
                 Twitter
               </Button>
-              {/* TODO: Add forgot password */}
-              {/* <p className="mt-4">
-                <Link
-                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/forgot-password"
-                >
-                  Forgot your password?
-                </Link>
-              </p> */}
-              {/* TODO: Add create account */}
-              {/* <p className="mt-1">
-                <Link
-                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/create-account"
-                >
-                  Create account
-                </Link>
-              </p> */}
+            
             </form>
           </main>
         </div>

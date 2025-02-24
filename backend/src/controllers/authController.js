@@ -98,7 +98,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
   if (!admin || !(await comparePassword(password, admin.password))) {
     throw createError(403, "Invalid Credentials");
   }
-  const accessToken = createJwt({ userId: admin._id }, "15s");
+  const accessToken = createJwt({ userId: admin._id }, "15m");
   const refreshToken = createJwt({ userId: admin._id }, "7d");
 
   admin.refreshToken = refreshToken;
@@ -227,6 +227,38 @@ const checkUser = asyncHandler(async (req, res) => {
   user.password = undefined;
   res.json({ user });
 });
+
+// Create Admin User
+const createAdmin = asyncHandler(async (req, res) => {
+  const { fullName, email, password } = req.body;
+
+  // Check if email already exists
+  const userExist = await User.findOne({ email });
+  if (userExist) {
+    throw createError(403, "Account already exists with this email");
+  }
+
+  const hashedPassword = await hashPassword(password);
+
+  // Create admin user
+  const admin = await User.create({
+    fullName,
+    email,
+    password: hashedPassword,
+    role: "admin", 
+  });
+
+  // Remove sensitive data
+  admin.password = undefined;
+  admin.refreshToken = undefined;
+
+  res.status(201).json({
+    success: true,
+    message: "Admin account created successfully",
+    admin,
+  });
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -235,4 +267,5 @@ module.exports = {
   logout,
   checkAuth,
   checkUser,
+  createAdmin,
 };

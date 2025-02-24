@@ -35,6 +35,7 @@ const AllHomeBanners = () => {
         </TableHeader>
         <TableBody>
           {data?.banners?.map((banner) => (
+            console.log(banner),
             <TableRow key={banner._id}>
               <TableCell>
                 <td

@@ -8,6 +8,8 @@ const ProductsAll = lazy(() => import("../pages/ProductsAll"));
 const SingleProduct = lazy(() => import("../pages/SingleProduct"));
 const AddProduct = lazy(() => import("../pages/AddProduct"));
 const Customers = lazy(() => import("../pages/Customers"));
+const AddAdmin = lazy(() => import("../pages/users/AddAdmin"));
+const AdminsAll = lazy(() => import("../pages/users/AdminsAll"));
 const Chats = lazy(() => import("../pages/Chats"));
 const Profile = lazy(() => import("../pages/Profile"));
 const Settings = lazy(() => import("../pages/Settings"));
@@ -49,14 +51,7 @@ const routes = [
     path: "dashboard",
     component: Dashboard,
   },
-  {
-    path: "home-banner/add",
-    component: AddHomeBanner,
-  },
-  {
-    path: "home-banner/all",
-    component: AllHomeBanners,
-  },
+ 
   {
     path: "orders",
     component: Orders,
@@ -112,6 +107,14 @@ const routes = [
   {
     path: "customers",
     component: Customers,
+  },
+  {
+    path: "admins",
+    component: AdminsAll,
+  },
+  {
+    path: "add-admin",
+    component: AddAdmin,
   },
   {
     path: "chats",

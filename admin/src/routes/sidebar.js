@@ -11,28 +11,32 @@ const routes = [
     icon: "HomeIcon", // the component being exported from icons/index.js
     name: "Dashboard", // name that appear in Sidebar
   },
-  {
-    path: "/app/home-banner/add",
-    icon: "CartIcon",
-    name: "Home Banner",
-    routes: [
-      {
-        path: "/app/home-banner/add",
-        name: "Add Home Banner",
-      },
-      {
-        path: "/app/home-banner/all",
-        name: "All Home Banner",
-      },
-    ],
-  },
+  
   {
     path: "/app/orders",
     icon: "CartIcon",
     name: "Orders",
   },
   {
-    icon: "TruckIcon",
+    icon: "PeopleIcon",
+    name: "User Management",
+    routes: [
+      {
+        path: "/app/customers",
+        name: "Customers",
+      },
+      {
+        path: "/app/admins",
+        name: "Admins",
+      },
+      {
+        path: "/app/add-admin",
+        name: "Add Admin",
+      },
+    ],
+  },
+  {
+    icon: "FormsIcon",
     name: "Products",
     routes: [
       {
@@ -45,16 +49,16 @@ const routes = [
       },
       {
         path: "/app/product-color",
-        name: "Product Color",
+        name: "Add Color",
       },
       {
         path: "/app/product-size",
-        name: "Product Size",
+        name: "Add Size",
       },
     ],
   },
   {
-    icon: "CategoryIcon",
+    icon: "CardsIcon",
     name: "Categories",
     routes: [
       {
@@ -65,6 +69,12 @@ const routes = [
         path: "/app/add-category",
         name: "Add Category",
       },
+    ],
+  },
+  {
+    icon: "ModalsIcon",
+    name: "Sub Categories",
+    routes: [
       {
         path: "/app/all-sub-categories",
         name: "All Sub Categories",
@@ -76,7 +86,7 @@ const routes = [
     ],
   },
   {
-    icon: "BrandIcon",
+    icon: "TablesIcon",
     name: "Brands",
     routes: [
       {
@@ -90,9 +100,18 @@ const routes = [
     ],
   },
   {
-    path: "/app/customers",
-    icon: "GroupIcon",
-    name: "Customers",
+    icon: "PagesIcon",
+    name: "Home Banner",
+    routes: [
+      {
+        path: "/app/home-banner/all",
+        name: "All Banners",
+      },
+      {
+        path: "/app/home-banner/add",
+        name: "Add Banner",
+      },
+    ],
   },
   {
     path: "/app/chats",
@@ -101,7 +120,7 @@ const routes = [
   },
   {
     path: "/app/manage-profile",
-    icon: "UserIcon",
+    icon: "OutlinePersonIcon",
     name: "Profile",
   },
   {
