@@ -1,6 +1,7 @@
 import AddressList from '../../components/AddressList';
 import { useState } from 'react';
 import { useCart } from '../../hooks/useCart';
+import { useOrder } from '../../hooks/useOrder';
 import {
   Container,
   Grid,
@@ -38,27 +39,54 @@ import {
   NavigateBefore,
   CheckCircle,
 } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 const Checkout = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const { cart, isLoading } = useCart();
+  const { cart, isLoading: isLoadingCart } = useCart();
+  const { createOrder, isCreatingOrder } = useOrder();
   const [selectedDeliveryOption, setSelectedDeliveryOption] =
     useState('standard');
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleNext = () => {
     if (activeStep === 0 && !selectedAddress) {
+      setError('Please select a delivery address');
       return;
     }
+    setError(null);
     setActiveStep(prevStep => prevStep + 1);
     setCompleted({ ...completed, [activeStep]: true });
   };
 
   const handleBack = () => {
+    setError(null);
     setActiveStep(prevStep => prevStep - 1);
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!selectedAddress) {
+      setError('Please select a delivery address');
+      return;
+    }
+
+    if (!cart?.items?.length) {
+      setError('Your cart is empty');
+      return;
+    }
+
+    try {
+      await createOrder({
+        shippingAddress: selectedAddress._id,
+        cartId: cart._id,
+      });
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to place order');
+    }
   };
 
   const deliveryOptions = [
@@ -211,7 +239,7 @@ const Checkout = () => {
     },
   ];
 
-  if (isLoading) {
+  if (isLoadingCart || isCreatingOrder) {
     return (
       <Box
         display='flex'
@@ -224,9 +252,45 @@ const Checkout = () => {
     );
   }
 
+  if (!cart?.items?.length) {
+    return (
+      <Container maxWidth='xl' sx={{ py: 4 }}>
+        <Paper
+          sx={{
+            p: 4,
+            textAlign: 'center',
+            borderRadius: 2,
+            bgcolor: 'grey.50',
+            border: '2px dashed',
+            borderColor: 'grey.300',
+          }}
+        >
+          <ShoppingBag sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+          <Typography variant='h6' gutterBottom>
+            Your Cart is Empty
+          </Typography>
+          <Typography color='text.secondary' paragraph>
+            Add items to your cart to proceed with checkout.
+          </Typography>
+          <Link to='/shop'>
+            <Button variant='contained' color='primary'>
+              Continue Shopping
+            </Button>
+          </Link>
+        </Paper>
+      </Container>
+    );
+  }
+
   return (
     <Box sx={{ bgcolor: '#f5f5f5', minHeight: '100vh', py: 4 }}>
       <Container maxWidth='xl'>
+        {error && (
+          <Alert severity='error' sx={{ mb: 3 }}>
+            {error}
+          </Alert>
+        )}
+
         <Typography
           variant='h4'
           component='h1'
@@ -301,7 +365,11 @@ const Checkout = () => {
                             </Button>
                             <Button
                               variant='contained'
-                              onClick={handleNext}
+                              onClick={
+                                activeStep === steps.length - 1
+                                  ? handlePlaceOrder
+                                  : handleNext
+                              }
                               endIcon={
                                 index === steps.length - 1 ? (
                                   <ShoppingBag />
@@ -309,7 +377,11 @@ const Checkout = () => {
                                   <NavigateNext />
                                 )
                               }
-                              disabled={activeStep === 0 && !selectedAddress}
+                              disabled={
+                                (activeStep === 0 && !selectedAddress) ||
+                                isCreatingOrder ||
+                                !cart?.items?.length
+                              }
                             >
                               {index === steps.length - 1
                                 ? 'Place Order'
@@ -350,7 +422,11 @@ const Checkout = () => {
                         </Button>
                         <Button
                           variant='contained'
-                          onClick={handleNext}
+                          onClick={
+                            activeStep === steps.length - 1
+                              ? handlePlaceOrder
+                              : handleNext
+                          }
                           endIcon={
                             activeStep === steps.length - 1 ? (
                               <ShoppingBag />
@@ -358,7 +434,11 @@ const Checkout = () => {
                               <NavigateNext />
                             )
                           }
-                          disabled={activeStep === 0 && !selectedAddress}
+                          disabled={
+                            (activeStep === 0 && !selectedAddress) ||
+                            isCreatingOrder ||
+                            !cart?.items?.length
+                          }
                         >
                           {activeStep === steps.length - 1
                             ? 'Place Order'

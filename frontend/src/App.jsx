@@ -6,6 +6,8 @@ import ThemedSuspense from './components/ThemedSuspense';
 import { AuthProvider } from './context/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
+import TrackOrders from './pages/Profile/TrackOrders';
+import Settings from './pages/Profile/Settings';
 
 // Lazy load components
 const Home = lazy(() => import('./pages/Home'));
@@ -21,6 +23,8 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const ProductModal = lazy(() => import('./components/Modals/ProductModal'));
+const Orders = lazy(() => import('./pages/Profile/Orders'));
+const OrderDetails = lazy(() => import('./pages/Profile/OrderDetails'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -68,6 +72,16 @@ function App() {
                   <Route path='/wishlist' element={<Wishlist />} />
                   <Route element={<PrivateRoute />}>
                     <Route path='/profile' element={<Profile />} />
+                    <Route path='/profile/orders' element={<Orders />} />
+                    <Route
+                      path='/profile/orders/:orderId'
+                      element={<OrderDetails />}
+                    />
+                    <Route path='/profile/settings' element={<Settings />} />
+                    <Route
+                      path='/profile/track-orders'
+                      element={<TrackOrders />}
+                    />
                     <Route path='/checkout' element={<Checkout />} />
                   </Route>
                 </Route>

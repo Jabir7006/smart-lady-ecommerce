@@ -21,7 +21,11 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 const getSingleUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await findUserById(id);
+
+  // If the ID is 'me', use the authenticated user's ID
+  const userId = id === "me" ? req.user._id : id;
+
+  const user = await findUserById(userId);
   res.status(200).json(user);
 });
 
