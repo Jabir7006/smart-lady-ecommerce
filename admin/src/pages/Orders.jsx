@@ -37,10 +37,11 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const response = await getAllOrders();
-      setOrders(response.orders);
+      setOrders(response.orders || []);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching orders:", error);
+      setOrders([]);
       setLoading(false);
     }
   };

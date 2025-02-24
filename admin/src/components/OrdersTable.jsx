@@ -16,7 +16,7 @@ import { updateOrderStatus } from "../services/orderService";
 import toast from "react-hot-toast";
 
 const OrdersTable = ({
-  orders,
+  orders = [],
   resultsPerPage,
   filter,
   loading,
@@ -26,7 +26,7 @@ const OrdersTable = ({
   const [displayData, setDisplayData] = useState([]);
 
   // pagination setup
-  const totalResults = orders.length;
+  const totalResults = Array.isArray(orders) ? orders.length : 0;
 
   // pagination change control
   function onPageChange(p) {
@@ -43,7 +43,7 @@ const OrdersTable = ({
   };
 
   const getStatusBadgeType = (status) => {
-    switch (status.toLowerCase()) {
+    switch (status?.toLowerCase()) {
       case "pending":
         return "warning";
       case "processing":
@@ -60,16 +60,21 @@ const OrdersTable = ({
   };
 
   const isOrderEditable = (status) => {
-    return !["delivered", "cancelled"].includes(status.toLowerCase());
+    return !["delivered", "cancelled"].includes(status?.toLowerCase() || "");
   };
 
   // Filter and paginate data
   useEffect(() => {
+    if (!Array.isArray(orders)) {
+      setDisplayData([]);
+      return;
+    }
+
     let filteredData = orders;
 
     if (filter !== "all") {
       filteredData = orders.filter(
-        (order) => order.status.toLowerCase() === filter
+        (order) => order.status?.toLowerCase() === filter
       );
     }
 
@@ -79,7 +84,19 @@ const OrdersTable = ({
   }, [orders, page, resultsPerPage, filter]);
 
   if (loading) {
-    return <div className="text-center">Loading orders...</div>;
+    return (
+      <div className="text-center p-4 text-gray-600 dark:text-gray-400">
+        Loading orders...
+      </div>
+    );
+  }
+
+  if (!Array.isArray(orders) || orders.length === 0) {
+    return (
+      <div className="text-center p-4 text-gray-600 dark:text-gray-400">
+        No orders found
+      </div>
+    );
   }
 
   return (
@@ -101,34 +118,42 @@ const OrdersTable = ({
             {displayData.map((order) => (
               <TableRow key={order._id}>
                 <TableCell>
-                  <span className="text-sm">#{order._id.slice(-6)}</span>
+                  <span className="text-sm">
+                    #{order._id?.slice(-6) || "N/A"}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <div>
-                      <p className="font-semibold">{order.user.fullName}</p>
+                      <p className="font-semibold">
+                        {order.user?.fullName || "Unknown"}
+                      </p>
                       <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {order.user.email}
+                        {order.user?.email || "No email"}
                       </p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">
-                    {order.orderItems.length} items
+                    {order.orderItems?.length || 0} items
                   </span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">₹{order.totalPrice}</span>
+                  <span className="text-sm">
+                    ₹{order.totalPrice?.toLocaleString() || "0"}
+                  </span>
                 </TableCell>
                 <TableCell>
                   <Badge type={getStatusBadgeType(order.status)}>
-                    {order.status}
+                    {order.status || "Unknown"}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <span className="text-sm">
-                    {new Date(order.createdAt).toLocaleDateString()}
+                    {order.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString()
+                      : "N/A"}
                   </span>
                 </TableCell>
                 <TableCell>
