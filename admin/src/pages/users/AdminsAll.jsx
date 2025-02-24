@@ -32,7 +32,7 @@ const AdminsAll = () => {
   const fetchAdmins = async () => {
     try {
       setLoading(true);
-      const response = await getAllUsers();
+      const response = await getAllUsers("admin");
       // Filter only admin users
       const adminUsers = response.users.filter((user) => user.role === "admin");
       setAdmins(adminUsers);
