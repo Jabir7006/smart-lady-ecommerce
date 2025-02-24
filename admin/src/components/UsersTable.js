@@ -11,14 +11,19 @@ import {
   Badge,
   Pagination,
 } from "@windmill/react-ui";
-import response from "../utils/demo/usersData";
 
-const UsersTable = ({ resultsPerPage, filter }) => {
+const UsersTable = ({
+  users = [],
+  resultsPerPage = 10,
+  loading = false,
+  error = null,
+  onRetry,
+}) => {
   const [page, setPage] = useState(1);
-  const [data, setData] = useState([]);
+  const [displayData, setDisplayData] = useState([]);
 
   // pagination setup
-  const totalResults = response.length;
+  const totalResults = users.length;
 
   // pagination change control
   function onPageChange(p) {
@@ -26,49 +31,86 @@ const UsersTable = ({ resultsPerPage, filter }) => {
   }
 
   // on page change, load new sliced data
-  // here you would make another server request for new data
   useEffect(() => {
-    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }, [page, resultsPerPage, filter]);
+    setDisplayData(
+      users.slice((page - 1) * resultsPerPage, page * resultsPerPage)
+    );
+  }, [page, resultsPerPage, users]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-40">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-6">
+        <p className="text-red-500 mb-4">{error}</p>
+        {onRetry && (
+          <button
+            onClick={onRetry}
+            className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-lg hover:bg-purple-700"
+          >
+            Retry
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  if (!users.length) {
+    return (
+      <div className="text-center p-6 text-gray-600 dark:text-gray-400">
+        No users found
+      </div>
+    );
+  }
 
   return (
     <div>
-      {/* Table */}
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
+              <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Joined on</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {data.map((user, i) => (
-              <TableRow key={i}>
+            {displayData.map((user) => (
+              <TableRow key={user._id}>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <Avatar
                       className="hidden mr-3 md:block"
-                      src={user.avatar}
-                      alt="User image"
+                      src={
+                        user.avatar ||
+                        "https://ui-avatars.com/api/?name=" +
+                          encodeURIComponent(user.fullName)
+                      }
+                      alt="User avatar"
                     />
                     <div>
-                      <p className="font-semibold">{user.first_name}</p>
+                      <p className="font-semibold">{user.fullName}</p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{user.last_name}</span>
-                </TableCell>
-                <TableCell>
                   <span className="text-sm">{user.email}</span>
                 </TableCell>
-
+                <TableCell>
+                  <Badge type={user.isActive ? "success" : "warning"}>
+                    {user.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <span className="text-sm">
-                    {new Date(user.joined_on).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </span>
                 </TableCell>
               </TableRow>

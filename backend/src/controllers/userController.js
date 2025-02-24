@@ -5,8 +5,26 @@ const { hashPassword, comparePassword } = require("../utils/hashPasword");
 
 // Get all users
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password -refreshToken");
-  res.json({ users });
+  const { role } = req.query;
+
+  // Build query
+  const query = {};
+  if (role) {
+    query.role = role;
+  }
+
+  // Get users with filtered fields
+  const users = await User.find(query)
+    .select("fullName email isActive createdAt role")
+    .sort("-createdAt");
+
+  console.log(`Found ${users.length} users with role: ${role || "all"}`); // Debug log
+
+  res.json({
+    success: true,
+    users,
+    count: users.length,
+  });
 });
 
 // Get single user
@@ -68,9 +86,96 @@ const changePassword = asyncHandler(async (req, res) => {
   res.json({ message: "Password updated successfully" });
 });
 
+// Get user analytics
+const getUserAnalytics = asyncHandler(async (req, res) => {
+  const totalUsers = await User.countDocuments({ role: "user" });
+  const activeUsers = await User.countDocuments({
+    role: "user",
+    isActive: true,
+  });
+  const newUsersThisMonth = await User.countDocuments({
+    role: "user",
+    createdAt: { $gte: new Date(new Date().setDate(1)) },
+  });
+
+  res.json({
+    totalUsers,
+    activeUsers,
+    newUsersThisMonth,
+  });
+});
+
+// Get customer growth data
+const getCustomerGrowth = asyncHandler(async (req, res) => {
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  const growthData = await User.aggregate([
+    {
+      $match: {
+        role: "user",
+        createdAt: { $gte: sixMonthsAgo },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { "_id.year": 1, "_id.month": 1 },
+    },
+    {
+      $project: {
+        _id: 0,
+        date: {
+          $concat: [
+            { $toString: "$_id.year" },
+            "-",
+            {
+              $cond: {
+                if: { $lt: ["$_id.month", 10] },
+                then: { $concat: ["0", { $toString: "$_id.month" }] },
+                else: { $toString: "$_id.month" },
+              },
+            },
+          ],
+        },
+        count: 1,
+      },
+    },
+  ]);
+
+  res.json(growthData);
+});
+
+// Get online users data
+const getOnlineUsers = asyncHandler(async (req, res) => {
+  // For demo purposes, generate sample data
+  const currentHour = new Date().getHours();
+  const data = [];
+
+  for (let i = 0; i < 24; i++) {
+    const hour = (currentHour - i + 24) % 24;
+    data.push({
+      time: `${hour}:00`,
+      count: Math.floor(Math.random() * 50) + 10, // Random number between 10-60
+    });
+  }
+
+  res.json(data.reverse());
+});
+
 module.exports = {
   getAllUsers,
   getSingleUser,
   updateProfile,
   changePassword,
+  getUserAnalytics,
+  getCustomerGrowth,
+  getOnlineUsers,
 };

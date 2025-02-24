@@ -3,23 +3,33 @@ const userRouter = express.Router();
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const {
   getAllUsers,
-  getSingleUser,
   updateProfile,
   changePassword,
+  // getUser,
+
+  getUserAnalytics,
+  getCustomerGrowth,
+  getOnlineUsers,
+  getSingleUser,
+
 } = require("../controllers/userController");
 const validate = require("../middlewares/validateMiddleware");
 const {
-  userIdParamSchema,
   updateUserSchema,
 } = require("../validations/userValidation");
 
-userRouter.get("/", authMiddleware, isAdmin, getAllUsers);
-userRouter.get(
-  "/:id",
-  validate(userIdParamSchema),
-  authMiddleware,
-  getSingleUser
-);
+// Protect all routes
+userRouter.use(authMiddleware);
+
+// Admin routes
+userRouter.get("/", isAdmin, getAllUsers);
+userRouter.get("/analytics", isAdmin, getUserAnalytics);
+userRouter.get("/growth", isAdmin, getCustomerGrowth);
+userRouter.get("/online", isAdmin, getOnlineUsers);
+
+// User routes
+userRouter.get("/:id", getSingleUser);
+userRouter.put("/:id", updateProfile);
 
 // Profile routes
 userRouter.put(
