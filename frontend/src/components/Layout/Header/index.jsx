@@ -267,7 +267,7 @@ const Header = () => {
           </ListItemIcon>
           <ListItemText>My Orders</ListItemText>
         </MenuItem>
-        <MenuItem component={Link} to='/profile/wishlist'>
+        <MenuItem component={Link} to='/wishlist'>
           <ListItemIcon>
             <Favorite fontSize='small' />
           </ListItemIcon>

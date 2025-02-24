@@ -3,7 +3,7 @@ import axiosInstance from '../config/axios';
 // Get user profile
 export const getUserProfile = async () => {
   try {
-    const { data } = await axiosInstance.get('/users/me');
+    const { data } = await axiosInstance.get('/auth/check-user');
     return data.user || null; // Return null if no user data
   } catch (error) {
     // If error is 401 (Unauthorized), return null
