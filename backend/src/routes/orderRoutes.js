@@ -22,6 +22,7 @@ orderRouter.put("/my-orders/:id/cancel", cancelOrder);
 
 // Admin routes
 orderRouter.get("/admin/orders", isAdmin, getAllOrders);
+orderRouter.get("/admin/orders/:id", isAdmin, getOrderById);
 orderRouter.get("/admin/stats", isAdmin, getOrderStats);
 orderRouter.put("/admin/orders/:id/status", isAdmin, updateOrderStatus);
 

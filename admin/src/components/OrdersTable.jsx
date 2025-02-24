@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   TableBody,
   TableContainer,
@@ -14,6 +15,7 @@ import {
 } from "@windmill/react-ui";
 import { updateOrderStatus } from "../services/orderService";
 import toast from "react-hot-toast";
+import { EyeIcon } from "../icons";
 
 const OrdersTable = ({
   orders = [],
@@ -158,25 +160,30 @@ const OrdersTable = ({
                   </span>
                 </TableCell>
                 <TableCell>
-                  {isOrderEditable(order.status) ? (
-                    <Select
-                      className="mt-1"
-                      onChange={(e) =>
-                        onStatusUpdate(order._id, e.target.value)
-                      }
-                      value={order.status}
+                  <div className="flex items-center space-x-4">
+                    <Link
+                      to={`/app/order/${order._id}`}
+                      className="p-2 text-sm font-medium leading-5 text-purple-600 rounded-lg dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+                      aria-label="View"
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Shipped">Shipped</option>
-                      <option value="Delivered">Delivered</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </Select>
-                  ) : (
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      No actions available
-                    </span>
-                  )}
+                      <EyeIcon className="w-5 h-5" aria-hidden="true" />
+                    </Link>
+                    {isOrderEditable(order.status) && (
+                      <Select
+                        className="mt-1"
+                        onChange={(e) =>
+                          handleStatusUpdate(order._id, e.target.value)
+                        }
+                        value={order.status}
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </Select>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

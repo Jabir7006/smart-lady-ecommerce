@@ -155,11 +155,16 @@ const getOrderById = async (req, res) => {
       });
     }
 
-    // Check if the order belongs to the logged-in user or if the user is admin
-    if (
-      order.user._id.toString() !== req.user._id.toString() &&
-      req.user.role !== "admin"
-    ) {
+    // If user is admin, allow access to any order
+    if (req.user.role === "admin") {
+      return res.status(200).json({
+        success: true,
+        order,
+      });
+    }
+
+    // For non-admin users, check if the order belongs to them
+    if (order.user._id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
         message: "Not authorized to access this order",

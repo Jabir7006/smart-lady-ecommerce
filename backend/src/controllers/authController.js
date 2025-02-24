@@ -98,7 +98,7 @@ const loginAdmin = asyncHandler(async (req, res) => {
   if (!admin || !(await comparePassword(password, admin.password))) {
     throw createError(403, "Invalid Credentials");
   }
-  const accessToken = createJwt({ userId: admin._id }, "15m");
+  const accessToken = createJwt({ userId: admin._id }, "15s");
   const refreshToken = createJwt({ userId: admin._id }, "7d");
 
   admin.refreshToken = refreshToken;
