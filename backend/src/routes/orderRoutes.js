@@ -7,6 +7,7 @@ const {
   getOrderById,
   updateOrderStatus,
   cancelOrder,
+  getOrderStats,
 } = require("../controllers/orderController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
@@ -21,6 +22,7 @@ orderRouter.put("/my-orders/:id/cancel", cancelOrder);
 
 // Admin routes
 orderRouter.get("/admin/orders", isAdmin, getAllOrders);
+orderRouter.get("/admin/stats", isAdmin, getOrderStats);
 orderRouter.put("/admin/orders/:id/status", isAdmin, updateOrderStatus);
 
 module.exports = orderRouter;

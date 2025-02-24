@@ -259,6 +259,41 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+// Get order statistics for admin
+const getOrderStats = async (req, res) => {
+  try {
+    const [totalOrders, pendingOrders, completedOrders, totalRevenue] =
+      await Promise.all([
+        Order.countDocuments(),
+        Order.countDocuments({ status: "Pending" }),
+        Order.countDocuments({ status: "Delivered" }),
+        Order.aggregate([
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$totalPrice" },
+            },
+          },
+        ]),
+      ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalOrders,
+        pendingOrders,
+        completedOrders,
+        totalRevenue: totalRevenue[0]?.total || 0,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createOrder,
   getAllOrders,
@@ -266,4 +301,5 @@ module.exports = {
   getOrderById,
   updateOrderStatus,
   cancelOrder,
+  getOrderStats,
 };
