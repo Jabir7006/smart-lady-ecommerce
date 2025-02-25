@@ -8,10 +8,13 @@ const NewsLetter = () => {
       <div className='container'>
         <div className='row'>
           <div className='col-md-6'>
-            <p className='text-white mb-1'>Subscribe to our newsletter and get 10% off your first purchase</p>
+            <p className='text-white mb-1'>
+              Subscribe to our newsletter and get 10% off your first purchase
+            </p>
             <h3>Join our newsletter and get...</h3>
             <p className='text-light'>
-              Join our email subscription now to get <br /> updates on sales and coupons.
+              Join our email subscription now to get <br /> updates on sales and
+              coupons.
             </p>
 
             <form>

@@ -21,11 +21,25 @@ const ProductSlider = ({ title = '', description = '', itemView = 4, products = 
       </div>
       <div className='product_row w-100 mt-2' style={{ opacity: 1 }}>
         <Swiper 
-          slidesPerView={itemView} 
-          spaceBetween={0} 
-          navigation={true} 
-          modules={[Navigation]} 
+          slidesPerView={itemView}
+          spaceBetween={0}
+          navigation={true}
+          modules={[Navigation]}
           className='mySwiper'
+          breakpoints={{
+            320: {
+              slidesPerView: 2,
+              spaceBetween: 10
+            },
+            768: {
+              slidesPerView: 3,
+              spaceBetween: 15
+            },
+            1024: {
+              slidesPerView: itemView,
+              spaceBetween: 0
+            }
+          }}
         >
           {products?.map((product) => (
             <SwiperSlide key={product._id}>

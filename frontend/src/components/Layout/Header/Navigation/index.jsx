@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa6';
 import { IoIosMenu } from 'react-icons/io';
 import { Link } from 'react-router-dom';
+import './Navigation.css';
 
 import home from '../../../../assets/images/home.png';
 import shop from '../../../../assets/images/shop.png';
@@ -33,57 +34,52 @@ const Navigation = ({ categories }) => {
                 className={`sidebarNav ${isopenSidebar === true ? 'open' : ''} `}
               >
                 <ul className=''>
-                  <li>
-                    <Link>
-                      <Button>
-                        Men
-                        <FaAngleRight className='ml-auto' />
-                      </Button>
-                    </Link>
-
-                    <div className='submenu'>
-                      <Link to={'/'}>
-                        <Button>Ok Ok</Button>
-                      </Link>
-                      <Link to={'/'}>
-                        <Button>Ok Ok</Button>
-                      </Link>
-                      <Link to={'/'}>
-                        <Button>Home</Button>
-                      </Link>
-                    </div>
-                  </li>
                   {categories?.categories?.map(item => (
-                    <li className='' key={item._id}>
+                    <li className='nav-item-with-submenu' key={item._id}>
                       <Link to={`/shop?categories=${item._id}`}>
                         <Button
-                          // className='d-flex align-items-center'
                           style={{
                             display: 'flex',
                             alignItems: 'center',
                             gap: '10px',
+                            width: '100%',
+                            justifyContent: 'space-between',
                           }}
                         >
-                          <img
-                            src={item?.image}
-                            alt='category'
-                            width={25}
-                            height={25}
-                          />
-                          {item.name}
-                          {/* {item.subMenu && <FaAngleRight className='ml-auto' />} */}
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '10px',
+                            }}
+                          >
+                            <img
+                              src={item?.image}
+                              alt='category'
+                              width={25}
+                              height={25}
+                            />
+                            {item.name}
+                          </div>
+                          {item.subcategories &&
+                            item.subcategories.length > 0 && (
+                              <FaAngleRight className='ml-auto' />
+                            )}
                         </Button>
                       </Link>
-                      {/* 
-                      {item.subMenu && (
+
+                      {item.subcategories && item.subcategories.length > 0 && (
                         <div className='submenu'>
-                          {item.subMenu.map(subItem => (
-                            <Link key={subItem.id} to={'/'}>
-                              <Button>{subItem.title}</Button>
+                          {item.subcategories.map(subItem => (
+                            <Link
+                              key={subItem._id}
+                              to={`/shop?categories=${item._id}&subcategory=${subItem._id}`}
+                            >
+                              <Button>{subItem.name}</Button>
                             </Link>
                           ))}
                         </div>
-                      )} */}
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -123,7 +119,7 @@ const Navigation = ({ categories }) => {
               </li>
               {categories?.categories?.map(item => (
                 <li
-                  className='list-inline-item'
+                  className='list-inline-item nav-item-with-submenu'
                   key={item._id}
                   style={{ flex: '0 0 auto' }}
                 >
@@ -141,12 +137,29 @@ const Navigation = ({ categories }) => {
                       style={{
                         textTransform: 'uppercase !important',
                         fontWeight: 'bold',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
                       }}
                     >
                       {item?.name}
-                      {/* {item?.subMenu && <FaAngleDown className='ml-1' />} */}
+                      {item.subcategories && item.subcategories.length > 0 && (
+                        <FaAngleDown className='ml-1' />
+                      )}
                     </Button>
                   </Link>
+                  {item.subcategories && item.subcategories.length > 0 && (
+                    <div className='submenu top-submenu'>
+                      {item.subcategories.map(subItem => (
+                        <Link
+                          key={subItem._id}
+                          to={`/shop?categories=${item._id}&subcategory=${subItem._id}`}
+                        >
+                          <Button>{subItem.name}</Button>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

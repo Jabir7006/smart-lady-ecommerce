@@ -137,7 +137,7 @@ const Home = () => {
       <section className='homeProducts pb-0'>
         <div className='container'>
           <div className='row homeProductsRow'>
-            <div className='col-md-3'>
+            <div className='col-md-3 d-none d-md-block'>
               <div className='sticky'>
                 <div className='banner mb-3'>
                   <img
@@ -179,14 +179,17 @@ const Home = () => {
                 )
               )}
 
-              <div className='d-flex align-items-center mt-4'>
-                <div className='info' style={{ width: '35%' }}>
+              <div className='d-flex align-items-center mt-4 flex-wrap'>
+                <div
+                  className='info mb-2 mb-md-0'
+                  style={{ width: '100%', maxWidth: '350px' }}
+                >
                   <h3 className='mb-0 hd'>NEW ARRIVALS</h3>
                   <p className='text-light text-sm mb-0'>
                     New Products With updated stocks.
                   </p>
                 </div>
-                <div className='ml-auto'>
+                <div className='ml-auto w-100 w-md-auto'>
                   <ScrollableTabs onCategoryChange={handleCategoryChange} />
                 </div>
               </div>

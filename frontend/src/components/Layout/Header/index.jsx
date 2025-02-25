@@ -24,14 +24,13 @@ import {
 
 import Navigation from './Navigation';
 import HeaderWarn from '../../ui/HeaderWarn';
-import { useAuth } from '../../../context/AuthContext';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
 import { useState } from 'react';
-import { IoMdHeartEmpty } from 'react-icons/io';
 import MobileHeader from './MobileHeader';
 import { useCategories } from '../../../hooks/useCategories';
 import { Typography } from '@mui/material';
+import { useAuth } from '../../../context/AuthContext';
 
 const Header = () => {
   const { isAuthenticated, user, logout, loading } = useAuth();

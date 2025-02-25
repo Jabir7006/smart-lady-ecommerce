@@ -56,7 +56,7 @@ const ScrollableTabs = ({ onCategoryChange }) => {
   return (
     <Box
       sx={{
-        maxWidth: { xs: 320, sm: 480 },
+        width: '100%',
         bgcolor: 'background.paper',
         position: 'relative',
         minHeight: '48px',
@@ -82,10 +82,33 @@ const ScrollableTabs = ({ onCategoryChange }) => {
           variant='scrollable'
           scrollButtons='auto'
           aria-label='category tabs'
+          sx={{
+            '& .MuiTabs-scrollButtons.Mui-disabled': {
+              opacity: 0.3,
+            },
+            '& .MuiTab-root': {
+              fontSize: { xs: '12px', sm: '14px' },
+              minWidth: { xs: '80px', sm: 'auto' },
+              padding: { xs: '6px 12px', sm: '6px 16px' },
+            },
+          }}
         >
-          <Tab label='All' />
+          <Tab
+            label='All'
+            sx={{
+              fontSize: { xs: '12px', sm: '14px' },
+              minWidth: { xs: '60px', sm: 'auto' },
+            }}
+          />
           {categoriesData?.categories?.map(category => (
-            <Tab key={category._id} label={category.name} />
+            <Tab
+              key={category._id}
+              label={category.name}
+              sx={{
+                fontSize: { xs: '12px', sm: '14px' },
+                minWidth: { xs: '80px', sm: 'auto' },
+              }}
+            />
           ))}
         </Tabs>
       )}
