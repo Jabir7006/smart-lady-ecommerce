@@ -548,10 +548,6 @@ nav .navPart2 ul li:hover .submenu {
   font-weight: 600;
 }
 
-
-
- 
-
 .viewAllBtn {
   padding: 5px 25px !important;
   background: #ffffff;
@@ -665,7 +661,6 @@ nav .navPart2 ul li:hover .submenu {
   width: 100%;
 } */
 
-
 .productItem .img_rapper img {
   height: auto;
   transition: all 0.3s ease-in-out;
@@ -761,7 +756,6 @@ svg {
 /* ... existing styles ... */
 
 .productItem .img_rapper {
-
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   background: rgb(255, 255, 255);
@@ -2328,7 +2322,30 @@ a:hover {
 @media (max-width: 768px) {
   .product_row .swiper-button-next,
   .product_row .swiper-button-prev {
-    display: none !important;
+    width: 30px !important;
+    height: 30px !important;
+    background: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s ease;
+  }
+
+  .product_row .swiper-button-next:hover,
+  .product_row .swiper-button-prev:hover {
+    background: #6D4AAE !important;
+    color: #ffffff;
+  }
+
+  .product_row .swiper-button-next:after,
+  .product_row .swiper-button-prev:after {
+    font-size: 14px !important;
+  }
+
+  .product_row .swiper-button-next {
+    right: 5px !important;
+  }
+
+  .product_row .swiper-button-prev {
+    left: 5px !important;
   }
 
   .product_row {
