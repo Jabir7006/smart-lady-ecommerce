@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Menu, ShoppingCart } from '@mui/icons-material';
 import MobileSidebar from './Navigation/MobileSidebar';
 import Drawer from '@mui/material/Drawer';
+import logo from '../../../assets/images/logo.png';
 export default function MobileHeader({ categories }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -65,7 +66,7 @@ export default function MobileHeader({ categories }) {
               >
                 <img
                   alt='Logo'
-                  src='http://localhost:5173/src/assets/images/logo1.png'
+                  src={logo}
                   style={{
                     boxSizing: 'border-box',
                     padding: '0px',

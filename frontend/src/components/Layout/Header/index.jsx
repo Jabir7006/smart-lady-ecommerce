@@ -111,10 +111,7 @@ const Header = () => {
               <div className='row'>
                 <div className='logoWrapper d-flex align-items-center col-sm-2'>
                   <Link to='/'>
-                    <img
-                      src='http://localhost:5173/src/assets/images/logo.png'
-                      alt='logo'
-                    />
+                    <img src={logo} alt='logo' />
                   </Link>
                 </div>
 
