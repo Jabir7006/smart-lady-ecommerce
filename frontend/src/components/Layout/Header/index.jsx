@@ -12,15 +12,14 @@ import {
   Box,
   IconButton,
 } from '@mui/material';
-import { FiUser, FiLogOut } from 'react-icons/fi';
-import { IoBagOutline } from 'react-icons/io5';
+
 import {
   Person,
-  ShoppingBag,
-  Favorite,
+  ShoppingBagOutlined,
   Settings,
   Logout,
   LocalShipping,
+  FavoriteOutlined,
 } from '@mui/icons-material';
 
 import Navigation from './Navigation';
@@ -161,7 +160,7 @@ const Header = () => {
                       <div className='position-relative ml-2 res-hide'>
                         <Link to='/wishlist'>
                           <Button className='circle'>
-                            <Favorite />
+                            <FavoriteOutlined />
                           </Button>
                         </Link>
                         {wishlistItemsCount > 0 ? (
@@ -186,7 +185,7 @@ const Header = () => {
                       <div className='position-relative ml-2 res-hide'>
                         <Link to='/cart'>
                           <Button className='circle'>
-                            <ShoppingBag />
+                            <ShoppingBagOutlined />
                           </Button>
                         </Link>
                         {cartItemsCount > 0 ? (
@@ -260,13 +259,13 @@ const Header = () => {
         </MenuItem>
         <MenuItem component={Link} to='/profile/orders'>
           <ListItemIcon>
-            <ShoppingBag fontSize='small' />
+            <ShoppingBagOutlined fontSize='small' />
           </ListItemIcon>
           <ListItemText>My Orders</ListItemText>
         </MenuItem>
         <MenuItem component={Link} to='/wishlist'>
           <ListItemIcon>
-            <Favorite fontSize='small' />
+            <FavoriteOutlined fontSize='small' />
           </ListItemIcon>
           <ListItemText>Wishlist</ListItemText>
         </MenuItem>

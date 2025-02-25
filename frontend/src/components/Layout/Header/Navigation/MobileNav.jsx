@@ -14,15 +14,19 @@ export default function MobileNav({ categories }) {
                   className='sidebarNav'
                   style={{
                     border: '0px',
-                    padding: '0px',
+                    padding: '0px', 
                     display: 'block',
                     height: 'auto',
                     left: '0px',
                     opacity: 1,
                     position: 'relative',
-                    scrollbarWidth: '0px',
+                    scrollbarWidth: 'none', // Hide Firefox scrollbar
                     top: '0px',
                     visibility: 'inherit',
+                    '-ms-overflow-style': 'none', // Hide IE scrollbar
+                    '&::-webkit-scrollbar': {
+                      display: 'none' // Hide Chrome/Safari/Opera scrollbar
+                    }
                   }}
                 >
                   <ul
@@ -30,13 +34,17 @@ export default function MobileNav({ categories }) {
                       boxSizing: 'border-box',
                       margin: '0px',
                       padding: '0px',
-                      marginTop: '0px',
+                      marginTop: '0px', 
                       overflow: 'scroll hidden',
                       whiteSpace: 'nowrap',
                       display: 'block',
                       marginBottom: '0px',
-                      scrollbarWidth: '0px',
-                      width: '100%',
+                      scrollbarWidth: 'none', // Hide Firefox scrollbar
+                      '-ms-overflow-style': 'none', // Hide IE scrollbar
+                      '&::-webkit-scrollbar': {
+                        display: 'none' // Hide Chrome/Safari/Opera scrollbar
+                      },
+                      width: '100%'
                     }}
                   >
                     {categories?.categories?.map((item, index) => (

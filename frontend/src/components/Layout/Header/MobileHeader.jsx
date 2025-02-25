@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MobileNav from './Navigation/MobileNav';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { Menu, ShoppingCart } from '@mui/icons-material';
+import { Menu, ShoppingBagOutlined, ShoppingCart } from '@mui/icons-material';
 import MobileSidebar from './Navigation/MobileSidebar';
 import Drawer from '@mui/material/Drawer';
 import logo from '../../../assets/images/logo.png';
@@ -22,7 +22,11 @@ export default function MobileHeader({ categories }) {
   const buttonStyle = {
     color: 'rgb(0, 0, 0)',
     cursor: 'pointer',
-    borderRadius: '100%',
+    borderRadius: '50%',
+    minWidth: '40px',
+    width: '45px',
+    height: '45px',
+    padding: '10px'
   };
   return (
     <>
@@ -85,7 +89,7 @@ export default function MobileHeader({ categories }) {
                     tabIndex='0'
                     style={buttonStyle}
                   >
-                    <ShoppingCart />
+                    <ShoppingBagOutlined />
                   </Button>
                   <span className='count d-flex align-items-center justify-content-center'>
                     0

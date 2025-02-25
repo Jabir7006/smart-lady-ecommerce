@@ -471,6 +471,13 @@ nav .navPart2 ul li:hover .submenu {
   position: relative;
 }
 
+@media (max-width: 768px) {
+  .homeBannerSection {
+    min-height: 0px;
+    padding-bottom: 50px;
+  }
+}
+
 /* .homeBannerSection .swiper {
   overflow: inherit !important;
 } */
@@ -908,6 +915,16 @@ svg {
   margin-bottom: 30px;
   color: #333;
   text-align: center;
+}
+
+@media (max-width: 768px) {
+  .featured-categories{
+    padding: 0px;
+  }
+  .featured-categories h2 {
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
 }
 
 .featured-categories .swiper {
