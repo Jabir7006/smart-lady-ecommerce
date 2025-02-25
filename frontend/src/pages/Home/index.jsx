@@ -172,7 +172,7 @@ const Home = () => {
                 featuredProducts?.products && (
                   <ProductSlider
                     title='FEATURED PRODUCTS'
-                    description='Do not miss the current offers until the end'
+                    description='Do not miss the current offers'
                     itemView={4}
                     products={featuredProducts.products}
                   />
@@ -185,7 +185,7 @@ const Home = () => {
                   style={{ width: '100%', maxWidth: '350px' }}
                 >
                   <h3 className='mb-0 hd'>NEW ARRIVALS</h3>
-                  <p className='text-light text-sm mb-0'>
+                  <p className='text-light text-sm mb-0 description'>
                     New Products With updated stocks.
                   </p>
                 </div>

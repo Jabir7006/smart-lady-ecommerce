@@ -10,11 +10,11 @@ const ProductSlider = ({ title = '', description = '', itemView = 4, products = 
   return (
     <>
       <div className='d-flex align-items-center res-flex-column'>
-        <div className='info w-50'>
+        <div className='info w-100 w-md-50'>
           <h3 className='mb-0 hd'>{title}</h3>
-          <p className='text-muted text-sm mb-0'>{description}</p>
+          <p className='text-muted text-sm mb-0 description'>{description}</p>
         </div>
-        <Button className='viewAllBtn ml-auto'>
+        <Button className='viewAllBtn ml-auto d-none d-md-block'>
           View all
           <IoIosArrowRoundForward />
         </Button>
@@ -42,7 +42,7 @@ const ProductSlider = ({ title = '', description = '', itemView = 4, products = 
           }}
         >
           {products?.map((product) => (
-            <SwiperSlide key={product._id}>
+            <SwiperSlide key={product._id} className='swiper-slide'>
               <ProductItem product={product} />
             </SwiperSlide>
           ))}

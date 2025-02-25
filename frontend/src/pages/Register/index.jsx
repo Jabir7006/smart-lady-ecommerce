@@ -44,8 +44,8 @@ const Register = () => {
       </div>
       <div className='container'>
         <div className='box card p-3 shadow border-8'>
-          <div className='text-center'>
-            <img src={logo} className='w-50' alt='logo' />
+          <div className='text-center mb-4'>
+            <img src={logo} className='logo-img' alt='logo' />
           </div>
 
           {registerError && (
@@ -55,10 +55,10 @@ const Register = () => {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className='mt-3'>
-            <h2 className='mb-4'>Register</h2>
+            <h2 className='mb-4 text-center'>Register</h2>
 
-            <div className='row'>
-              <div className='col-md-6'>
+            <div className='row g-3'>
+              <div className='col-12'>
                 <TextField
                   label='Full Name *'
                   variant='standard'
@@ -68,7 +68,7 @@ const Register = () => {
                   helperText={errors.fullName?.message}
                 />
               </div>
-              <div className='col-md-6'>
+              <div className='col-12'>
                 <TextField
                   label='Phone *'
                   variant='standard'
@@ -80,7 +80,7 @@ const Register = () => {
               </div>
             </div>
 
-            <div className='form-group position-relative'>
+            <div className='form-group position-relative mt-3'>
               <TextField
                 label='Email *'
                 variant='standard'
@@ -91,7 +91,7 @@ const Register = () => {
               />
             </div>
 
-            <div className='form-group'>
+            <div className='form-group mt-3'>
               <TextField
                 label='Password *'
                 type='password'
@@ -103,9 +103,9 @@ const Register = () => {
               />
             </div>
 
-            <div className='d-flex align-items-center mt-3 mb-3'>
+            <div className='d-flex flex-column gap-2 mt-4 mb-3'>
               <Button
-                className='col btn-big btn-blue btn-lg'
+                className='w-100 btn-big btn-blue btn-lg'
                 type='submit'
                 disabled={registerIsLoading}
               >
@@ -116,9 +116,9 @@ const Register = () => {
                 )}
               </Button>
 
-              <Link to='/'>
+              <Link to='/' className='w-100'>
                 <Button
-                  className='col btn-big btn-blue btn-lg ml-3'
+                  className='w-100 btn-big btn-blue btn-lg'
                   variant='outlined'
                   disabled={registerIsLoading}
                 >
@@ -127,7 +127,7 @@ const Register = () => {
               </Link>
             </div>
 
-            <p className='txt'>
+            <p className='txt text-center mt-3'>
               Already Registered?{' '}
               <Link to='/login' className='border-effect'>
                 Login

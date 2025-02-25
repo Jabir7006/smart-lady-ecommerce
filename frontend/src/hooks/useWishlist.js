@@ -14,8 +14,8 @@ export const useWishlist = () => {
   const { data: wishlist, isLoading } = useQuery({
     queryKey: ['wishlist'],
     queryFn: fetchWishlist,
-    staleTime: 1000,
-    cacheTime: 5000,
+    staleTime: 1000 * 60 * 5,
+    cacheTime: 1000 * 60 * 10,
   });
 
   // Add to Wishlist

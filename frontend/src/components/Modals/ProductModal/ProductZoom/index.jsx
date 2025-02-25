@@ -38,10 +38,10 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
               <div className='item'>
                 <InnerImageZoom
                   zoomType='hover'
-                  // zoomScale={1}
+                  zoomScale={1.5}
                   src={image.url}
-                  // width={400}
-                  // height={400}
+                  width={1000}
+                  height={1000}
                   fullscreenOnMobile={true}
                   moveType='pan'
                 />

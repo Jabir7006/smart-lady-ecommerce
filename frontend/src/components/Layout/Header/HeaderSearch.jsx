@@ -1,66 +1,78 @@
-import { Button } from '@mui/material';
+import {
+  Button,
+  InputAdornment,
+  TextField,
+  ClickAwayListener,
+} from '@mui/material';
 import { IoIosSearch } from 'react-icons/io';
-import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SearchDropdown from './SearchDropdown';
+import useSearch from '../../../hooks/useSearch';
 
 const HeaderSearch = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const searchRef = useRef(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleClickOutside = event => {
-      if (searchRef.current && !searchRef.current.contains(event.target)) {
-        setIsDropdownVisible(false);
-      }
-    };
-
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, []);
-
-  const handleSearch = e => {
-    e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchTerm.trim())}`);
-      setIsDropdownVisible(false);
-    }
-  };
-
-  const handleProductSelect = product => {
-    navigate(`/product/${product._id}`);
-    setIsDropdownVisible(false);
-    setSearchTerm('');
-  };
+  const {
+    searchTerm,
+    setSearchTerm,
+    debouncedSearchTerm,
+    isDropdownVisible,
+    handleSearch,
+    handleProductSelect,
+    handleClickAway,
+  } = useSearch();
 
   return (
-    <div ref={searchRef} className='headerSearch ml-3 mr-3'>
-      <form onSubmit={handleSearch}>
-        <input
-          type='text'
-          value={searchTerm}
-          onChange={e => {
-            setSearchTerm(e.target.value);
-            setIsDropdownVisible(true);
-          }}
-          onFocus={() => setIsDropdownVisible(true)}
-          placeholder='Search for products...'
-          aria-label='Search products'
-        />
-        <Button type='submit'>
-          <IoIosSearch />
-        </Button>
-      </form>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <div className='headerSearch'>
+        <form onSubmit={handleSearch} className='search-form'>
+          <TextField
+            fullWidth
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            onFocus={() => searchTerm.trim()}
+            placeholder='Search'
+            aria-label='Search products'
+            variant='outlined'
+            size='small'
+            className='search-input'
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <Button
+                    type='submit'
+                    className='search-button'
+                    size='small'
+                    aria-label='search'
+                  >
+                    <IoIosSearch style={{ fontSize: '16px' }} />
+                  </Button>
+                </InputAdornment>
+              ),
+              sx: {
+                borderRadius: '4px',
+                padding: '0 4px 0 8px',
+                '&.MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#e0e0e0',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#7e57c2',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#7e57c2',
+                  },
+                },
+              },
+            }}
+          />
+        </form>
 
-      {isDropdownVisible && searchTerm.trim() && (
-        <SearchDropdown
-          searchTerm={searchTerm}
-          onSelect={handleProductSelect}
-        />
-      )}
-    </div>
+        {isDropdownVisible && debouncedSearchTerm.trim() && (
+          <SearchDropdown
+            searchTerm={debouncedSearchTerm}
+            onSelect={handleProductSelect}
+          />
+        )}
+      </div>
+    </ClickAwayListener>
   );
 };
 

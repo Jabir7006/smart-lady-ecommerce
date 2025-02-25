@@ -66,7 +66,7 @@ const Login = () => {
               />
             </div>
 
-            <div className='form-group'>
+            <div className='form-group mt-3'>
               <TextField
                 label='Password *'
                 type='password'
@@ -78,12 +78,15 @@ const Login = () => {
               />
             </div>
 
-            <a href='/' className='border-effect cursor txt'>
-              Forgot Password?
-            </a>
-            <div className='d-flex align-items-center mt-3 mb-3'>
+            <div className='d-flex justify-content-end mt-2'>
+              <a href='/' className='border-effect cursor txt'>
+                Forgot Password?
+              </a>
+            </div>
+
+            <div className='d-flex flex-column flex-md-row align-items-center gap-2 mt-4 mb-3'>
               <Button
-                className='col btn-big btn-blue btn-lg'
+                className='w-100 btn-big btn-blue btn-lg'
                 type='submit'
                 disabled={loginIsLoading}
               >
@@ -100,9 +103,9 @@ const Login = () => {
                 )}
               </Button>
 
-              <Link to='/'>
+              <Link to='/' className='w-100'>
                 <Button
-                  className='col btn-big btn-blue btn-lg ml-3'
+                  className='w-100 btn-big btn-blue btn-lg'
                   variant='outlined'
                   disabled={loginIsLoading}
                 >
@@ -111,7 +114,7 @@ const Login = () => {
               </Link>
             </div>
 
-            <p className='txt'>
+            <p className='txt text-center'>
               Not Registered?{' '}
               <Link to='/register' className='border-effect'>
                 Register

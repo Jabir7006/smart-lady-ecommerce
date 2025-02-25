@@ -1,96 +1,46 @@
-import { Button } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import { FreeMode } from 'swiper/modules';
 
 export default function MobileNav({ categories }) {
+  if (!categories?.categories?.length) return null;
+
   return (
-    <>
-      <nav>
-        <div className='container'>
-          <div className='row'>
-            <div className='col-sm-2 navPart1'>
-              <div className='catWrapper'>
-                <div
-                  className='sidebarNav'
-                  style={{
-                    border: '0px',
-                    padding: '0px', 
-                    display: 'block',
-                    height: 'auto',
-                    left: '0px',
-                    opacity: 1,
-                    position: 'relative',
-                    scrollbarWidth: 'none', // Hide Firefox scrollbar
-                    top: '0px',
-                    visibility: 'inherit',
-                    '-ms-overflow-style': 'none', // Hide IE scrollbar
-                    '&::-webkit-scrollbar': {
-                      display: 'none' // Hide Chrome/Safari/Opera scrollbar
-                    }
-                  }}
-                >
-                  <ul
-                    style={{
-                      boxSizing: 'border-box',
-                      margin: '0px',
-                      padding: '0px',
-                      marginTop: '0px', 
-                      overflow: 'scroll hidden',
-                      whiteSpace: 'nowrap',
-                      display: 'block',
-                      marginBottom: '0px',
-                      scrollbarWidth: 'none', // Hide Firefox scrollbar
-                      '-ms-overflow-style': 'none', // Hide IE scrollbar
-                      '&::-webkit-scrollbar': {
-                        display: 'none' // Hide Chrome/Safari/Opera scrollbar
-                      },
-                      width: '100%'
-                    }}
-                  >
-                    {categories?.categories?.map((item, index) => (
-                      <li
-                        key={item._id}
-                        style={{
-                          boxSizing: 'border-box',
-                          margin: '0px',
-                          listStyle: 'none',
-                          position: 'static',
-                          padding: '0px',
-                          display: 'inline-block',
-                          verticalAlign: 'top',
-                          width: 'max-content',
-                        }}
-                      >
-                        <Link
-                          to={`/shop?categories=${item._id}`}
-                          style={{
-                            boxSizing: 'border-box',
-                            margin: '0px',
-                            padding: '0px',
-                            textDecoration: 'none',
-                            backgroundColor: 'initial',
-                            color: 'rgb(0, 123, 255)',
-                          }}
-                        >
-                          <Button type='button'>
-                            <img
-                              className='mr-2'
-                              width={20}
-                              src={item?.image}
-                              alt={item?.name}
-                            />{' '}
-                            {item?.name}
-                          </Button>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+    <div className='mobile-category-nav'>
+      <div className='container'>
+        <Swiper
+          slidesPerView='auto'
+          spaceBetween={4}
+          freeMode={{
+            enabled: true,
+            minimumVelocity: 0.02,
+            momentum: true,
+            momentumRatio: 0.8,
+            momentumBounce: false,
+          }}
+          modules={[FreeMode]}
+          className='mobile-category-swiper'
+        >
+          {categories?.categories?.map(item => (
+            <SwiperSlide key={item._id} className='mobile-category-slide'>
+              <Link
+                to={`/shop?categories=${item._id}`}
+                className='mobile-category-link'
+                title={item?.name}
+                aria-label={`Shop ${item?.name}`}
+              >
+                <div className='mobile-category-icon'>
+                  <img src={item?.image} alt='' />
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-    </>
+                <span className='mobile-category-name'>{item?.name}</span>
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </div>
   );
 }

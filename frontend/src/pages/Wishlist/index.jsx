@@ -15,9 +15,17 @@ import {
   TableRow,
   Paper,
   Checkbox,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
 } from '@mui/material';
 import { IoMdHeartEmpty } from 'react-icons/io';
-import { IoBagOutline } from 'react-icons/io5';
+import {
+  IoBagOutline,
+  IoTrashOutline,
+  IoArrowForwardOutline,
+} from 'react-icons/io5';
 import { useWishlist } from '../../hooks/useWishlist';
 import { useCart } from '../../hooks/useCart';
 import { useState } from 'react';
@@ -44,7 +52,11 @@ const Wishlist = () => {
   const [selectedSize, setSelectedSize] = useState('');
 
   if (isLoading) {
-    return <ThemedSuspense />;
+    return (
+      <div className='wishlist-loading'>
+        <ThemedSuspense />
+      </div>
+    );
   }
 
   const handleRemoveFromWishlist = async productId => {
@@ -126,8 +138,10 @@ const Wishlist = () => {
       }
       // Clear selection after adding to cart
       setSelectedItems([]);
+      toast.success('Items added to cart');
     } catch (error) {
       console.error('Error adding selected items to cart:', error);
+      toast.error('Failed to add some items to cart');
     }
   };
 
@@ -140,6 +154,7 @@ const Wishlist = () => {
         // Remove from selected items as each item is processed
         setSelectedItems(prev => prev.filter(id => id !== productId));
       }
+      toast.success('Selected items removed');
     } catch (error) {
       console.error('Error removing selected items:', error);
       toast.error('Failed to remove some items');
@@ -167,13 +182,13 @@ const Wishlist = () => {
               className='img-fluid'
               style={{ width: 80, height: 80, objectFit: 'contain' }}
             />
-            <Box>
+            <Box sx={{ ml: 2 }}>
               <Link
                 to={`/product/${product._id}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <Typography variant='subtitle1' sx={{ mb: 1 }}>
-                  {product.name}
+                  {product.title}
                 </Typography>
               </Link>
               <Rating value={product.rating || 0} readOnly size='small' />
@@ -240,130 +255,230 @@ const Wishlist = () => {
     ));
   };
 
+  const renderMobileProducts = () => {
+    if (!wishlist?.products) return null;
+
+    return wishlist.products.map(product => (
+      <Card className='wishlist-item-card' key={product._id}>
+        <div className='wishlist-item-header'>
+          <div className='wishlist-checkbox'>
+            <Checkbox
+              checked={selectedItems.includes(product._id)}
+              onChange={() => handleSelectItem(product._id)}
+            />
+          </div>
+          <Link to={`/product/${product._id}`} className='wishlist-item-image'>
+            <img
+              src={product.images[0]?.url}
+              alt={product.title}
+              loading='lazy'
+            />
+          </Link>
+          <div className='wishlist-item-details'>
+            <Link to={`/product/${product._id}`}>
+              <h3>
+                {product.title?.substring(0, 30)}
+                {product.title?.length > 30 ? '...' : ''}
+              </h3>
+            </Link>
+            <div className='wishlist-item-rating'>
+              <Rating value={product.rating || 0} readOnly size='small' />
+              <span>({product.numReviews || 0})</span>
+            </div>
+            <div className='wishlist-item-price'>
+              <strong>
+                {product.discountPrice || product.regularPrice} TK
+              </strong>
+              {product.discountPrice && (
+                <span className='old-price'>{product.regularPrice} TK</span>
+              )}
+            </div>
+            <div className='wishlist-item-stock'>
+              {product.quantity > 0 ? (
+                <span className='in-stock'>In Stock</span>
+              ) : (
+                <span className='out-of-stock'>Out of Stock</span>
+              )}
+            </div>
+          </div>
+          <IconButton
+            className='remove-wishlist-item'
+            onClick={() => handleRemoveFromWishlist(product._id)}
+            disabled={isRemoving === product._id}
+          >
+            <IoTrashOutline />
+          </IconButton>
+        </div>
+        <div className='wishlist-item-footer'>
+          <Button
+            variant='contained'
+            fullWidth
+            startIcon={<IoBagOutline />}
+            onClick={() => handleAddToCart(product)}
+            disabled={product.quantity === 0}
+            className='add-to-cart-btn'
+          >
+            Add to Cart
+          </Button>
+        </div>
+      </Card>
+    ));
+  };
+
   if (!wishlist?.products?.length) {
     return (
-      <Container maxWidth='lg' sx={{ py: 8 }}>
-        <Box sx={{ textAlign: 'center', py: 8 }}>
-          <IoMdHeartEmpty size={80} color='#ff4081' />
-          <Typography variant='h4' sx={{ mt: 3, mb: 2, fontWeight: 500 }}>
-            Your Wishlist is Empty
-          </Typography>
-          <Typography color='text.secondary' sx={{ mb: 4 }}>
+      <div className='empty-wishlist-container'>
+        <div className='empty-wishlist'>
+          <div className='empty-wishlist-icon'>
+            <IoMdHeartEmpty />
+          </div>
+          <h2>Your Wishlist is Empty</h2>
+          <p>
             Add items that you like to your wishlist. Review them anytime and
             easily move them to the cart.
-          </Typography>
-          <Link to='/' style={{ textDecoration: 'none' }}>
-            <Button variant='contained' size='large'>
+          </p>
+          <Link to='/'>
+            <Button
+              variant='contained'
+              color='primary'
+              className='continue-shopping-btn'
+              endIcon={<IoArrowForwardOutline />}
+            >
               Continue Shopping
             </Button>
           </Link>
-        </Box>
-      </Container>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Container maxWidth='lg' sx={{ py: 4 }}>
-      <Box sx={{ mb: 4 }}>
-        <Typography variant='h4' sx={{ mb: 1, fontWeight: 500 }}>
-          My Wishlist ({wishlist.products.length})
-        </Typography>
-        <Divider sx={{ my: 2 }} />
-      </Box>
+    <section className='wishlist-section'>
+      <Container>
+        <div className='wishlist-header'>
+          <h1>My Wishlist</h1>
+          <p>
+            You have <span>{wishlist.products.length}</span>{' '}
+            {wishlist.products.length === 1 ? 'item' : 'items'} in your wishlist
+          </p>
+        </div>
 
-      <Box sx={{ mb: 3 }}>
-        <Button
-          variant='contained'
-          startIcon={<IoBagOutline />}
-          onClick={handleAddSelectedToCart}
-          disabled={!selectedItems.length}
-          sx={{ mr: 2 }}
-        >
-          Add Selected to Cart
-        </Button>
-        <Button
-          variant='outlined'
-          color='error'
-          startIcon={<DeleteOutlineIcon />}
-          onClick={handleRemoveSelected}
-          disabled={!selectedItems.length}
-        >
-          Remove Selected
-        </Button>
-      </Box>
-
-      <TableContainer
-        component={Paper}
-        elevation={0}
-        sx={{ border: '1px solid #e0e0e0' }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding='checkbox'>
-                <Checkbox
-                  checked={selectedItems.length === wishlist.products.length}
-                  indeterminate={
-                    selectedItems.length > 0 &&
-                    selectedItems.length < wishlist.products.length
-                  }
-                  onChange={handleSelectAll}
-                />
-              </TableCell>
-              <TableCell>Product</TableCell>
-              <TableCell>Price</TableCell>
-              <TableCell>Stock Status</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderProducts()}</TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Select Options</DialogTitle>
-        <DialogContent>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel>Color</InputLabel>
-            <Select
-              value={selectedColor}
-              onChange={e => setSelectedColor(e.target.value)}
-              label='Color'
-            >
-              {selectedProduct?.colors.map(color => (
-                <MenuItem key={color._id} value={color.title}>
-                  {color.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ mt: 2 }}>
-            <InputLabel>Size</InputLabel>
-            <Select
-              value={selectedSize}
-              onChange={e => setSelectedSize(e.target.value)}
-              label='Size'
-            >
-              {selectedProduct?.sizes.map(size => (
-                <MenuItem key={size._id} value={size.title}>
-                  {size.title}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+        <div className='wishlist-actions'>
           <Button
-            onClick={handleConfirmAddToCart}
             variant='contained'
-            disabled={!selectedColor || !selectedSize}
+            startIcon={<IoBagOutline />}
+            onClick={handleAddSelectedToCart}
+            disabled={!selectedItems.length}
+            className='add-selected-btn'
           >
-            Add to Cart
+            Add Selected to Cart
           </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+          <Button
+            variant='outlined'
+            color='error'
+            startIcon={<IoTrashOutline />}
+            onClick={handleRemoveSelected}
+            disabled={!selectedItems.length}
+            className='remove-selected-btn'
+          >
+            Remove Selected
+          </Button>
+        </div>
+
+        {/* Desktop View */}
+        <div className='wishlist-table-container desktop-wishlist'>
+          <TableContainer
+            component={Paper}
+            elevation={0}
+            className='wishlist-table-wrapper'
+          >
+            <Table className='wishlist-table'>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding='checkbox'>
+                    <Checkbox
+                      checked={
+                        selectedItems.length === wishlist.products.length
+                      }
+                      indeterminate={
+                        selectedItems.length > 0 &&
+                        selectedItems.length < wishlist.products.length
+                      }
+                      onChange={handleSelectAll}
+                    />
+                  </TableCell>
+                  <TableCell>Product</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Stock Status</TableCell>
+                  <TableCell>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{renderProducts()}</TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+
+        {/* Mobile View */}
+        <div className='mobile-wishlist'>
+          <div className='wishlist-select-all'>
+            <Checkbox
+              checked={selectedItems.length === wishlist.products.length}
+              indeterminate={
+                selectedItems.length > 0 &&
+                selectedItems.length < wishlist.products.length
+              }
+              onChange={handleSelectAll}
+            />
+            <span>Select All Items</span>
+          </div>
+          {renderMobileProducts()}
+        </div>
+
+        <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+          <DialogTitle>Select Options</DialogTitle>
+          <DialogContent>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel>Color</InputLabel>
+              <Select
+                value={selectedColor}
+                onChange={e => setSelectedColor(e.target.value)}
+                label='Color'
+              >
+                {selectedProduct?.colors.map(color => (
+                  <MenuItem key={color._id} value={color.title}>
+                    {color.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel>Size</InputLabel>
+              <Select
+                value={selectedSize}
+                onChange={e => setSelectedSize(e.target.value)}
+                label='Size'
+              >
+                {selectedProduct?.sizes.map(size => (
+                  <MenuItem key={size._id} value={size.title}>
+                    {size.title}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)}>Cancel</Button>
+            <Button
+              onClick={handleConfirmAddToCart}
+              variant='contained'
+              disabled={!selectedColor || !selectedSize}
+            >
+              Add to Cart
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </section>
   );
 };
 

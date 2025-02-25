@@ -2,100 +2,112 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import logo from '../../../../assets/images/logo.png';
-import { Button } from '@mui/material';
-import { ArrowDropDown } from '@mui/icons-material';
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemIcon,
+  Divider,
+} from '@mui/material';
+import { ArrowDropDown, Home, ShoppingBag, Person } from '@mui/icons-material';
 
 export default function MobileSidebar({ categories }) {
   return (
-    <div style={{ padding: '15px 5px', width: '80vw' }}>
-      <React.Fragment>
-        <Link
-          className='logo'
-          to='/'
-          style={{
-            display: 'block',
-            paddingBottom: '15px',
-          }}
-        >
+    <div className='mobile-sidebar'>
+      <div className='mobile-sidebar-header'>
+        <Link className='logo' to='/'>
           <img
             alt='logo'
             src={logo}
-            style={{
-              boxSizing: 'border-box',
-              marginLeft: '8px',
-              verticalAlign: 'middle',
-              width: '120px',
-            }}
+            className='mobile-sidebar-logo'
+            style={{ maxHeight: '30px' }}
           />
         </Link>
+      </div>
+
+      <Divider />
+
+      <List className='mobile-sidebar-nav' dense>
+        <ListItem component={Link} to='/' className='mobile-sidebar-item' dense>
+          <ListItemIcon>
+            <Home fontSize='small' style={{ fontSize: '16px' }} />
+          </ListItemIcon>
+          <ListItemText
+            primary='Home'
+            primaryTypographyProps={{ fontSize: '13px' }}
+          />
+        </ListItem>
+
+        <ListItem
+          component={Link}
+          to='/shop'
+          className='mobile-sidebar-item'
+          dense
+        >
+          <ListItemIcon>
+            <ShoppingBag fontSize='small' style={{ fontSize: '16px' }} />
+          </ListItemIcon>
+          <ListItemText
+            primary='Shop'
+            primaryTypographyProps={{ fontSize: '13px' }}
+          />
+        </ListItem>
+
+        <Divider />
+
+        <ListItem className='mobile-sidebar-category-header' dense>
+          <ListItemText
+            primary='Categories'
+            primaryTypographyProps={{ fontSize: '13px', fontWeight: 600 }}
+          />
+        </ListItem>
 
         {categories?.categories?.map((item, index) => (
-          <li
-            className='list-inline-item'
-            style={{
-              width: '100%',
-              position: 'relative',
-            }}
+          <ListItem
+            key={item._id}
+            component={Link}
+            to={`/shop?categories=${item._id}`}
+            className='mobile-sidebar-category'
+            dense
           >
-            <Link to={`/shop?categories=${item._id}`}>
-              <Button
-                type='button'
-                tabIndex='0'
-                style={{
-                  color: 'rgba(0, 0, 0, 0.7)',
-                  fontWeight: 600,
-                  padding: '10px 20px',
-                  fontSize: '14px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                <img className='mr-2' width={25} src={item?.image} />{' '}
-                {item?.name}
-              </Button>
-            </Link>
-            <span
-              className='arrow false'
-              style={{
-                boxSizing: 'border-box',
-                margin: '0px',
-                padding: '0px',
-                background: 'rgb(241, 241, 241)',
-                borderRadius: '100%',
-                transition: '0.3s ease-in-out',
-                alignItems: 'center',
-                display: 'flex',
-                height: '35px',
-                justifyContent: 'center',
-                position: 'absolute',
-                right: '20px',
-                top: '7px',
-                width: '35px',
-                zIndex: 100,
-              }}
-            >
-              <ArrowDropDown />
-            </span>
-            <div
-              className='submenu false'
-              style={{
-                overflow: 'hidden',
-              }}
-            ></div>
-          </li>
+            <ListItemIcon>
+              <img
+                className='category-icon'
+                src={item?.image}
+                alt=''
+                style={{ width: '18px', height: '18px' }}
+              />
+            </ListItemIcon>
+            <ListItemText
+              primary={item?.name}
+              primaryTypographyProps={{ fontSize: '12px' }}
+            />
+            {item.subcategories && item.subcategories.length > 0 && (
+              <ArrowDropDown
+                className='category-arrow'
+                fontSize='small'
+                style={{ fontSize: '16px' }}
+              />
+            )}
+          </ListItem>
         ))}
+      </List>
 
-        <div className='pt-3 pl-3 pr-3'>
-          <Link to='/login'>
-            <Button
-              className='btn-blue w-100 btn-big'
-              type='button'
-              tabIndex='0'
-            >
-              Sign In
-            </Button>
-          </Link>
-        </div>
-      </React.Fragment>
+      <Divider />
+
+      <div className='mobile-sidebar-footer'>
+        <Link to='/login' className='mobile-sidebar-login'>
+          <Button
+            className='btn-blue w-100'
+            variant='contained'
+            startIcon={<Person fontSize='small' style={{ fontSize: '16px' }} />}
+            size='small'
+          >
+            Sign In
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

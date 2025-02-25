@@ -1,11 +1,23 @@
 import { Link } from 'react-router-dom';
-import { Box, Button, Container, Rating, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Rating,
+  Typography,
+  Divider,
+  IconButton,
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import QuantityBox from '../../components/Home/QuantityBox';
 import { useCart } from '../../hooks/useCart';
 import ThemedSuspense from '../../components/ThemedSuspense';
 import { useState } from 'react';
-import { IoBagOutline } from 'react-icons/io5';
+import {
+  IoBagOutline,
+  IoArrowForwardOutline,
+  IoTrashOutline,
+} from 'react-icons/io5';
 import { useAuth } from '../../context/AuthContext';
 
 const Cart = () => {
@@ -15,7 +27,11 @@ const Cart = () => {
   const [isUpdating, setIsUpdating] = useState(null);
 
   if (isLoading) {
-    return <ThemedSuspense />;
+    return (
+      <div className='cart-loading'>
+        <ThemedSuspense />
+      </div>
+    );
   }
 
   const cartItemsCount = cart?.items?.length || 0;
@@ -55,81 +71,97 @@ const Cart = () => {
 
   if (!cart?.items?.length) {
     return (
-      <Container className='py-5'>
-        <Box className='text-center'>
-          <IoBagOutline size={60} className='text-muted mb-4' />
-          <Typography variant='h5' gutterBottom>
-            Your Cart is Empty
-          </Typography>
-          <Typography variant='body1' color='textSecondary' className='mb-4'>
-            items to your cart. Review them anytime and easily proceed to
-            checkout when ready.
-          </Typography>
+      <div className='empty-cart-container'>
+        <div className='empty-cart'>
+          <div className='empty-cart-icon'>
+            <IoBagOutline />
+          </div>
+          <h2>Your Cart is Empty</h2>
+          <p>Looks like you haven't added anything to your cart yet.</p>
           <Link to='/'>
-            <Button variant='contained' color='primary'>
+            <Button
+              variant='contained'
+              color='primary'
+              className='continue-shopping-btn'
+              endIcon={<IoArrowForwardOutline />}
+            >
               Continue Shopping
             </Button>
           </Link>
-        </Box>
-      </Container>
+        </div>
+      </div>
     );
   }
 
   return (
-    <section className='section cartPage'>
-      <div className='container'>
-        <div className='mb-4'>
-          <h2 className='hd mb-2'>YOUR CART</h2>
-          <p className='mb-0'>
-            There are <span className='text-danger'>{cartItemsCount}</span>{' '}
-            products in your cart
+    <section className='cart-section'>
+      <Container>
+        <div className='cart-header'>
+          <h1>Your Cart</h1>
+          <p>
+            You have <span>{cartItemsCount}</span>{' '}
+            {cartItemsCount === 1 ? 'item' : 'items'} in your cart
           </p>
         </div>
 
-        <div className='row'>
-          <div className='col-md-9'>
-            <div className='table-responsive'>
-              <table className='table'>
+        <div className='cart-content'>
+          <div className='cart-items'>
+            {/* Desktop View */}
+            <div className='cart-table-container desktop-cart'>
+              <table className='cart-table'>
                 <thead>
                   <tr>
                     <th>Product</th>
-                    <th>Unit Price</th>
+                    <th>Price</th>
                     <th>Quantity</th>
-                    <th>Subtotal</th>
-                    <th>Remove</th>
+                    <th>Total</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {cart?.items?.map(item => (
-                    <tr key={item.product._id}>
+                    <tr key={`${item.product._id}-${item.color}-${item.size}`}>
                       <td>
-                        <Link to={`/product/${item?.product?._id}`}>
-                          <div className='d-flex align-items-center cartItemimgWrapper'>
-                            <div className='imgWrapper'>
-                              <img
-                                src={item.product.images[0].url}
-                                alt={item.product.title.substring(0, 20)}
-                              />
-                            </div>
-                            <div className='info px-3'>
-                              <h6>{item.product.title.substring(0, 40)}...</h6>
-                              <Rating
-                                value={item.product.rating || 0}
-                                readOnly
-                                size='small'
-                              />
-                              <p>Color: {item.color}</p>
-                              <p>Size: {item.size}</p>
+                        <Link
+                          to={`/product/${item?.product?._id}`}
+                          className='cart-product'
+                        >
+                          <div className='cart-product-image'>
+                            <img
+                              src={item.product.images[0].url}
+                              alt={item.product.title}
+                              loading='lazy'
+                            />
+                          </div>
+                          <div className='cart-product-info'>
+                            <h3>
+                              {item.product.title.substring(0, 40)}
+                              {item.product.title.length > 40 ? '...' : ''}
+                            </h3>
+                            <Rating
+                              value={item.product.rating || 0}
+                              readOnly
+                              size='small'
+                            />
+                            <div className='cart-product-meta'>
+                              {item.color && (
+                                <span className='product-color'>
+                                  Color: {item.color}
+                                </span>
+                              )}
+                              {item.size && (
+                                <span className='product-size'>
+                                  Size: {item.size}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </Link>
                       </td>
-                      <td>
-                        <span className='fw-bold'>
-                          TK{' '}
-                          {item.product.discountPrice ||
-                            item.product.regularPrice}
-                        </span>
+                      <td className='cart-price'>
+                        TK{' '}
+                        {item.product.discountPrice ||
+                          item.product.regularPrice}
                       </td>
                       <td>
                         <QuantityBox
@@ -144,56 +176,147 @@ const Cart = () => {
                           }
                         />
                       </td>
-                      <td>
-                        <span className='fw-bold'>
-                          TK{' '}
-                          {(item.product.discountPrice ||
-                            item.product.regularPrice) * item.quantity}
-                        </span>
+                      <td className='cart-subtotal'>
+                        TK{' '}
+                        {(item.product.discountPrice ||
+                          item.product.regularPrice) * item.quantity}
                       </td>
                       <td>
-                        <span
-                          className='remove'
+                        <IconButton
+                          className='remove-item'
                           onClick={() => handleRemoveFromCart(item.product._id)}
+                          disabled={isRemoving === item.product._id}
                         >
                           <CloseIcon />
-                        </span>
+                        </IconButton>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile View */}
+            <div className='mobile-cart'>
+              {cart?.items?.map(item => (
+                <div
+                  className='cart-item-card'
+                  key={`${item.product._id}-${item.color}-${item.size}-mobile`}
+                >
+                  <div className='cart-item-header'>
+                    <Link
+                      to={`/product/${item?.product?._id}`}
+                      className='cart-item-image'
+                    >
+                      <img
+                        src={item.product.images[0].url}
+                        alt={item.product.title}
+                        loading='lazy'
+                      />
+                    </Link>
+                    <div className='cart-item-details'>
+                      <Link to={`/product/${item?.product?._id}`}>
+                        <h3>
+                          {item.product.title.substring(0, 30)}
+                          {item.product.title.length > 30 ? '...' : ''}
+                        </h3>
+                      </Link>
+                      <div className='cart-item-meta'>
+                        {item.color && <span>Color: {item.color}</span>}
+                        {item.size && <span>Size: {item.size}</span>}
+                      </div>
+                      <div className='cart-item-price'>
+                        TK{' '}
+                        {item.product.discountPrice ||
+                          item.product.regularPrice}
+                      </div>
+                    </div>
+                    <IconButton
+                      className='remove-item-mobile'
+                      onClick={() => handleRemoveFromCart(item.product._id)}
+                      disabled={isRemoving === item.product._id}
+                    >
+                      <IoTrashOutline />
+                    </IconButton>
+                  </div>
+                  <div className='cart-item-footer'>
+                    <div className='cart-item-quantity'>
+                      <span>Quantity:</span>
+                      <QuantityBox
+                        defaultValue={item.quantity}
+                        onChange={value =>
+                          handleQuantityChange(
+                            item.product._id,
+                            value,
+                            item.color,
+                            item.size
+                          )
+                        }
+                      />
+                    </div>
+                    <div className='cart-item-subtotal'>
+                      <span>Subtotal:</span>
+                      <strong>
+                        TK{' '}
+                        {(item.product.discountPrice ||
+                          item.product.regularPrice) * item.quantity}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className='col-md-3'>
-            <div className='card shadow p-4'>
-              <h5 className='mb-3'>CART TOTALS</h5>
-              <div className='d-flex justify-content-between mb-2'>
+          <div className='cart-summary'>
+            <div className='summary-card'>
+              <h2>Order Summary</h2>
+              <div className='summary-row'>
                 <span>Subtotal</span>
-                <span className='text-danger fw-bold'>TK {cartTotal}</span>
+                <span>TK {cartTotal}</span>
               </div>
-              <div className='d-flex justify-content-between mb-4'>
+              <div className='summary-row'>
+                <span>Shipping</span>
+                <span>Calculated at checkout</span>
+              </div>
+              <Divider className='summary-divider' />
+              <div className='summary-row total'>
                 <span>Total</span>
-                <span className='text-danger fw-bold'>TK {cartTotal}</span>
+                <span>TK {cartTotal}</span>
               </div>
+
               {isAuthenticated ? (
-                <Link to='/checkout'>
-                  <Button variant='contained' color='primary' className='w-100'>
+                <Link to='/checkout' className='checkout-link'>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    className='checkout-btn'
+                    endIcon={<IoArrowForwardOutline />}
+                  >
                     Proceed to Checkout
                   </Button>
                 </Link>
               ) : (
-                <Link to='/login'>
-                  <Button variant='contained' color='primary' className='w-100'>
+                <Link to='/login' className='checkout-link'>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    className='checkout-btn'
+                  >
                     Login to Checkout
                   </Button>
                 </Link>
               )}
+
+              <Link to='/' className='continue-shopping'>
+                <Button variant='outlined' className='continue-btn'>
+                  Continue Shopping
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 };
