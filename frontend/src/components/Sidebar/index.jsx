@@ -1,218 +1,341 @@
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { useState, useEffect, useCallback } from 'react';
-import RangeSlider from 'react-range-slider-input';
-import 'react-range-slider-input/dist/style.css';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+  Slider,
+  FormGroup,
+  Divider,
+  Box,
+  Chip,
+  Button,
+} from '@mui/material';
+import { FaChevronDown } from 'react-icons/fa';
 import { useCategories } from '../../hooks/useCategories';
 import { useBrands } from '../../hooks/useBrands';
-import ThemedSuspense from '../ThemedSuspense';
-import { debounce } from 'lodash';
+import './Sidebar.css';
 
-const Sidebar = ({ onFilterChange }) => {
-  const [searchParams] = useSearchParams();
+const Sidebar = ({ onFilterChange, initialFilters }) => {
+  const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
+  const [expanded, setExpanded] = useState([
+    'categories',
+    'price',
+    'brands',
+    'availability',
+  ]);
 
-  // Initialize states with default values
-  const [priceRange, setPriceRange] = useState([100, 60000]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedBrands, setSelectedBrands] = useState([]);
-  const [stockStatus, setStockStatus] = useState({
-    inStock: false,
-    outOfStock: false,
+  // Temporary state for filters before applying
+  const [tempFilters, setTempFilters] = useState({
+    categories: [],
+    brands: [],
+    priceRange: [100, 60000],
+    stockStatus: {
+      inStock: false,
+      outOfStock: false,
+    },
   });
 
-  // Fetch categories and brands
-  const { data: categoriesData, isLoading: categoriesLoading } = useCategories({
-    limit: 100,
-    sort: 'name',
-    order: 'asc',
-  });
+  // State to track if filters have been modified
+  const [isModified, setIsModified] = useState(false);
 
-  const { data: brandsData, isLoading: brandsLoading } = useBrands({
-    limit: 100,
-  });
-
-  // Initialize state from URL params
+  // Initialize filters from URL params on component mount
   useEffect(() => {
-    const categories =
-      searchParams.get('categories')?.split(',').filter(Boolean) || [];
-    const brands = searchParams.get('brands')?.split(',').filter(Boolean) || [];
-    const minPrice = Number(searchParams.get('minPrice')) || 100;
-    const maxPrice = Number(searchParams.get('maxPrice')) || 60000;
-    const inStock = searchParams.get('inStock') === 'true';
-    const outOfStock = searchParams.get('outOfStock') === 'true';
+    if (initialFilters) {
+      setTempFilters(initialFilters);
+    }
+  }, [initialFilters]);
 
-    setSelectedCategories(categories);
-    setSelectedBrands(brands);
-    setPriceRange([minPrice, maxPrice]);
-    setStockStatus({ inStock, outOfStock });
-  }, [searchParams]);
+  // Handle accordion expansion
+  const handleAccordionChange = panel => (event, isExpanded) => {
+    setExpanded(prev =>
+      isExpanded ? [...prev, panel] : prev.filter(p => p !== panel)
+    );
+  };
 
-  // Debounce the filter change handler
-  const debouncedFilterChange = useCallback(
-    debounce(filters => {
-      onFilterChange(filters);
-    }, 500),
-    [onFilterChange]
-  );
+  // Handle category selection
+  const handleCategoryChange = categoryId => {
+    setTempFilters(prev => {
+      const newCategories = prev.categories.includes(categoryId)
+        ? prev.categories.filter(id => id !== categoryId)
+        : [...prev.categories, categoryId];
 
-  // Handle filter changes
-  const handleCategoryChange = useCallback(
-    categoryId => {
-      setSelectedCategories(prev => {
-        const updated = prev.includes(categoryId)
-          ? prev.filter(id => id !== categoryId)
-          : [...prev, categoryId];
+      setIsModified(true);
+      return { ...prev, categories: newCategories };
+    });
+  };
 
-        // Use setTimeout to avoid state updates during render
-        setTimeout(() => {
-          onFilterChange?.({ categories: updated });
-        }, 0);
+  // Handle brand selection
+  const handleBrandChange = brandId => {
+    setTempFilters(prev => {
+      const newBrands = prev.brands.includes(brandId)
+        ? prev.brands.filter(id => id !== brandId)
+        : [...prev.brands, brandId];
 
-        return updated;
-      });
-    },
-    [onFilterChange]
-  );
+      setIsModified(true);
+      return { ...prev, brands: newBrands };
+    });
+  };
 
-  const handleBrandChange = useCallback(
-    brandId => {
-      setSelectedBrands(prev => {
-        const updated = prev.includes(brandId)
-          ? prev.filter(id => id !== brandId)
-          : [...prev, brandId];
+  // Handle price range change
+  const handlePriceChange = (event, newValue) => {
+    setTempFilters(prev => {
+      setIsModified(true);
+      return { ...prev, priceRange: newValue };
+    });
+  };
 
-        setTimeout(() => {
-          onFilterChange?.({ brands: updated });
-        }, 0);
+  // Handle stock status change
+  const handleStockStatusChange = status => {
+    setTempFilters(prev => {
+      const newStockStatus = {
+        ...prev.stockStatus,
+        [status]: !prev.stockStatus[status],
+      };
+      setIsModified(true);
+      return { ...prev, stockStatus: newStockStatus };
+    });
+  };
 
-        return updated;
-      });
-    },
-    [onFilterChange]
-  );
+  // Apply filters
+  const applyFilters = () => {
+    onFilterChange(tempFilters);
+    setIsModified(false);
+  };
 
-  const handlePriceChange = useCallback(
-    newRange => {
-      setPriceRange(newRange);
-      debouncedFilterChange({ priceRange: newRange });
-    },
-    [debouncedFilterChange]
-  );
+  // Clear all filters
+  const clearAllFilters = () => {
+    const defaultFilters = {
+      categories: [],
+      brands: [],
+      priceRange: [100, 60000],
+      stockStatus: {
+        inStock: false,
+        outOfStock: false,
+      },
+    };
+    setTempFilters(defaultFilters);
+    onFilterChange(defaultFilters);
+    setIsModified(false);
+  };
 
-  const handleStockStatusChange = useCallback(
-    status => {
-      setStockStatus(prev => {
-        const updated = { ...prev, [status]: !prev[status] };
-
-        setTimeout(() => {
-          onFilterChange?.({ stockStatus: updated });
-        }, 0);
-
-        return updated;
-      });
-    },
-    [onFilterChange]
-  );
-
-  if (categoriesLoading || brandsLoading) {
-    return <ThemedSuspense />;
-  }
+  // Get active filter count
+  const getActiveFilterCount = () => {
+    let count = 0;
+    count += tempFilters.categories.length;
+    count += tempFilters.brands.length;
+    if (
+      tempFilters.priceRange[0] !== 100 ||
+      tempFilters.priceRange[1] !== 60000
+    )
+      count++;
+    if (tempFilters.stockStatus.inStock) count++;
+    if (tempFilters.stockStatus.outOfStock) count++;
+    return count;
+  };
 
   return (
-    <div className='sidebar'>
-      <div className='filterBox'>
-        <h6>PRODUCT CATEGORIES</h6>
-        <div className='scroll'>
-          <ul>
+    <div className='filters-sidebar'>
+      {/* Active Filters */}
+      {getActiveFilterCount() > 0 && (
+        <Box className='active-filters'>
+          <div className='active-filters-header'>
+            <Typography variant='subtitle2'>Active Filters</Typography>
+            <Typography
+              variant='body2'
+              className='clear-all'
+              onClick={clearAllFilters}
+            >
+              Clear All
+            </Typography>
+          </div>
+          <div className='filter-chips'>
+            {tempFilters.categories.map(catId => {
+              const category = categoriesData?.categories?.find(
+                c => c._id === catId
+              );
+              return (
+                category && (
+                  <Chip
+                    key={catId}
+                    label={category.name}
+                    onDelete={() => handleCategoryChange(catId)}
+                    size='small'
+                  />
+                )
+              );
+            })}
+            {tempFilters.brands.map(brandId => {
+              const brand = brandsData?.brands?.find(b => b._id === brandId);
+              return (
+                brand && (
+                  <Chip
+                    key={brandId}
+                    label={brand.title}
+                    onDelete={() => handleBrandChange(brandId)}
+                    size='small'
+                  />
+                )
+              );
+            })}
+            {(tempFilters.priceRange[0] !== 100 ||
+              tempFilters.priceRange[1] !== 60000) && (
+              <Chip
+                label={`৳${tempFilters.priceRange[0]} - ৳${tempFilters.priceRange[1]}`}
+                onDelete={() => handlePriceChange(null, [100, 60000])}
+                size='small'
+              />
+            )}
+          </div>
+          <Divider className='mt-3' />
+        </Box>
+      )}
+
+      {/* Categories */}
+      <Accordion
+        expanded={expanded.includes('categories')}
+        onChange={handleAccordionChange('categories')}
+        className='filter-accordion'
+      >
+        <AccordionSummary expandIcon={<FaChevronDown />}>
+          <Typography>Categories</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormGroup className='scrollable-filter-group'>
             {categoriesData?.categories?.map(category => (
-              <li key={category._id}>
-                <FormControlLabel
-                  className='w-100'
-                  control={
-                    <Checkbox
-                      checked={selectedCategories.includes(category._id)}
-                      onChange={() => handleCategoryChange(category._id)}
-                    />
-                  }
-                  label={category.name}
-                />
-              </li>
+              <FormControlLabel
+                key={category._id}
+                control={
+                  <Checkbox
+                    checked={tempFilters.categories.includes(category._id)}
+                    onChange={() => handleCategoryChange(category._id)}
+                    size='small'
+                  />
+                }
+                label={
+                  <div className='filter-label'>
+                    <span>{category.name}</span>
+                    <span className='count'>
+                      ({category.productCount || 0})
+                    </span>
+                  </div>
+                }
+              />
             ))}
-          </ul>
-        </div>
-      </div>
+          </FormGroup>
+        </AccordionDetails>
+      </Accordion>
 
-      <div className='filterBox'>
-        <h6>FILTER BY PRICE</h6>
-        <RangeSlider
-          value={priceRange}
-          onInput={handlePriceChange}
-          min={100}
-          max={60000}
-          step={5}
-        />
-        <div className='d-flex pt-2 pb-2 priceRange'>
-          <span>
-            From: <strong className='text-dark'>Rs: {priceRange[0]}</strong>
-          </span>
-          <span className='ml-auto'>
-            To: <strong className='text-dark'>Rs: {priceRange[1]}</strong>
-          </span>
-        </div>
-      </div>
+      {/* Price Range */}
+      <Accordion
+        expanded={expanded.includes('price')}
+        onChange={handleAccordionChange('price')}
+        className='filter-accordion'
+      >
+        <AccordionSummary expandIcon={<FaChevronDown />}>
+          <Typography>Price Range</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <div className='price-range'>
+            <Slider
+              value={tempFilters.priceRange}
+              onChange={handlePriceChange}
+              valueLabelDisplay='auto'
+              min={100}
+              max={60000}
+              step={100}
+            />
+            <div className='price-inputs'>
+              <Typography variant='body2'>
+                ৳{tempFilters.priceRange[0]} - ৳{tempFilters.priceRange[1]}
+              </Typography>
+            </div>
+          </div>
+        </AccordionDetails>
+      </Accordion>
 
-      <div className='filterBox'>
-        <h6>PRODUCT STATUS</h6>
-        <div className='scroll'>
-          <ul>
-            <li>
-              <FormControlLabel
-                className='w-100'
-                control={
-                  <Checkbox
-                    checked={stockStatus.inStock}
-                    onChange={() => handleStockStatusChange('inStock')}
-                  />
-                }
-                label='In Stock'
-              />
-            </li>
-            <li>
-              <FormControlLabel
-                className='w-100'
-                control={
-                  <Checkbox
-                    checked={stockStatus.outOfStock}
-                    onChange={() => handleStockStatusChange('outOfStock')}
-                  />
-                }
-                label='Out of Stock'
-              />
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div className='filterBox'>
-        <h6>BRANDS</h6>
-        <div className='scroll'>
-          <ul>
+      {/* Brands */}
+      <Accordion
+        expanded={expanded.includes('brands')}
+        onChange={handleAccordionChange('brands')}
+        className='filter-accordion'
+      >
+        <AccordionSummary expandIcon={<FaChevronDown />}>
+          <Typography>Brands</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormGroup className='scrollable-filter-group'>
             {brandsData?.brands?.map(brand => (
-              <li key={brand._id}>
-                <FormControlLabel
-                  className='w-100'
-                  control={
-                    <Checkbox
-                      checked={selectedBrands.includes(brand._id)}
-                      onChange={() => handleBrandChange(brand._id)}
-                    />
-                  }
-                  label={brand.title}
-                />
-              </li>
+              <FormControlLabel
+                key={brand._id}
+                control={
+                  <Checkbox
+                    checked={tempFilters.brands.includes(brand._id)}
+                    onChange={() => handleBrandChange(brand._id)}
+                    size='small'
+                  />
+                }
+                label={
+                  <div className='filter-label'>
+                    <span>{brand.title}</span>
+                    <span className='count'>({brand.productCount || 0})</span>
+                  </div>
+                }
+              />
             ))}
-          </ul>
-        </div>
+          </FormGroup>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Availability */}
+      <Accordion
+        expanded={expanded.includes('availability')}
+        onChange={handleAccordionChange('availability')}
+        className='filter-accordion'
+      >
+        <AccordionSummary expandIcon={<FaChevronDown />}>
+          <Typography>Availability</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={tempFilters.stockStatus.inStock}
+                  onChange={() => handleStockStatusChange('inStock')}
+                  size='small'
+                />
+              }
+              label='In Stock'
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={tempFilters.stockStatus.outOfStock}
+                  onChange={() => handleStockStatusChange('outOfStock')}
+                  size='small'
+                />
+              }
+              label='Out of Stock'
+            />
+          </FormGroup>
+        </AccordionDetails>
+      </Accordion>
+
+      {/* Apply Filters Button */}
+      <div className='filter-actions'>
+        <Button
+          variant='contained'
+          fullWidth
+          onClick={applyFilters}
+          disabled={!isModified}
+          className='apply-filters-btn'
+        >
+          Apply Filters
+        </Button>
       </div>
     </div>
   );

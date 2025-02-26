@@ -1,30 +1,43 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { FaAngleDown } from 'react-icons/fa';
+import { FiFilter, FiSearch } from 'react-icons/fi';
 import Sidebar from '../../components/Sidebar';
 import { CgMenuGridR } from 'react-icons/cg';
 import { TfiLayoutGrid4Alt } from 'react-icons/tfi';
 import { IoIosMenu } from 'react-icons/io';
-import { Button, Menu, MenuItem, Pagination } from '@mui/material';
+import {
+  Button,
+  Menu,
+  MenuItem,
+  Pagination,
+  Drawer,
+  IconButton,
+  InputAdornment,
+  TextField,
+} from '@mui/material';
 import ProductItem from '../../components/Products/ProductItem/ProductItem';
 import { useProducts } from '../../hooks/useProducts';
 import ThemedSuspense from '../../components/ThemedSuspense';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useCategories } from '../../hooks/useCategories';
 import { useBrands } from '../../hooks/useBrands';
+import './Shop.css';
+import { BsInboxes } from 'react-icons/bs';
 
 const highlightSearchTerm = (text, searchTerm) => {
   if (!searchTerm || !text) return text;
-  
+
   const regex = new RegExp(`(${searchTerm})`, 'gi');
   return text.replace(regex, '<span class="highlight-match">$1</span>');
 };
 
 const Shop = () => {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [anchorEl, setAnchorEl] = useState(null);
   const [view, setView] = useState('four');
-  const [page, setPage] = useState(Number(searchParams.get('page')) || 1);
-  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(12);
 
   // Move searchTerm initialization to useEffect
   const [searchTerm, setSearchTerm] = useState('');
@@ -42,6 +55,38 @@ const Shop = () => {
 
   const { data: categoriesData } = useCategories();
   const { data: brandsData } = useBrands();
+
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  // Initialize filters from URL params
+  const initialFilters = useMemo(
+    () => ({
+      categories:
+        searchParams.get('categories')?.split(',').filter(Boolean) || [],
+      brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
+      priceRange: [
+        Number(searchParams.get('minPrice')) || 100,
+        Number(searchParams.get('maxPrice')) || 60000,
+      ],
+      stockStatus: {
+        inStock: searchParams.get('inStock') === 'true',
+        outOfStock: searchParams.get('outOfStock') === 'true',
+      },
+    }),
+    [searchParams]
+  );
+
+  // Reset filters on page refresh
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.removeItem('shop_filters');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   // Initialize state from URL params
   useEffect(() => {
@@ -84,62 +129,66 @@ const Shop = () => {
     [page, limit, searchTerm, filters]
   );
 
-  // Update URL when filters change
+  // Handle filter changes
   const handleFilterChange = useCallback(
     newFilters => {
-      setFilters(prev => {
-        const updated = { ...prev, ...newFilters };
-        const params = new URLSearchParams(searchParams);
+      setSearchParams(
+        prev => {
+          // Update categories
+          if (newFilters.categories.length) {
+            prev.set('categories', newFilters.categories.join(','));
+          } else {
+            prev.delete('categories');
+          }
 
-        if (searchTerm) {
-          params.set('search', searchTerm);
-        }
+          // Update brands
+          if (newFilters.brands.length) {
+            prev.set('brands', newFilters.brands.join(','));
+          } else {
+            prev.delete('brands');
+          }
 
-        if (updated.categories.length) {
-          params.set('categories', updated.categories.join(','));
-          const categoryNames = categoriesData?.categories
-            ?.filter(cat => updated.categories.includes(cat._id))
-            .map(cat => cat.slug || cat.name)
-            .join(',');
-          if (categoryNames) params.set('category_names', categoryNames);
-        } else {
-          params.delete('categories');
-          params.delete('category_names');
-        }
+          // Update price range
+          if (
+            newFilters.priceRange[0] !== 100 ||
+            newFilters.priceRange[1] !== 60000
+          ) {
+            prev.set('minPrice', newFilters.priceRange[0].toString());
+            prev.set('maxPrice', newFilters.priceRange[1].toString());
+          } else {
+            prev.delete('minPrice');
+            prev.delete('maxPrice');
+          }
 
-        if (updated.brands.length) {
-          params.set('brands', updated.brands.join(','));
-          const brandNames = brandsData?.brands
-            ?.filter(brand => updated.brands.includes(brand._id))
-            .map(brand => brand.slug || brand.title)
-            .join(',');
-          if (brandNames) params.set('brand_names', brandNames);
-        } else {
-          params.delete('brands');
-          params.delete('brand_names');
-        }
+          // Update stock status
+          if (newFilters.stockStatus.inStock) {
+            prev.set('inStock', 'true');
+          } else {
+            prev.delete('inStock');
+          }
 
-        // Only set price range params if they differ from defaults
-        if (updated.priceRange[0] !== 100 || updated.priceRange[1] !== 60000) {
-          params.set('minPrice', updated.priceRange[0]);
-          params.set('maxPrice', updated.priceRange[1]);
-        } else {
-          params.delete('minPrice');
-          params.delete('maxPrice');
-        }
+          if (newFilters.stockStatus.outOfStock) {
+            prev.set('outOfStock', 'true');
+          } else {
+            prev.delete('outOfStock');
+          }
 
-        if (updated.stockStatus.inStock) params.set('inStock', 'true');
-        else params.delete('inStock');
+          // Reset to page 1 when filters change
+          prev.set('page', '1');
+          setPage(1);
 
-        if (updated.stockStatus.outOfStock) params.set('outOfStock', 'true');
-        else params.delete('outOfStock');
+          return prev;
+        },
+        { replace: true }
+      );
 
-        setSearchParams(params, { replace: true });
-        return updated;
-      });
-      setPage(1);
+      // Save filters to session storage
+      sessionStorage.setItem('shop_filters', JSON.stringify(newFilters));
+
+      // Close mobile filter drawer if open
+      setIsMobileFilterOpen(false);
     },
-    [searchParams, setSearchParams, categoriesData, brandsData, searchTerm]
+    [setSearchParams]
   );
 
   const { data: productsData, isLoading } = useProducts(filterParams);
@@ -170,153 +219,238 @@ const Shop = () => {
     setAnchorEl(null);
   };
 
+  // Handle search input change
+  const handleSearchChange = e => {
+    const newSearch = e.target.value;
+    setSearchTerm(newSearch);
+
+    // Update URL params
+    setSearchParams(
+      prev => {
+        if (newSearch.trim()) {
+          prev.set('search', newSearch.trim());
+        } else {
+          prev.delete('search');
+        }
+        prev.set('page', '1');
+        return prev;
+      },
+      { replace: true }
+    );
+
+    setPage(1);
+  };
+
+  const clearAllFilters = () => {
+    setSearchParams(
+      prev => {
+        prev.delete('categories');
+        prev.delete('brands');
+        prev.delete('minPrice');
+        prev.delete('maxPrice');
+        prev.delete('inStock');
+        prev.delete('outOfStock');
+        prev.set('page', '1');
+        setPage(1);
+        return prev;
+      },
+      { replace: true }
+    );
+    setFilters({
+      categories: [],
+      brands: [],
+      priceRange: [100, 60000],
+      stockStatus: {
+        inStock: false,
+        outOfStock: false,
+      },
+    });
+    setIsMobileFilterOpen(false);
+  };
+
   return (
-    <>
-      <section className='product_Listing_Page'>
-        <div className='container'>
-          <div className='productListing d-flex'>
-            <Sidebar onFilterChange={handleFilterChange} />
-            <div className='content_right'>
-              <div className='search-container mb-3'>
-                <input
-                  type='text'
-                  className='form-control'
-                  placeholder='Real-time Search products...'
-                  value={searchTerm}
-                  onChange={e => {
-                    const newSearch = e.target.value;
-                    setSearchTerm(newSearch);
+    <section className='shop-section'>
+      <div className='container'>
+        <div className='row'>
+          {/* Search and Filter Row */}
+          <div className='col-12 mb-4'>
+            <div className='search-filter-wrapper'>
+              <TextField
+                className='search-input'
+                placeholder='Search products...'
+                value={searchTerm}
+                onChange={handleSearchChange}
+                variant='outlined'
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position='start'>
+                      <FiSearch className='search-icon' />
+                    </InputAdornment>
+                  ),
+                }}
+              />
 
-                    // Update URL params
-                    setSearchParams(
-                      prev => {
-                        if (newSearch.trim()) {
-                          prev.set('search', newSearch.trim());
-                        } else {
-                          prev.delete('search');
-                        }
-                        prev.set('page', '1');
-                        return prev;
-                      },
-                      { replace: true }
-                    );
-
-                    setPage(1);
-                  }}
-                />
+              <div className='d-md-none'>
+                <Button
+                  variant='outlined'
+                  className='filter-button'
+                  onClick={() => setIsMobileFilterOpen(true)}
+                  startIcon={<FiFilter />}
+                >
+                  Filter
+                </Button>
               </div>
+            </div>
 
-              {searchTerm && (
-                <div className='search-results-header mb-3'>
-                  <h2 className='h5 mb-0'>
-                    Search results for "{searchTerm}"
-                    {productsData?.total !== undefined && (
-                      <span className='text-muted ml-2'>
-                        ({productsData.total} products found)
-                      </span>
-                    )}
-                  </h2>
-                </div>
-              )}
-
-              <div className='showBy mt-3 mb-3 d-flex align-items-center'>
-                <div className='d-flex align-items-center btnWrapper'>
-                  <Button
-                    className={view === 'one' && 'active'}
-                    onClick={() => setView('one')}
-                  >
-                    <IoIosMenu />
-                  </Button>
-                  <Button
-                    className={view === 'three' && 'active'}
-                    onClick={() => setView('three')}
-                  >
-                    <CgMenuGridR />
-                  </Button>
-                  <Button
-                    className={view === 'four' && 'active'}
-                    onClick={() => setView('four')}
-                  >
-                    <TfiLayoutGrid4Alt />
-                  </Button>
-                </div>
-
-                <div className='ml-auto showByFilter'>
-                  <Button onClick={handleClick}>
-                    Show {limit} <FaAngleDown />
-                  </Button>
-
-                  <Menu
-                    className='w-100 showPerPageDropdown'
-                    anchorEl={anchorEl}
-                    open={openDropdown}
-                    onClose={handleClose}
-                  >
-                    <MenuItem onClick={() => handleLimitChange(10)}>
-                      10
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLimitChange(20)}>
-                      20
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLimitChange(30)}>
-                      30
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLimitChange(40)}>
-                      40
-                    </MenuItem>
-                    <MenuItem onClick={() => handleLimitChange(50)}>
-                      50
-                    </MenuItem>
-                  </Menu>
-                </div>
+            {/* Search Results Counter */}
+            {(searchTerm ||
+              filters.categories.length > 0 ||
+              filters.brands.length > 0) && (
+              <div className='search-results-counter'>
+                <p>
+                  {productsData?.total || 0} results found
+                  {searchTerm && <span> for "{searchTerm}"</span>}
+                  {filters.categories.length > 0 && (
+                    <span>
+                      {' '}
+                      in{' '}
+                      {categoriesData?.categories
+                        ?.filter(cat => filters.categories.includes(cat._id))
+                        .map(cat => cat.name)
+                        .join(', ')}
+                    </span>
+                  )}
+                </p>
               </div>
+            )}
+          </div>
 
-              <div className='productListing'>
-                {isLoading ? (
+          {/* Mobile Filter Drawer */}
+          <Drawer
+            anchor='bottom'
+            open={isMobileFilterOpen}
+            onClose={() => setIsMobileFilterOpen(false)}
+            className='mobile-filter-drawer'
+          >
+            <div className='mobile-filter-header'>
+              <h5>Filters</h5>
+              <IconButton onClick={() => setIsMobileFilterOpen(false)}>
+                ×
+              </IconButton>
+            </div>
+            <div className='mobile-filter-content'>
+              <Sidebar
+                onFilterChange={handleFilterChange}
+                initialFilters={initialFilters}
+              />
+            </div>
+          </Drawer>
+
+          {/* Desktop Filters Column */}
+          <div className='col-md-3 d-none d-md-block'>
+            <div className='filters-wrapper'>
+              <Sidebar
+                onFilterChange={handleFilterChange}
+                initialFilters={initialFilters}
+              />
+            </div>
+          </div>
+
+          {/* Products Grid Column */}
+          <div className='col-md-9'>
+            <div className='products-wrapper'>
+              {isLoading ? (
+                <div className='loading-container'>
                   <ThemedSuspense />
-                ) : productsData?.products?.length > 0 ? (
-                  productsData.products.map(product => (
-                    <ProductItem
-                      key={product._id}
-                      product={{
-                        ...product,
-                        title: searchTerm 
-                          ? <span dangerouslySetInnerHTML={{ 
-                              __html: highlightSearchTerm(product.title, searchTerm) 
-                            }} />
-                          : product.title,
-                        description: searchTerm 
-                          ? <span dangerouslySetInnerHTML={{ 
-                              __html: highlightSearchTerm(product.description, searchTerm) 
-                            }} />
-                          : product.description
-                      }}
-                      itemView={view}
-                    />
-                  ))
-                ) : (
-                  <div className='text-center w-100 py-5'>
-                    <p>No products found.</p>
+                </div>
+              ) : productsData?.products?.length > 0 ? (
+                <>
+                  <div className='products-grid'>
+                    {productsData.products.map(product => (
+                      <ProductItem
+                        key={product._id}
+                        product={{
+                          ...product,
+                          title: searchTerm ? (
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: highlightSearchTerm(
+                                  product.title,
+                                  searchTerm
+                                ),
+                              }}
+                            />
+                          ) : (
+                            product.title
+                          ),
+                          description: searchTerm ? (
+                            <span
+                              dangerouslySetInnerHTML={{
+                                __html: highlightSearchTerm(
+                                  product.description,
+                                  searchTerm
+                                ),
+                              }}
+                            />
+                          ) : (
+                            product.description
+                          ),
+                        }}
+                        itemView={view}
+                      />
+                    ))}
                   </div>
-                )}
-              </div>
 
-              {productsData?.total > 0 && (
-                <div className='d-flex align-items-center justify-content-center mt-5'>
-                  <Pagination
-                    count={Math.ceil(productsData?.total / limit)}
-                    page={page}
-                    onChange={handlePageChange}
-                    color='primary'
-                    size='large'
-                  />
+                  {productsData.hasNextPage && (
+                    <div className='load-more-container'>
+                      <Button
+                        variant='outlined'
+                        onClick={() => setPage(prev => prev + 1)}
+                        disabled={isLoading}
+                      >
+                        Load More
+                      </Button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className='no-products'>
+                  <div className='illustration'>
+                    <BsInboxes size={120} color='#ccc' />
+                  </div>
+                  <h3>No Products Found</h3>
+                  <p>
+                    We couldn't find any products matching your current filters
+                    and search criteria.
+                  </p>
+                  <div className='suggestions'>
+                    <h4>Try the following:</h4>
+                    <ul>
+                      <li>• Check for spelling mistakes in your search</li>
+                      <li>• Use more general search terms</li>
+                      <li>• Remove some filters to broaden your search</li>
+                      <li>• Try different category or brand combinations</li>
+                    </ul>
+                    {(searchTerm ||
+                      filters.categories.length > 0 ||
+                      filters.brands.length > 0) && (
+                      <Button
+                        className='reset-filters-btn'
+                        variant='contained'
+                        onClick={clearAllFilters}
+                      >
+                        Reset All Filters
+                      </Button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 

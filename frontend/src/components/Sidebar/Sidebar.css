@@ -1,0 +1,196 @@
+.filters-sidebar {
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Active Filters */
+.active-filters {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  margin-bottom: 1rem;
+}
+
+.active-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.active-filters .clear-all {
+  color: #1976d2;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.active-filters .clear-all:hover {
+  text-decoration: underline;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-chips .MuiChip-root {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-size: 0.8125rem;
+}
+
+.filter-chips .MuiChip-deleteIcon {
+  color: #1976d2;
+}
+
+/* Accordion Styles */
+.filter-accordion {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+}
+
+.filter-accordion:before {
+  display: none !important;
+}
+
+.filter-accordion .MuiAccordionSummary-root {
+  padding: 0 1rem;
+  min-height: 48px;
+  border-bottom: 1px solid #eee;
+}
+
+.filter-accordion .MuiAccordionSummary-content {
+  margin: 0;
+}
+
+.filter-accordion .MuiAccordionDetails-root {
+  padding: 1rem;
+  background-color: #fff;
+}
+
+/* Scrollable Filter Groups */
+.scrollable-filter-group {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Force vertical layout for form group */
+.scrollable-filter-group.MuiFormGroup-root {
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+}
+
+.scrollable-filter-group::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollable-filter-group::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.scrollable-filter-group::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scrollable-filter-group::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.scrollable-filter-group .MuiFormControlLabel-root {
+  margin-left: -11px;
+  margin-right: 0;
+  width: 100%;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* Filter Labels */
+.filter-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-size: 0.875rem;
+  min-width: 0;
+}
+
+.filter-label span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filter-label .count {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+/* Price Range */
+.price-range {
+  padding: 0.5rem 0.5rem 0;
+}
+
+.price-inputs {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  color: #1976d2;
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .filters-sidebar {
+    border-radius: 0;
+    height: 100%;
+  }
+
+  .filter-accordion .MuiAccordionSummary-root {
+    background-color: #f8f9fa;
+  }
+
+  .scrollable-filter-group {
+    max-height: none;
+  }
+
+  .active-filters {
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* Checkbox Styles */
+.MuiCheckbox-root {
+  color: #1976d2 !important;
+}
+
+.MuiFormControlLabel-root {
+  margin-left: -11px;
+  margin-right: 0;
+  width: 100%;
+}
+
+/* Filter Actions */
+.filter-actions {
+  padding: 1rem;
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+}
+
+.apply-filters-btn {
+  text-transform: none !important;
+  font-weight: 500 !important;
+  padding: 0.75rem !important;
+}
+
+.apply-filters-btn.Mui-disabled {
+  background-color: #e0e0e0 !important;
+  color: #9e9e9e !important;
+}
