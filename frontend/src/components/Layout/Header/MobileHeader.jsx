@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import MobileNav from './Navigation/MobileNav';
 import { Button, IconButton, Badge, Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import {
@@ -15,7 +14,6 @@ import Drawer from '@mui/material/Drawer';
 import logo from '../../../assets/images/logo.png';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
-import ProfileMenu from './ProfileMenu';
 import { useAuth } from '../../../context/AuthContext';
 import HeaderSearch from './HeaderSearch';
 
@@ -235,7 +233,7 @@ export default function MobileHeader({ categories }) {
           </div>
         </div>
       </header>
-      <MobileNav categories={categories} />
+
     </>
   );
 }
