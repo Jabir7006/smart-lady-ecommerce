@@ -681,22 +681,55 @@ nav .navPart2 ul li:hover .submenu {
 .homeBannerSection {
   min-height: 300px;
   position: relative;
+  margin: 0 auto;
+  max-width: 1920px;
+  padding: 0 15px;
 }
 
-@media (max-width: 768px) {
-  .homeBannerSection {
-    min-height: 0px;
-    padding-bottom: 50px;
-  }
+.banner-loading-container {
+  width: 100%;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border-radius: 10px;
 }
 
-/* .homeBannerSection .swiper {
-  overflow: inherit !important;
-} */
+.banner-loading-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.banner-slider {
+  width: 100%;
+  height: 100%;
+}
+
+.banner-item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.banner-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.banner-item:hover .banner-image {
+  transform: scale(1.02);
+}
 
 .homeBannerSection .swiper-slide {
   overflow: hidden;
   border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .homeBannerSection .swiper-button-next,
@@ -708,6 +741,14 @@ nav .navPart2 ul li:hover .submenu {
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.homeBannerSection:hover .swiper-button-next,
+.homeBannerSection:hover .swiper-button-prev {
+  opacity: 1;
+  visibility: visible;
 }
 
 .homeBannerSection .swiper-button-next:after,
@@ -720,6 +761,7 @@ nav .navPart2 ul li:hover .submenu {
 .homeBannerSection .swiper-button-prev:hover {
   background: #6d4aae;
   color: #ffffff;
+  transform: scale(1.1);
 }
 
 .homeBannerSection .swiper-button-next {
@@ -728,6 +770,75 @@ nav .navPart2 ul li:hover .submenu {
 
 .homeBannerSection .swiper-button-prev {
   left: 20px;
+}
+
+.homeBannerSection .swiper-pagination {
+  bottom: 20px !important;
+}
+
+.homeBannerSection .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.homeBannerSection .swiper-pagination-bullet-active {
+  opacity: 1;
+  background: #6d4aae;
+  transform: scale(1.2);
+}
+
+@media (max-width: 1200px) {
+  .homeBannerSection {
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .homeBannerSection {
+    min-height: 200px;
+    padding: 0 10px 40px;
+  }
+
+  .banner-loading-container {
+    height: 200px;
+  }
+
+  .homeBannerSection .swiper-button-next,
+  .homeBannerSection .swiper-button-prev {
+    display: none;
+  }
+
+  .homeBannerSection .swiper-pagination {
+    bottom: 10px !important;
+  }
+
+  .homeBannerSection .swiper-pagination-bullet {
+    width: 8px;
+    height: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homeBannerSection {
+    min-height: 150px;
+  }
+
+  .banner-loading-container {
+    height: 150px;
+  }
+
+  .homeBannerSection .swiper-pagination {
+    bottom: 5px !important;
+  }
+
+  .homeBannerSection .swiper-pagination-bullet {
+    width: 6px;
+    height: 6px;
+    margin: 0 4px !important;
+  }
 }
 
 .homeProducts {
