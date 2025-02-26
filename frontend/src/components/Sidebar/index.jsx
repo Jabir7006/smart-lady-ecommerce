@@ -19,8 +19,16 @@ import { useBrands } from '../../hooks/useBrands';
 import './Sidebar.css';
 
 const Sidebar = ({ onFilterChange, initialFilters }) => {
-  const { data: categoriesData } = useCategories();
-  const { data: brandsData } = useBrands();
+  const { data: categoriesData } = useCategories({
+    limit: 100,
+    sort: 'name',
+    order: 'asc',
+  });
+  const { data: brandsData } = useBrands({
+    limit: 100,
+    sort: 'title',
+    order: 'asc',
+  });
   const [expanded, setExpanded] = useState([
     'categories',
     'price',
@@ -48,6 +56,12 @@ const Sidebar = ({ onFilterChange, initialFilters }) => {
       setTempFilters(initialFilters);
     }
   }, [initialFilters]);
+
+  // Add console logs to check the data
+  useEffect(() => {
+    console.log('Categories Data:', categoriesData);
+    console.log('Brands Data:', brandsData);
+  }, [categoriesData, brandsData]);
 
   // Handle accordion expansion
   const handleAccordionChange = panel => (event, isExpanded) => {
@@ -219,7 +233,7 @@ const Sidebar = ({ onFilterChange, initialFilters }) => {
                   <div className='filter-label'>
                     <span>{category.name}</span>
                     <span className='count'>
-                      ({category.productCount || 0})
+                      ({category.totalProducts || 0})
                     </span>
                   </div>
                 }
@@ -281,7 +295,7 @@ const Sidebar = ({ onFilterChange, initialFilters }) => {
                 label={
                   <div className='filter-label'>
                     <span>{brand.title}</span>
-                    <span className='count'>({brand.productCount || 0})</span>
+                    <span className='count'>({brand.totalProducts || 0})</span>
                   </div>
                 }
               />

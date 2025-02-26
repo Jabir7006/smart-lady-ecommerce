@@ -1,20 +1,37 @@
 const asyncHandler = require("express-async-handler");
 const createError = require("http-errors");
 const Brand = require("../models/Brand");
+const Product = require("../models/Product");
 
 // =============================================================================
 // Get all brands
 // =============================================================================
 
 exports.getBrands = asyncHandler(async (req, res) => {
-    const page = req.query.page || 1;
-    const limit = req.query.limit || 10;
-    const skip = (page - 1) * limit;
-  const brands = await Brand.find().skip(skip).limit(limit).sort({ createdAt: -1 });
+  const page = req.query.page || 1;
+  const limit = req.query.limit || 10;
+  const skip = (page - 1) * limit;
+
+  // Get brands with lean() to convert to plain objects
+  const brands = await Brand.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 })
+    .lean();
+
+  // Get product counts for each brand
+  const brandsWithCounts = await Promise.all(
+    brands.map(async (brand) => {
+      const totalProducts = await Product.countDocuments({ brand: brand._id });
+      return { ...brand, totalProducts };
+    })
+  );
+
   const total = await Brand.countDocuments();
   const pages = Math.ceil(total / limit);
+
   res.status(200).json({
-    brands,
+    brands: brandsWithCounts,
     total,
     page,
     limit,

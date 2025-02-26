@@ -30,16 +30,28 @@ exports.getCategories = asyncHandler(async (req, res) => {
     sortOptions.createdAt = -1;
   }
 
+  // Get categories with product counts
   const categories = await Category.find(query)
     .skip(skip)
     .limit(Number(limit))
-    .sort(sortOptions);
+    .sort(sortOptions)
+    .lean();
+
+  // Get product counts for each category
+  const categoriesWithCounts = await Promise.all(
+    categories.map(async (category) => {
+      const totalProducts = await Product.countDocuments({
+        category: category._id,
+      });
+      return { ...category, totalProducts };
+    })
+  );
 
   const total = await Category.countDocuments(query);
   const pages = Math.ceil(total / limit);
 
   res.status(200).json({
-    categories,
+    categories: categoriesWithCounts,
     total,
     page: Number(page),
     limit: Number(limit),

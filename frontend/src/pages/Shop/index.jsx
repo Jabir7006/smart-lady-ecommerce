@@ -1,15 +1,10 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { FaAngleDown } from 'react-icons/fa';
 import { FiFilter, FiSearch } from 'react-icons/fi';
 import Sidebar from '../../components/Sidebar';
-import { CgMenuGridR } from 'react-icons/cg';
-import { TfiLayoutGrid4Alt } from 'react-icons/tfi';
-import { IoIosMenu } from 'react-icons/io';
+
 import {
   Button,
-  Menu,
-  MenuItem,
-  Pagination,
+
   Drawer,
   IconButton,
   InputAdornment,
