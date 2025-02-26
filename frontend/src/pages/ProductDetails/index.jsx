@@ -5,6 +5,8 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import ProductZoom from '../../components/Modals/ProductModal/ProductZoom';
 import QuantityBox from '../../components/Home/QuantityBox';
@@ -30,6 +32,8 @@ const ProductDetails = () => {
   const { data, isLoading } = useProduct(id);
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const product = data?.data;
 
@@ -71,7 +75,7 @@ const ProductDetails = () => {
     <section className='productDetails section'>
       <div className='container'>
         <div className='row'>
-          <div className='col-md-4 pl-5'>
+          <div className='col-12 col-md-4'>
             <ProductZoom
               images={product?.images}
               discountPercentage={calculateDiscountPercentage(
@@ -80,7 +84,7 @@ const ProductDetails = () => {
               )}
             />
           </div>
-          <div className='col-md-7 pl-5 pr-5'>
+          <div className='col-12 col-md-7'>
             <h2 className='hd text-capitalize'>{product?.title}</h2>
 
             <ul className='list list-inline d-flex align-items-center'>
@@ -97,7 +101,7 @@ const ProductDetails = () => {
                     value={product?.rating}
                     precision={0.5}
                     readOnly
-                    size='small'
+                    size={isMobile ? 'small' : 'medium'}
                   />
                   <span className='text-muted cursor ml-2'>
                     {product?.totalrating} Review
@@ -154,6 +158,7 @@ const ProductDetails = () => {
               <Button
                 className='btn-blue btn-lg btn-big btn-round btn-cart'
                 onClick={handleAddToCart}
+                fullWidth={isMobile}
               >
                 <ShoppingCartIcon /> &nbsp; Add to cart
               </Button>
@@ -161,6 +166,7 @@ const ProductDetails = () => {
               <Button
                 className='btn-success btn-lg btn-big btn-round ml-2 btn-wishlist'
                 onClick={handleAddToWishlist}
+                fullWidth={isMobile}
               >
                 <IoIosHeartEmpty size={23} /> &nbsp; Add to wishlist
               </Button>
@@ -168,13 +174,13 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        <br />
+        <div className='mt-4'>
+          <ProductDetailsTabs product={product} />
+        </div>
 
-        <ProductDetailsTabs product={product} />
-
-        <br />
-
-        <RelatedProducts />
+        <div className='mt-4'>
+          <RelatedProducts />
+        </div>
       </div>
     </section>
   );

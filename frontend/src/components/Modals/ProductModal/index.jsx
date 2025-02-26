@@ -1,12 +1,25 @@
-import { Button, Dialog, Rating } from '@mui/material';
-
+import {
+  Button,
+  Dialog,
+  Rating,
+  IconButton,
+  Typography,
+  Box,
+  Divider,
+  Chip,
+  Stack,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { MdClose, MdOutlineCompareArrows } from 'react-icons/md';
+import { IoIosHeart } from 'react-icons/io';
+import { FaShoppingCart } from 'react-icons/fa';
+import { TbTruckDelivery } from 'react-icons/tb';
+import { BiStore } from 'react-icons/bi';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import QuantityBox from '../../Home/QuantityBox';
-import { IoIosHeart } from 'react-icons/io';
-
 import ProductZoom from './ProductZoom';
 import { useContext, useState } from 'react';
 import GlobalContext from '../../../context/GlobalContext';
@@ -22,12 +35,16 @@ const ProductModal = () => {
   const { setisOpenProductModal, productId } = useContext(GlobalContext);
   const { data, isLoading } = useProduct(productId);
   const { addToCart } = useCart();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
 
   const product = data?.data;
+
   if (isLoading) {
     return <ThemedSuspense />;
   }
@@ -46,101 +63,171 @@ const ProductModal = () => {
     });
   };
 
+  const getStockStatus = () => {
+    if (product?.quantity === 0)
+      return { label: 'OUT OF STOCK', color: 'error' };
+    if (product?.quantity < 10) return { label: 'LOW STOCK', color: 'warning' };
+    return { label: 'IN STOCK', color: 'success' };
+  };
+
   return (
     <Dialog
       open={true}
+      maxWidth='lg'
       className='productModal'
-      style={{
-        opacity: 1,
-        transition: 'opacity 225ms cubic-bezier(0.4, 0, 0.2, 1)',
-      }}
       onClose={() => setisOpenProductModal(false)}
     >
-      <Button className='close_' onClick={() => setisOpenProductModal(false)}>
-        <MdClose />
-      </Button>
-      <h4 className='mb-1 font-weight-bold pr-5'>{product?.title}</h4>
-      <div className='d-flex align-items-center'>
-        <div className='d-flex align-items-center mr-4'>
-          <span>Brands: </span>
-          <span className='ml-2'>
-            <b>{product?.brand?.title}</b>{' '}
-          </span>
-        </div>
-        <Rating
-          name='read-only'
-          value={product?.totalrating || 0}
-          size='small'
-          precision={0.5}
-          readOnly
-        />
-      </div>
-      <hr />
+      <Box sx={{ position: 'relative', p: { xs: 2, sm: 3 } }}>
+        <IconButton
+          className='close_'
+          onClick={() => setisOpenProductModal(false)}
+          sx={{ position: 'absolute', right: 8, top: 8 }}
+        >
+          <MdClose />
+        </IconButton>
 
-      <div className='row mt-2 productDetailsModal'>
-        <div className='col-md-5'>
-          <ProductZoom images={product?.images} />
-        </div>
+        <Typography
+          variant={isMobile ? 'h6' : 'h5'}
+          component='h1'
+          sx={{ pr: 4, mb: 1 }}
+        >
+          {product?.title}
+        </Typography>
 
-        <div className='col-md-7'>
-          <div className='d-flex info align-items-center mb-3'>
-            <span className='oldPrice lg mr-2'>
-              TK : {product?.regularPrice}
-            </span>
-            <span className='netPrice text-danger lg'>
-              TK : {product?.discountPrice}
-            </span>
-          </div>
-          <span className='badge bg-success'>
-            {product?.quantity === 0
-              ? 'OUT OF STOCK'
-              : product?.quantity < 10
-                ? 'LOW STOCK'
-                : 'IN STOCK'}
-          </span>
-
-          <p
-            className='mt-3'
-            dangerouslySetInnerHTML={{
-              __html: generateShortDescription(product?.description),
-            }}
+        <Stack direction='row' spacing={2} alignItems='center' mb={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Typography variant='body2' color='text.secondary'>
+              Brand:
+            </Typography>
+            <Typography variant='body2' fontWeight='bold'>
+              {product?.brand?.title}
+            </Typography>
+          </Box>
+          <Rating
+            name='read-only'
+            value={product?.totalrating || 0}
+            size='small'
+            precision={0.5}
+            readOnly
           />
+        </Stack>
 
-          <div className='mt-3'>
-            <ProductColorSelector
-              colors={product?.colors}
-              onSelect={setSelectedColor}
+        <Divider sx={{ my: 2 }} />
+
+        <Box className='row mt-2 productDetailsModal'>
+          <Box
+            className={isMobile ? 'col-12' : 'col-md-5'}
+            mb={isMobile ? 3 : 0}
+          >
+            <ProductZoom
+              images={product?.images}
+              discountPercentage={product?.discountPercentage}
             />
-            <ProductSizeSelector
-              sizes={product?.sizes}
-              onSelect={size => setSelectedSize(size)}
-            />
-          </div>
+          </Box>
 
-          <div className='d-flex align-items-center actions_'>
-            <QuantityBox
-              defaultValue={1}
-              onChange={value => setQuantity(value)}
-            />
+          <Box className={isMobile ? 'col-12' : 'col-md-7'}>
+            <Stack spacing={3}>
+              <Box>
+                <Stack direction='row' alignItems='center' spacing={2} mb={1}>
+                  <Typography
+                    variant='h6'
+                    color='text.secondary'
+                    sx={{ textDecoration: 'line-through' }}
+                  >
+                    TK {product?.regularPrice}
+                  </Typography>
+                  <Typography variant='h5' color='error.main' fontWeight='bold'>
+                    TK {product?.discountPrice}
+                  </Typography>
+                </Stack>
 
-            <Button
-              className='btn-blue btn-lg btn-big btn-round ml-3'
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </Button>
-          </div>
+                <Chip
+                  label={getStockStatus().label}
+                  color={getStockStatus().color}
+                  size='small'
+                />
+              </Box>
 
-          <div className='d-flex align-items-center mt-5 actions'>
-            <Button className='btn-round btn-sml' variant='outlined'>
-              <IoIosHeart /> &nbsp; ADD TO WISHLIST
-            </Button>
-            <Button className='btn-round btn-sml ml-3' variant='outlined'>
-              <MdOutlineCompareArrows /> &nbsp; COMPARE
-            </Button>
-          </div>
-        </div>
-      </div>
+              <Box>
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  dangerouslySetInnerHTML={{
+                    __html: generateShortDescription(product?.description),
+                  }}
+                />
+              </Box>
+
+              <Stack spacing={2}>
+                <ProductColorSelector
+                  colors={product?.colors}
+                  onSelect={setSelectedColor}
+                />
+                <ProductSizeSelector
+                  sizes={product?.sizes}
+                  onSelect={size => setSelectedSize(size)}
+                />
+              </Stack>
+
+              <Stack direction={isMobile ? 'column' : 'row'} spacing={2}>
+                <Box sx={{ width: isMobile ? '100%' : 150 }}>
+                  <QuantityBox
+                    defaultValue={1}
+                    onChange={value => setQuantity(value)}
+                  />
+                </Box>
+
+                <Button
+                  variant='contained'
+                  className='btn-blue btn-lg btn-round'
+                  onClick={handleAddToCart}
+                  fullWidth={isMobile}
+                  startIcon={<FaShoppingCart />}
+                >
+                  Add to Cart
+                </Button>
+              </Stack>
+
+              <Stack direction='row' spacing={2} mt={2}>
+                <Button
+                  variant='outlined'
+                  className='btn-round btn-sml'
+                  fullWidth
+                  startIcon={<IoIosHeart />}
+                >
+                  Wishlist
+                </Button>
+                <Button
+                  variant='outlined'
+                  className='btn-round btn-sml'
+                  fullWidth
+                  startIcon={<MdOutlineCompareArrows />}
+                >
+                  Compare
+                </Button>
+              </Stack>
+
+              <Divider />
+
+              <Stack spacing={2}>
+                <Typography variant='subtitle2' fontWeight='bold'>
+                  Delivery & Returns
+                </Typography>
+                <Stack direction='row' spacing={3}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TbTruckDelivery size={20} />
+                    <Typography variant='body2'>Free Delivery</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <BiStore size={20} />
+                    <Typography variant='body2'>Store Pickup</Typography>
+                  </Box>
+                </Stack>
+              </Stack>
+            </Stack>
+          </Box>
+        </Box>
+      </Box>
     </Dialog>
   );
 };

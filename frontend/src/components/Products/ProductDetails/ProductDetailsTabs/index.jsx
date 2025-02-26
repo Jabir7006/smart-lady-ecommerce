@@ -1,42 +1,48 @@
-import { Button, Rating } from '@mui/material';
+import { Button, Rating, useMediaQuery, useTheme } from '@mui/material';
 import { useState } from 'react';
 
 const ProductDetailsTabs = ({ product }) => {
   const [activeTabs, setActiveTabs] = useState(0);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
-    <div className='card mt-5 p-5 detailsPageTabs'>
-      <div className='customTabs'>
+    <div className='detailsPageTabs'>
+      <div className='customTabs p-3'>
         <ul className='list list-inline'>
           <li className='list-inline-item'>
-            <Button className={`${activeTabs === 0 && 'activeTab'}`} onClick={() => setActiveTabs(0)}>
+            <Button
+              className={`${activeTabs === 0 && 'activeTab'}`}
+              onClick={() => setActiveTabs(0)}
+            >
               Description
             </Button>
           </li>
-          <li className='list-inline-item'>
-            <Button className={`${activeTabs === 1 && 'activeTab'}`} onClick={() => setActiveTabs(1)}>
+          {/* <li className='list-inline-item'>
+            <Button
+              className={`${activeTabs === 1 && 'activeTab'}`}
+              onClick={() => setActiveTabs(1)}
+            >
               Additional info
             </Button>
-          </li>
+          </li> */}
           <li className='list-inline-item'>
             <Button
-              className={`${activeTabs === 2 && 'activeTab'}`}
-              onClick={() => {
-                setActiveTabs(2);
-                showReviews();
-              }}>
+              className={`${activeTabs === 1 && 'activeTab'}`}
+              onClick={() => setActiveTabs(1)}
+            >
               Reviews (3)
             </Button>
           </li>
         </ul>
-
-        <br />
 
         {activeTabs === 0 && (
           <div className='tabContent'>
             <div dangerouslySetInnerHTML={{ __html: product?.description }} />
           </div>
         )}
-
+{/* 
         {activeTabs === 1 && (
           <div className='tabContent'>
             <div className='table-responsive'>
@@ -44,7 +50,6 @@ const ProductDetailsTabs = ({ product }) => {
                 <tbody>
                   <tr className='stand-up'>
                     <th>Stand Up</th>
-
                     <td>
                       <p>35"L x 24"W x 37-45"H(front to back wheel)</p>
                     </td>
@@ -118,7 +123,7 @@ const ProductDetailsTabs = ({ product }) => {
                   <tr className='pa_color'>
                     <th>Color</th>
                     <td>
-                      <p>Back, Blue, rRed, White</p>
+                      <p>Back, Blue, Red, White</p>
                     </td>
                   </tr>
                   <tr className='pa_size'>
@@ -131,66 +136,97 @@ const ProductDetailsTabs = ({ product }) => {
               </table>
             </div>
           </div>
-        )}
+        )} */}
 
-        {activeTabs === 2 && (
+        {activeTabs === 1 && (
           <div className='tabContent'>
             <div className='row'>
-              <div className='col-md-8'>
-                <h3>Customer questions & reviews</h3>
-                <br />
+              <div className={`${isMobile ? 'col-12' : 'col-md-8'}`}>
+                <h3 className='reviews-title'>Customer questions & reviews</h3>
 
-                <div className='card p-4 reviewsCard flex-row'>
-                  <div className='image'>
-                    <div className='rounded-circle'>
-                      <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-xnGLZJFli6FRyXSlm8-QnpJb9hh30HffEA&s' alt='user image' className='rounded-circle' />
-                    </div>
-
-                    <span className='text-g d-block text-center font-weight-bold'>Jabir Ahmad</span>
-                  </div>
-
-                  <div className='info pl-5'>
-                    <div className='d-flex aligm-items-center w-100'>
-                      <h5 className='text-dark'>19/02/2025</h5>
-
-                      <div className='ml-auto'>
-                        <Rating name='half-rating-read' value={4.5} precision={0.5} readOnly size='small' />
+                <div className='reviewsCard'>
+                  <div className='d-flex'>
+                    <div className='image'>
+                      <div className='rounded-circle'>
+                        <img
+                          src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-xnGLZJFli6FRyXSlm8-QnpJb9hh30HffEA&s'
+                          alt='user image'
+                          className='rounded-circle'
+                        />
                       </div>
+                      <span className='text-g d-block text-center font-weight-bold mt-2'>
+                        Jabir Ahmad
+                      </span>
                     </div>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita aliquid similique dolorem doloremque laudantium quos cupiditate quaerat esse perferendis, harum nostrum qui tenetur, molestiae temporibus</p>
+
+                    <div className='info pl-3'>
+                      <div className='d-flex align-items-center justify-content-between w-100 flex-wrap'>
+                        <h5 className='text-dark mb-2'>19/02/2025</h5>
+                        <Rating
+                          name='half-rating-read'
+                          value={4.5}
+                          precision={0.5}
+                          readOnly
+                          size={isMobile ? 'small' : 'medium'}
+                        />
+                      </div>
+                      <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Expedita aliquid similique dolorem doloremque laudantium
+                        quos cupiditate quaerat esse perferendis, harum nostrum
+                        qui tenetur, molestiae temporibus
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <br className='res-hide' />
-            <br className='res-hide' />
+            <div className='mt-4'>
+              <form className='reviewForm'>
+                <h4>Add a review</h4>
+                <div className='form-group'>
+                  <textarea
+                    className='form-control'
+                    placeholder='Write a Review'
+                    name='review'
+                    rows={isMobile ? 3 : 4}
+                  ></textarea>
+                </div>
+                <div className='row'>
+                  <div className={`${isMobile ? 'col-12' : 'col-md-6'} mb-3`}>
+                    <div className='form-group'>
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder='Name'
+                        name='userName'
+                      />
+                    </div>
+                  </div>
 
-            <form className='reviewForm'>
-              <h4>Add a review</h4>
-              <div className='form-group'>
-                <textarea className='form-control' placeholder='Write a Review' name='review'></textarea>
-              </div>
-              <div className='row'>
-                <div className='col-md-6'>
-                  <div className='form-group'>
-                    <input type='text' className='form-control' placeholder='Name' name='userName' />
+                  <div className={`${isMobile ? 'col-12' : 'col-md-6'} mb-3`}>
+                    <div className='form-group'>
+                      <Rating
+                        name='rating'
+                        value={4.5}
+                        precision={0.5}
+                        size={isMobile ? 'medium' : 'large'}
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div className='col-md-6'>
-                  <div className='form-group'>
-                    <Rating name='rating' value={4.5} precision={0.5} />
-                  </div>
+                <div className='form-group'>
+                  <Button
+                    type='submit'
+                    className='btn-blue btn-lg btn-big btn-round'
+                    fullWidth={isMobile}
+                  >
+                    Submit Review
+                  </Button>
                 </div>
-              </div>
-              <br />
-              <div className='form-group'>
-                <Button type='submit' className='btn-blue btn-lg btn-big btn-round'>
-                  Submit Review
-                </Button>
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
         )}
       </div>
