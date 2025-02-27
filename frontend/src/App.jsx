@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { Toaster } from 'react-hot-toast';
 import TrackOrders from './pages/Profile/TrackOrders';
 import Settings from './pages/Profile/Settings';
+import ProductModal from './components/Modals/ProductModal';
 
 // Lazy load components
 const Home = lazy(() => import('./pages/Home'));
@@ -22,7 +23,6 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Wishlist = lazy(() => import('./pages/Wishlist'));
 const Checkout = lazy(() => import('./pages/Checkout'));
-const ProductModal = lazy(() => import('./components/Modals/ProductModal'));
 const Orders = lazy(() => import('./pages/Profile/Orders'));
 const OrderDetails = lazy(() => import('./pages/Profile/OrderDetails'));
 

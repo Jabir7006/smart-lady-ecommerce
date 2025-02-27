@@ -156,7 +156,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className='col-md-9 productRow'>
+            <div className='col-md-9 productRow pr-0'>
               {featuredLoading ? (
                 <div
                   style={{

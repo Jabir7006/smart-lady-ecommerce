@@ -69,7 +69,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleDrawer('left', true)}
                 size='small'
               >
-                <MenuIcon fontSize='small' style={{ fontSize: '18px' }} />
+                <MenuIcon fontSize='small' style={{ fontSize: '20px' }} />
               </IconButton>
               <Drawer
                 anchor='left'
@@ -93,7 +93,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleSearch}
                 size='small'
               >
-                <SearchIcon fontSize='small' style={{ fontSize: '18px' }} />
+                <SearchIcon fontSize='small' style={{ fontSize: '20px' }} />
               </IconButton>
 
               <Link to='/wishlist' className='mobile-icon-link'>
@@ -106,7 +106,7 @@ export default function MobileHeader({ categories }) {
                   >
                     <FavoriteOutlined
                       fontSize='small'
-                      style={{ fontSize: '18px' }}
+                      style={{ fontSize: '20px' }}
                     />
                   </Badge>
                 </IconButton>
@@ -122,7 +122,7 @@ export default function MobileHeader({ categories }) {
                   >
                     <ShoppingBagOutlined
                       fontSize='small'
-                      style={{ fontSize: '18px' }}
+                      style={{ fontSize: '20px' }}
                     />
                   </Badge>
                 </IconButton>
@@ -144,7 +144,7 @@ export default function MobileHeader({ categories }) {
                       {user?.name?.charAt(0)}
                     </Avatar>
                   ) : (
-                    <Person fontSize='small' style={{ fontSize: '18px' }} />
+                    <Person fontSize='small' style={{ fontSize: '20px' }} />
                   )}
                 </IconButton>
               )}
@@ -160,7 +160,7 @@ export default function MobileHeader({ categories }) {
                 size='small'
                 aria-label='Close search'
               >
-                <Close fontSize='small' style={{ fontSize: '18px' }} />
+                <Close fontSize='small' style={{ fontSize: '20px' }} />
               </IconButton>
               <div className='mobile-search-input'>
                 <HeaderSearch />
@@ -176,7 +176,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleProfile}
                 size='small'
               >
-                <Close fontSize='small' style={{ fontSize: '18px' }} />
+                <Close fontSize='small' style={{ fontSize: '20px' }} />
               </IconButton>
               <h3>My Account</h3>
             </div>
@@ -200,14 +200,26 @@ export default function MobileHeader({ categories }) {
                     <Link to='/profile' onClick={() => setProfileOpen(false)}>
                       My Profile
                     </Link>
-                    <Link to='/orders' onClick={() => setProfileOpen(false)}>
+                    <Link
+                      to='/profile/orders'
+                      onClick={() => setProfileOpen(false)}
+                    >
                       My Orders
                     </Link>
                     <Link to='/wishlist' onClick={() => setProfileOpen(false)}>
                       My Wishlist
                     </Link>
-                    <Link to='/address' onClick={() => setProfileOpen(false)}>
-                      My Addresses
+                    <Link
+                      to='/profile/track-orders'
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      Track Orders
+                    </Link>
+                    <Link
+                      to='/profile/settings'
+                      onClick={() => setProfileOpen(false)}
+                    >
+                      Settings
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -233,7 +245,6 @@ export default function MobileHeader({ categories }) {
           </div>
         </div>
       </header>
-
     </>
   );
 }

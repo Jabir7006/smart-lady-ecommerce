@@ -33,7 +33,7 @@ const HomeBanner = () => {
 
   return (
     <section className='homeBannerSection'>
-      <div className='container-fluid mt-3'>
+      <div className=' mt-3' style={{ padding: '0 5px' }}>
         <Swiper
           modules={[Navigation, Autoplay, Pagination]}
           navigation={!isMobile}

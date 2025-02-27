@@ -20,10 +20,7 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
 
   return (
     <div className='productZoom'>
-      <div className='productZoom productZoomBig position-relative mb-3'>
-        {discountPercentage > 0 && (
-          <div className='badge badge-primary'>{discountPercentage}%</div>
-        )}
+      <div className='productZoomBig'>
         <Swiper
           slidesPerView={1}
           spaceBetween={0}
@@ -35,13 +32,18 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
         >
           {images?.map((image, index) => (
             <SwiperSlide key={index}>
-              <div className='item'>
+              <div className='item position-relative'>
+                {index === 0 && discountPercentage > 0 && (
+                  <span className='badge badge-danger'>
+                    {discountPercentage}% OFF
+                  </span>
+                )}
                 <InnerImageZoom
                   zoomType='hover'
                   zoomScale={1.5}
                   src={image.url}
-                  width={1000}
-                  height={1000}
+                  width={800}
+                  height={800}
                   fullscreenOnMobile={true}
                   moveType='pan'
                 />

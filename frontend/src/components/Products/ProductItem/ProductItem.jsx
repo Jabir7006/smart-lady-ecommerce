@@ -25,10 +25,14 @@ export default function ProductItem({ product, itemView }) {
     product?.sizes[0]?.title || ''
   );
 
-  const viewProductDetails = useCallback(() => {
-    setisOpenProductModal(true);
-    setProductId(product?._id);
-  }, [product?._id, setisOpenProductModal, setProductId]);
+  const viewProductDetails = useCallback(
+    e => {
+      e.preventDefault(); // Prevent default behavior
+      setisOpenProductModal(true);
+      setProductId(product?._id);
+    },
+    [product?._id, setisOpenProductModal, setProductId]
+  );
 
   const discountPercentage = calculateDiscountPercentage(
     product?.regularPrice,
@@ -79,7 +83,7 @@ export default function ProductItem({ product, itemView }) {
             </div>
           </Link>
 
-          <span className='badge badge-primary'>{discountPercentage}%</span>
+          <span className='badge badge-danger'>{discountPercentage}% OFF</span>
           <div className='actions'>
             <Tooltip title='Quick View' placement='left'>
               <Button onClick={viewProductDetails}>
