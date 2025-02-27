@@ -69,11 +69,11 @@ export default function ProductItem({ product, itemView }) {
                   />
                 </span>
               </div>
-              <div className='img2 transition'>
+              <div className='img2 transition hover-only'>
                 <span className='lazy-load-image-background blur lazy-load-image-loaded'>
                   <LazyLoadImage
                     alt='image'
-                    src={product?.images[1]?.url}
+                    src={product?.images[1]?.url || product?.images[0]?.url}
                     effect='opacity'
                     placeholderSrc={placeholderImage}
                     className='w-100'
