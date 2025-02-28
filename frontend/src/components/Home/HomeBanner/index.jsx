@@ -5,6 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { useEffect, useState } from 'react';
 import { useHomeBanners } from '../../../hooks/useHomeBanners';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import bannerLoading from '../../../assets/images/bannerLoading.jpeg';
 
 const HomeBanner = () => {
@@ -23,17 +24,18 @@ const HomeBanner = () => {
   if (isLoading)
     return (
       <div className='banner-loading-container'>
-        <img
+        <LazyLoadImage
           src={bannerLoading}
           alt='banner loading'
           className='banner-loading-image'
+          effect="opacity"
         />
       </div>
     );
 
   return (
     <section className='homeBannerSection'>
-      <div className=' mt-3' style={{ padding: '0 5px' }}>
+      <div className='mt-3 px-2'>
         <Swiper
           modules={[Navigation, Autoplay, Pagination]}
           navigation={!isMobile}
@@ -51,7 +53,7 @@ const HomeBanner = () => {
           fadeEffect={{ crossFade: true }}
         >
           {homeBanners?.banners?.length > 0 ? (
-            homeBanners?.banners?.map(banner => (
+            homeBanners.banners.map(banner => (
               <SwiperSlide key={banner._id}>
                 <div className='banner-item'>
                   <picture>
@@ -63,11 +65,12 @@ const HomeBanner = () => {
                       media='(min-width: 769px)'
                       srcSet={banner?.image?.url}
                     />
-                    <img
+                    <LazyLoadImage
                       src={banner?.image?.url}
                       alt={banner?.image?.alt || 'Banner Image'}
                       className='banner-image'
                       loading='lazy'
+                      effect="opacity"
                     />
                   </picture>
                 </div>
@@ -76,11 +79,12 @@ const HomeBanner = () => {
           ) : (
             <SwiperSlide>
               <div className='banner-item'>
-                <img
+                <LazyLoadImage
                   src={bannerLoading}
                   alt='banner image'
                   className='banner-image'
                   loading='lazy'
+                  effect="opacity"
                 />
               </div>
             </SwiperSlide>
