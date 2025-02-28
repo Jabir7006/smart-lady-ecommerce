@@ -1825,7 +1825,8 @@ button:not(:disabled) {
   width: 95% !important;
   margin: 20px;
   border-radius: 12px !important;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto !important;
 }
 
 .MuiDialog-container .MuiPaper-root {

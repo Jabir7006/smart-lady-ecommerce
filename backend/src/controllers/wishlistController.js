@@ -33,11 +33,9 @@ exports.getWishlist = async (req, res) => {
   const sessionId = req.sessionID;
 
   try {
-    const wishlist =
-      (await Wishlist.findOne({ user: userId })) ||
-      (await Wishlist.findOne({ sessionId }));
-
-    const wishlistWithProducts = await wishlist.populate({
+    const wishlist = await Wishlist.findOne({
+      $or: [{ user: userId }, { sessionId }],
+    }).populate({
       path: "products",
       populate: [
         {
@@ -51,7 +49,7 @@ exports.getWishlist = async (req, res) => {
       ],
     });
 
-    res.json(wishlistWithProducts || { products: [] });
+    res.json(wishlist || { products: [] });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

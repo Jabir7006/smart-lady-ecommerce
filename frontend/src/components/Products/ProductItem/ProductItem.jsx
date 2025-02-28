@@ -19,10 +19,10 @@ export default function ProductItem({ product, itemView }) {
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search') || '';
   const [selectedColor, setSelectedColor] = useState(
-    product?.colors[0]?.title || ''
+    product?.colors[0] || ''
   );
   const [selectedSize, setSelectedSize] = useState(
-    product?.sizes[0]?.title || ''
+    product?.sizes[0] || ''
   );
 
   const viewProductDetails = useCallback(
@@ -62,7 +62,7 @@ export default function ProductItem({ product, itemView }) {
                 <span className='lazy-load-image-background blur lazy-load-image-loaded'>
                   <LazyLoadImage
                     alt='image'
-                    src={product?.images[0]?.url}
+                    src={product?.thumbnail}
                     effect='opacity'
                     placeholderSrc={placeholderImage}
                     className='w-100'
@@ -73,7 +73,7 @@ export default function ProductItem({ product, itemView }) {
                 <span className='lazy-load-image-background blur lazy-load-image-loaded'>
                   <LazyLoadImage
                     alt='image'
-                    src={product?.images[1]?.url || product?.images[0]?.url}
+                    src={product?.secondaryImage || product?.thumbnail}
                     effect='opacity'
                     placeholderSrc={placeholderImage}
                     className='w-100'

@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import ProductItem from '../Products/ProductItem/ProductItem';
 
 const ProductSlider = ({ title = '', description = '', itemView = 4, products = [] }) => {
+  console.log(products);
   return (
     <>
       <div className='d-flex align-items-center res-flex-column'>

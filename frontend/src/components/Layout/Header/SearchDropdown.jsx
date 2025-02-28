@@ -79,15 +79,16 @@ const SearchDropdown = memo(({ searchTerm, onSelect }) => {
               onClick={() => onSelect(product)}
             >
               <div className='search-dropdown-image-container'>
-                {product.images && product.images[0]?.url ? (
+                {product.thumbnail && product.thumbnail ? (
                   <img
-                    src={product.images[0]?.url}
+                    src={product.thumbnail}
                     alt=''
                     className='search-dropdown-image'
                     loading='lazy'
                   />
                 ) : (
                   <MdOutlineProductionQuantityLimits size={20} color='#999' />
+
                 )}
               </div>
               <div className='search-dropdown-content'>

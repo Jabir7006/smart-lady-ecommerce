@@ -20,15 +20,11 @@ exports.getCategories = asyncHandler(async (req, res) => {
   } = req.query;
 
   const query = search ? { name: { $regex: search, $options: "i" } } : {};
-
   const skip = (page - 1) * limit;
 
-  const sortOptions = {};
-  if (sort && sort !== "") {
-    sortOptions[sort] = order === "desc" ? -1 : 1;
-  } else {
-    sortOptions.createdAt = -1;
-  }
+  const sortOptions = {
+    [sort]: order === "desc" ? -1 : 1,
+  };
 
   // Get categories with product counts
   const categories = await Category.find(query)
@@ -38,14 +34,21 @@ exports.getCategories = asyncHandler(async (req, res) => {
     .lean();
 
   // Get product counts for each category
-  const categoriesWithCounts = await Promise.all(
-    categories.map(async (category) => {
-      const totalProducts = await Product.countDocuments({
-        category: category._id,
-      });
-      return { ...category, totalProducts };
-    })
-  );
+  const categoryIds = categories.map(category => category._id);
+  const productCounts = await Product.aggregate([
+    { $match: { category: { $in: categoryIds } } },
+    { $group: { _id: "$category", totalProducts: { $sum: 1 } } },
+  ]);
+
+  const productCountMap = productCounts.reduce((acc, { _id, totalProducts }) => {
+    acc[_id] = totalProducts;
+    return acc;
+  }, {});
+
+  const categoriesWithCounts = categories.map(category => ({
+    ...category,
+    totalProducts: productCountMap[category._id] || 0,
+  }));
 
   const total = await Category.countDocuments(query);
   const pages = Math.ceil(total / limit);

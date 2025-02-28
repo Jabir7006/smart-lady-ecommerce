@@ -59,45 +59,39 @@ const createProduct = asyncHandler(async (req, res) => {
 // @access  Public
 const findAllProducts = asyncHandler(async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10)); // Limit to a maximum of 100
     const skip = (page - 1) * limit;
 
     // Build query
     const queryObj = { ...req.query };
-    const excludeFields = [
-      "page",
-      "sort",
-      "limit",
-      "fields",
-      "search",
-      "order",
-    ];
+    const excludeFields = ["page", "sort", "limit", "fields", "search", "order"];
     excludeFields.forEach((el) => delete queryObj[el]);
 
     // Base query object
-    let query = {};
+    const query = {};
 
     // Handle search
     if (req.query.search) {
+      const searchRegex = new RegExp(req.query.search, "i");
       query.$or = [
-        { title: { $regex: req.query.search, $options: "i" } },
-        { "brand.title": { $regex: req.query.search, $options: "i" } },
+        { title: searchRegex },
+        { "brand.title": searchRegex },
       ];
     }
 
     // Handle categories filter
     if (req.query.category) {
-      const categoryIds = req.query.category.split(",").filter((id) => id);
-      if (categoryIds.length > 0) {
+      const categoryIds = req.query.category.split(",").filter(Boolean);
+      if (categoryIds.length) {
         query.category = { $in: categoryIds };
       }
     }
 
     // Handle brands filter
     if (req.query.brand) {
-      const brandIds = req.query.brand.split(",").filter((id) => id);
-      if (brandIds.length > 0) {
+      const brandIds = req.query.brand.split(",").filter(Boolean);
+      if (brandIds.length) {
         query.brand = { $in: brandIds };
       }
     }
@@ -105,20 +99,16 @@ const findAllProducts = asyncHandler(async (req, res) => {
     // Handle price range
     if (req.query.minPrice || req.query.maxPrice) {
       query.regularPrice = {};
-      if (req.query.minPrice)
-        query.regularPrice.$gte = Number(req.query.minPrice);
-      if (req.query.maxPrice)
-        query.regularPrice.$lte = Number(req.query.maxPrice);
+      if (req.query.minPrice) query.regularPrice.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice) query.regularPrice.$lte = Number(req.query.maxPrice);
     }
 
     // Handle stock status
     if (req.query.inStock === "true" || req.query.outOfStock === "true") {
       const stockConditions = [];
-      if (req.query.inStock === "true")
-        stockConditions.push({ quantity: { $gt: 0 } });
-      if (req.query.outOfStock === "true")
-        stockConditions.push({ quantity: 0 });
-      if (stockConditions.length > 0) {
+      if (req.query.inStock === "true") stockConditions.push({ quantity: { $gt: 0 } });
+      if (req.query.outOfStock === "true") stockConditions.push({ quantity: 0 });
+      if (stockConditions.length) {
         query.$or = stockConditions;
       }
     }
@@ -136,38 +126,45 @@ const findAllProducts = asyncHandler(async (req, res) => {
     // Execute count query
     const total = await Product.countDocuments(query);
 
-    // Build the main query
-    let productQuery = Product.find(query)
-      .populate("category", "name")
-      .populate("brand", "title")
+    // Build the main query with selected fields
+    const productQuery = Product.find(query)
+      .select('_id title description images colors sizes regularPrice discountPrice totalRating isFeatured quantity')
       .populate("sizes", "title")
       .populate("colors", "title")
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .lean(); // Use lean for better performance
+
     // Handle sorting
     if (req.query.sort) {
       const sortOrder = req.query.order === "desc" ? -1 : 1;
-      const sortField = req.query.sort;
-
-      if (sortField === "price") {
-        productQuery = productQuery.sort({
-          discountPrice: sortOrder,
-          regularPrice: sortOrder,
-        });
-      } else {
-        productQuery = productQuery.sort({ [sortField]: sortOrder });
-      }
+      const sortField = req.query.sort === "price" ? { discountPrice: sortOrder, regularPrice: sortOrder } : { [req.query.sort]: sortOrder };
+      productQuery.sort(sortField);
     } else {
-      productQuery = productQuery.sort("-createdAt");
+      productQuery.sort("-createdAt");
     }
 
     // Execute query
-    const products = await productQuery.lean();
+    const products = await productQuery;
 
     // Calculate pagination info
     const pages = Math.ceil(total / limit);
     const hasNextPage = page < pages;
     const hasPrevPage = page > 1;
+
+    const transformedProducts = products.map(({ _id, title, images, colors, sizes, regularPrice, discountPrice, totalRating, isFeatured, quantity }) => ({
+      _id,
+      title,
+      thumbnail: images[0]?.url,
+      secondaryImage: images[1]?.url || null,
+      colors: colors.map(color => color.title),
+      sizes: sizes.map(size => size.title),
+      regularPrice,
+      discountPrice,
+      totalRating,
+      isFeatured,
+      quantity,
+    }));
 
     res.status(200).json({
       success: true,
@@ -177,13 +174,14 @@ const findAllProducts = asyncHandler(async (req, res) => {
       total,
       hasNextPage,
       hasPrevPage,
-      products,
+      products: transformedProducts,
     });
   } catch (error) {
     console.error("Error in findAllProducts:", error);
     throw error;
   }
 });
+
 
 // @desc    Get single product
 // @route   GET /api/products/:id
