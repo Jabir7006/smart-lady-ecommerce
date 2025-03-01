@@ -40,19 +40,6 @@
   }
 }
 
-.viewAllBtn {
-  padding: 5px 25px !important;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-  border-radius: 30px !important;
-  color: #414141 !important;
-  font-weight: 600;
-  text-transform: capitalize !important;
-}
-
-.viewAllBtn svg {
-  font-size: 20px;
-}
 
 .productItem {
   box-sizing: border-box;
@@ -320,6 +307,7 @@ svg {
 .product_row {
   margin-left: -10px;
   margin-right: -10px;
+  opacity: 1;
 }
 
 .product_row .swiper-slide {

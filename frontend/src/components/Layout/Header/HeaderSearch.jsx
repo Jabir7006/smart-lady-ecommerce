@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import {
   Button,
   InputAdornment,
@@ -18,6 +20,10 @@ const HeaderSearch = () => {
     handleProductSelect,
     handleClickAway,
   } = useSearch();
+
+  const textSize = css`
+    font-size: 16px;
+  `;
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -42,7 +48,7 @@ const HeaderSearch = () => {
                     size='small'
                     aria-label='search'
                   >
-                    <IoIosSearch style={{ fontSize: '16px' }} />
+                    <IoIosSearch css={textSize} />
                   </Button>
                 </InputAdornment>
               ),

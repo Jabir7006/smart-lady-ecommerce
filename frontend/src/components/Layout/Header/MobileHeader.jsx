@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React, { useState } from 'react';
 import { Button, IconButton, Badge, Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
@@ -24,6 +26,10 @@ export default function MobileHeader({ categories }) {
   const { cart } = useCart();
   const { wishlist } = useWishlist();
   const { isAuthenticated, user, logout, loading } = useAuth();
+
+  const textSize = css`
+    font-size: 16px;
+  `;
 
   const handleLogout = async () => {
     await logout();
@@ -69,7 +75,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleDrawer('left', true)}
                 size='small'
               >
-                <MenuIcon fontSize='small' style={{ fontSize: '20px' }} />
+                <MenuIcon css={textSize} />
               </IconButton>
               <Drawer
                 anchor='left'
@@ -93,7 +99,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleSearch}
                 size='small'
               >
-                <SearchIcon fontSize='small' style={{ fontSize: '20px' }} />
+                <SearchIcon css={textSize} />
               </IconButton>
 
               <Link to='/wishlist' className='mobile-icon-link'>
@@ -104,10 +110,7 @@ export default function MobileHeader({ categories }) {
                     className='mobile-badge'
                     max={99}
                   >
-                    <FavoriteOutlined
-                      fontSize='small'
-                      style={{ fontSize: '20px' }}
-                    />
+                    <FavoriteOutlined css={textSize} />
                   </Badge>
                 </IconButton>
               </Link>
@@ -120,10 +123,7 @@ export default function MobileHeader({ categories }) {
                     className='mobile-badge'
                     max={99}
                   >
-                    <ShoppingBagOutlined
-                      fontSize='small'
-                      style={{ fontSize: '20px' }}
-                    />
+                    <ShoppingBagOutlined css={textSize} />
                   </Badge>
                 </IconButton>
               </Link>
@@ -144,7 +144,7 @@ export default function MobileHeader({ categories }) {
                       {user?.name?.charAt(0)}
                     </Avatar>
                   ) : (
-                    <Person fontSize='small' style={{ fontSize: '20px' }} />
+                    <Person fontSize='small' css={textSize} />
                   )}
                 </IconButton>
               )}
@@ -160,7 +160,7 @@ export default function MobileHeader({ categories }) {
                 size='small'
                 aria-label='Close search'
               >
-                <Close fontSize='small' style={{ fontSize: '20px' }} />
+                <Close fontSize='small' css={textSize} />
               </IconButton>
               <div className='mobile-search-input'>
                 <HeaderSearch />
@@ -176,7 +176,7 @@ export default function MobileHeader({ categories }) {
                 onClick={toggleProfile}
                 size='small'
               >
-                <Close fontSize='small' style={{ fontSize: '20px' }} />
+                <Close fontSize='small' css={textSize} />
               </IconButton>
               <h3>My Account</h3>
             </div>

@@ -1,26 +1,19 @@
-import { IoIosArrowRoundForward } from 'react-icons/io';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import HomeBanner from '../../components/Home/HomeBanner';
 import { Button } from '@mui/material';
 import ProductItem from '../../components/Products/ProductItem/ProductItem';
 import HomeCat from '../../components/Home/HomeCat';
 import NewsLetter from '../../components/Home/NewsLetter';
 import ProductSlider from '../../components/ui/ProductSlider';
-import GlobalContext from '../../context/GlobalContext';
-import { useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useProducts, useFeaturedProducts } from '../../hooks/useProducts';
 import ThemedSuspense from '../../components/ThemedSuspense';
 import ScrollableTabs from '../../components/Home/ScrollableTabs';
 import { useSearchParams } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 
 const Home = () => {
-  const { setisHeaderFooterVisible } = useContext(GlobalContext);
   const [searchParams, setSearchParams] = useSearchParams();
-  const { isAuthenticated } = useAuth();
-
-  // if (!isAuthenticated) {
-  //   return <div>Please login to continue</div>
-  // }
 
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
@@ -37,8 +30,7 @@ const Home = () => {
   useEffect(() => {
     setFilters(prev => ({
       ...prev,
-      categories:
-        searchParams.get('categories')?.split(',').filter(Boolean) || [],
+      categories: searchParams.get('categories')?.split(',').filter(Boolean) || [],
       brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
       priceRange: [
         Number(searchParams.get('minPrice')) || 100,
@@ -51,8 +43,7 @@ const Home = () => {
     }));
   }, [searchParams]);
 
-  const { data: featuredProducts, isLoading: featuredLoading } =
-    useFeaturedProducts();
+  const { data: featuredProducts, isLoading: featuredLoading } = useFeaturedProducts();
   const { data: newProducts, isLoading: productsLoading } = useProducts({
     page,
     limit: 9,
@@ -88,8 +79,7 @@ const Home = () => {
         // Only set price range if it's explicitly different from default
         if (
           newFilters.priceRange &&
-          (newFilters.priceRange[0] !== 100 ||
-            newFilters.priceRange[1] !== 60000)
+          (newFilters.priceRange[0] !== 100 || newFilters.priceRange[1] !== 60000)
         ) {
           params.set('minPrice', newFilters.priceRange[0]);
           params.set('maxPrice', newFilters.priceRange[1]);
@@ -159,12 +149,12 @@ const Home = () => {
             <div className='col-md-9 productRow pr-0'>
               {featuredLoading ? (
                 <div
-                  style={{
-                    minHeight: '200px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
+                  css={css`
+                    min-height: 200px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  `}
                 >
                   <ThemedSuspense />
                 </div>
@@ -182,7 +172,10 @@ const Home = () => {
               <div className='d-flex align-items-center mt-4 flex-wrap'>
                 <div
                   className='info mb-2 mb-md-0'
-                  style={{ width: '100%', maxWidth: '350px' }}
+                  css={css`
+                    width: 100%;
+                    max-width: 350px;
+                  `}
                 >
                   <h3 className='mb-0 hd'>NEW ARRIVALS</h3>
                   <p className='text-light text-sm mb-0 description'>
@@ -196,21 +189,24 @@ const Home = () => {
 
               <div
                 className='product_row productRow2 w-100 mt-4 d-flex flex-wrap'
-                style={{ minHeight: '200px', position: 'relative' }}
+                css={css`
+                  min-height: 200px;
+                  position: relative;
+                `}
               >
                 {productsLoading ? (
                   <div
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      bottom: 0,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      background: 'rgba(255, 255, 255, 0.8)',
-                    }}
+                    css={css`
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      right: 0;
+                      bottom: 0;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      background: rgba(255, 255, 255, 0.8);
+                    `}
                   >
                     <ThemedSuspense />
                   </div>

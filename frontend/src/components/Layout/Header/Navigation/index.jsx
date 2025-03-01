@@ -1,3 +1,6 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import { useState } from 'react';
 import { FaAngleDown, FaAngleRight } from 'react-icons/fa6';
@@ -7,6 +10,35 @@ import './Navigation.css';
 
 import home from '../../../../assets/images/home.png';
 import shop from '../../../../assets/images/shop.png';
+
+const CategoryButton = styled(Button)`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  justify-content: space-between;
+`;
+
+const Submenu = styled.div`
+  display: none;
+  position: absolute;
+  background: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 100;
+  .nav-item-with-submenu:hover & {
+    display: block;
+  }
+`;
+
+const navItemStyle = css`
+  flex: 0 0 auto;
+`;
+
+const uppercaseButtonStyle = css`
+  text-transform: uppercase !important;
+`;
 
 const Navigation = ({ categories }) => {
   const [isopenSidebar, setIsopenSidebar] = useState(false);
@@ -30,29 +62,13 @@ const Navigation = ({ categories }) => {
                 </span>
               </Button>
 
-              <div
-                className={`sidebarNav ${isopenSidebar === true ? 'open' : ''} `}
-              >
-                <ul className=''>
+              <div className={`sidebarNav ${isopenSidebar ? 'open' : ''}`}>
+                <ul>
                   {categories?.categories?.map(item => (
                     <li className='nav-item-with-submenu' key={item._id}>
                       <Link to={`/shop?categories=${item._id}`}>
-                        <Button
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            width: '100%',
-                            justifyContent: 'space-between',
-                          }}
-                        >
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '10px',
-                            }}
-                          >
+                        <CategoryButton>
+                          <div>
                             <img
                               src={item?.image}
                               alt='category'
@@ -61,15 +77,14 @@ const Navigation = ({ categories }) => {
                             />
                             {item.name}
                           </div>
-                          {item.subcategories &&
-                            item.subcategories.length > 0 && (
-                              <FaAngleRight className='ml-auto' />
-                            )}
-                        </Button>
+                          {item.subcategories && item.subcategories.length > 0 && (
+                            <FaAngleRight />
+                          )}
+                        </CategoryButton>
                       </Link>
 
                       {item.subcategories && item.subcategories.length > 0 && (
-                        <div className='submenu'>
+                        <Submenu className='submenu'>
                           {item.subcategories.map(subItem => (
                             <Link
                               key={subItem._id}
@@ -78,7 +93,7 @@ const Navigation = ({ categories }) => {
                               <Button>{subItem.name}</Button>
                             </Link>
                           ))}
-                        </div>
+                        </Submenu>
                       )}
                     </li>
                   ))}
@@ -89,9 +104,9 @@ const Navigation = ({ categories }) => {
 
           <div className='col-sm-9 navPart2 d-flex align-items-center'>
             <ul className='list list-inline ml-auto'>
-              <li className='list-inline-item' style={{ flex: '0 0 auto' }}>
+              <li className='list-inline-item' css={navItemStyle}>
                 <Link to='/' className='d-flex align-items-center'>
-                  <Button style={{ textTransform: 'uppercase !important' }}>
+                  <Button css={uppercaseButtonStyle}>
                     <img
                       src={home}
                       alt='logo'
@@ -103,9 +118,9 @@ const Navigation = ({ categories }) => {
                   </Button>
                 </Link>
               </li>
-              <li className='list-inline-item' style={{ flex: '0 0 auto' }}>
+              <li className='list-inline-item' css={navItemStyle}>
                 <Link to='/shop' className='d-flex align-items-center'>
-                  <Button style={{ textTransform: 'uppercase !important' }}>
+                  <Button css={uppercaseButtonStyle}>
                     <img
                       src={shop}
                       alt='logo'
@@ -118,30 +133,15 @@ const Navigation = ({ categories }) => {
                 </Link>
               </li>
               {categories?.categories?.map(item => (
-                <li
-                  className='list-inline-item nav-item-with-submenu'
-                  key={item._id}
-                  style={{ flex: '0 0 auto' }}
-                >
-                  <Link
-                    to={`/shop?categories=${item._id}`}
-                    className='d-flex align-items-center'
-                  >
+                <li className='list-inline-item nav-item-with-submenu' key={item._id} css={navItemStyle}>
+                  <Link to={`/shop?categories=${item._id}`} className='d-flex align-items-center'>
                     <img
                       src={item?.image}
                       alt='category'
                       width={25}
                       height={25}
                     />
-                    <Button
-                      style={{
-                        textTransform: 'uppercase !important',
-                        fontWeight: 'bold',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                      }}
-                    >
+                    <Button css={uppercaseButtonStyle}>
                       {item?.name}
                       {item.subcategories && item.subcategories.length > 0 && (
                         <FaAngleDown className='ml-1' />
@@ -149,7 +149,7 @@ const Navigation = ({ categories }) => {
                     </Button>
                   </Link>
                   {item.subcategories && item.subcategories.length > 0 && (
-                    <div className='submenu top-submenu'>
+                    <Submenu className='submenu top-submenu'>
                       {item.subcategories.map(subItem => (
                         <Link
                           key={subItem._id}
@@ -158,7 +158,7 @@ const Navigation = ({ categories }) => {
                           <Button>{subItem.name}</Button>
                         </Link>
                       ))}
-                    </div>
+                    </Submenu>
                   )}
                 </li>
               ))}

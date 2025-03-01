@@ -15,12 +15,9 @@ const ProductSlider = ({ title = '', description = '', itemView = 4, products = 
           <h3 className='mb-0 hd'>{title}</h3>
           <p className='text-muted text-sm mb-0 description'>{description}</p>
         </div>
-        <Button className='viewAllBtn ml-auto d-none d-md-block'>
-          View all
-          <IoIosArrowRoundForward />
-        </Button>
+       
       </div>
-      <div className='product_row w-100 mt-2' style={{ opacity: 1 }}>
+      <div className='product_row w-100 mt-2'>
         <Swiper
           slidesPerView={itemView}
           spaceBetween={0}

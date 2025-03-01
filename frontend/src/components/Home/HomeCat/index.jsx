@@ -6,6 +6,14 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/free-mode';
 import { useCategories } from '../../../hooks/useCategories';
+import styled from '@emotion/styled';
+
+const CategoryIcon = styled.div`
+  background-color: ${props => props.bg || '#f8f8f8'};
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  border-radius: 8px;
+`;
 
 const HomeCat = () => {
   const { data: categories } = useCategories({
@@ -61,19 +69,13 @@ const HomeCat = () => {
                 to={`/shop?categories=${category._id}`}
                 className='category-item'
               >
-                <div
-                  className='category-icon'
-                  style={{
-                    backgroundColor: category?.bg || '#f8f8f8',
-                    border: '1px solid rgba(0,0,0,0.08)',
-                  }}
-                >
+                <CategoryIcon className='category-icon' bg={category?.bg}>
                   <img
                     src={category?.image}
                     alt={category?.name}
                     loading='lazy'
                   />
-                </div>
+                </CategoryIcon>
                 <Typography
                   className='category-name'
                   noWrap

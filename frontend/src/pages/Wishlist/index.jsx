@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import {
   Container,
@@ -180,12 +182,19 @@ const Wishlist = () => {
               src={product.images[0]?.url}
               alt={product.title}
               className='img-fluid'
-              style={{ width: 80, height: 80, objectFit: 'contain' }}
+              css={css`
+                width: 80px;
+                height: 80px;
+                object-fit: contain;
+              `}
             />
             <Box sx={{ ml: 2 }}>
               <Link
                 to={`/product/${product._id}`}
-                style={{ textDecoration: 'none', color: 'inherit' }}
+                css={css`
+                  text-decoration: none;
+                  color: inherit;
+                `}
               >
                 <Typography variant='subtitle1' sx={{ mb: 1 }}>
                   {product.title}
@@ -225,9 +234,19 @@ const Wishlist = () => {
             sx={{ fontWeight: 500 }}
           >
             {product.quantity > 0 ? (
-              <span style={{ color: 'green' }}>In Stock</span>
+              <span css={css`
+                color: green;
+              `}>
+                In Stock
+              </span>
             ) : (
-              <span style={{ color: 'red' }}>Out of Stock</span>
+              <span
+                css={css`
+                  color: red;
+                `}
+              >
+                Out of Stock
+              </span>
             )}
           </Typography>
         </TableCell>

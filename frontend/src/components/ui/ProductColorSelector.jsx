@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React, { useState } from 'react';
 
 const ProductColorSelector = ({ colors, onSelect }) => {
@@ -18,7 +20,9 @@ const ProductColorSelector = ({ colors, onSelect }) => {
               <a
                 className={`tag ${activeColor === color.title ? 'active' : ''}`}
                 onClick={() => handleColor(color.title)}
-                style={{ backgroundColor: color.title }}
+                css={css`
+                  background-color: ${color.title};
+                `}
               >
                 {color.title}
               </a>
