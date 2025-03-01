@@ -1,5 +1,4 @@
-/** @jsxImportSource @emotion/react */
-import { css } from '@emotion/react';
+
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -9,46 +8,7 @@ import { InnerImageZoom } from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
 import { useRef, useState } from 'react';
 
-const productZoomStyles = {
-  productZoom: css`
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  `,
-  productZoomBig: css`
-    width: 100%;
-  `,
-  item: css`
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-  `,
-  discountBadge: css`
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: red;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: bold;
-  `,
-  thumbnailImage: css`
-    cursor: pointer;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 5px;
-  `,
-  itemActive: css`
-    border: 2px solid blue;
-  `,
-};
+
 
 const ProductZoom = ({ images = [], discountPercentage }) => {
   const [sliderIndex, setSliderIndex] = useState(0);
@@ -61,9 +21,10 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
     zoomSlider.current.swiper.slideTo(index);
   };
 
+
   return (
-    <div className='productZoom' css={productZoomStyles.productZoom}>
-      <div className='productZoomBig' css={productZoomStyles.productZoomBig}>
+    <div className='productZoom' >
+      <div className='productZoomBig'>
         <Swiper
           slidesPerView={1}
           spaceBetween={0}
@@ -75,16 +36,17 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
         >
           {images?.map((image, index) => (
             <SwiperSlide key={index}>
-              <div className='item' css={productZoomStyles.item}>
+              <div className='item' >
                 {index === 0 && discountPercentage > 0 && (
-                  <span className='badge badge-danger' css={productZoomStyles.discountBadge}>
+                  <span className='badge badge-danger' >
                     {discountPercentage}% OFF
                   </span>
                 )}
+                {console.log(image)}
                 <InnerImageZoom
                   zoomType='hover'
                   zoomScale={1.5}
-                  src={image.url}
+                  src={image?.url}
                   width={800}
                   height={800}
                   fullscreenOnMobile={true}
@@ -107,13 +69,13 @@ const ProductZoom = ({ images = [], discountPercentage }) => {
       >
         {images?.map((image, index) => (
           <SwiperSlide key={index}>
-            <div className={`item${sliderIndex === index ? ' item_active' : ''}`} css={sliderIndex === index ? productZoomStyles.itemActive : null}>
+            <div className={`item${sliderIndex === index ? ' item_active' : ''}`}>
               <img
-                src={image.url}
+                src={image?.url}
                 className='w-100'
                 onClick={() => goto(index)}
                 alt={`Product image ${index + 1}`}
-                css={productZoomStyles.thumbnailImage}
+             
               />
             </div>
           </SwiperSlide>

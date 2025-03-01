@@ -6,7 +6,9 @@ const uploadOnCloudinary = async (buffer) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: "image",
-          folder: "products"
+          folder: "products",
+          format: "webp",  
+          quality: "auto", 
         },
         (error, result) => {
           if (error) {
@@ -14,18 +16,16 @@ const uploadOnCloudinary = async (buffer) => {
             reject(error);
             return;
           }
-          console.log("Cloudinary upload result:", result);
-          
-          // Ensure we're returning the exact structure needed by the Product model
+
           resolve({
             public_id: result.public_id,
-            url: result.secure_url
+            url: result.secure_url, // Use secure CDN URL
           });
         }
       );
 
-      // Convert buffer to stream and pipe to uploadStream
-      const bufferStream = require('stream').Readable.from(buffer);
+      // Pipe buffer to Cloudinary upload stream
+      const bufferStream = require("stream").Readable.from(buffer);
       bufferStream.pipe(uploadStream);
     });
   } catch (error) {
@@ -34,22 +34,22 @@ const uploadOnCloudinary = async (buffer) => {
   }
 };
 
+
 const deleteImgFromCloudinary = async (fileToDelete) => {
   try {
     return new Promise((resolve, reject) => {
       cloudinary.uploader.destroy(
         fileToDelete,
-        {
-          resource_type: "image",
-        },
+        { resource_type: "image" },
         (error, result) => {
           if (error) {
+            console.error("Error deleting image from Cloudinary:", error);
             reject(error);
             return;
           }
-          resolve({
-            result: result,
-          });
+
+          console.log("Deleted image from Cloudinary:", result);
+          resolve(result);
         }
       );
     });
@@ -57,6 +57,7 @@ const deleteImgFromCloudinary = async (fileToDelete) => {
     throw new Error(`Error deleting from Cloudinary: ${error.message}`);
   }
 };
+
 
 module.exports = {
   uploadOnCloudinary,

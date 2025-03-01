@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 const validate = require("../middlewares/validateMiddleware");
-const { uploadPhoto, resizeImages } = require("../middlewares/uploadImages");
+const { uploadPhoto } = require("../middlewares/uploadImages");
 const {
   createCategorySchema,
   updateCategorySchema,
@@ -23,7 +23,6 @@ router.post(
   isAdmin,
   validate(createCategorySchema),
   uploadPhoto.single("image"),
-  resizeImages,
   createCategory
 );
 router.get("/", getCategories);

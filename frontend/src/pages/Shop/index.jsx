@@ -1,10 +1,8 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { FiFilter, FiSearch } from 'react-icons/fi';
 import Sidebar from '../../components/Sidebar';
-
 import {
   Button,
-
   Drawer,
   IconButton,
   InputAdornment,
@@ -21,7 +19,6 @@ import { BsInboxes } from 'react-icons/bs';
 
 const highlightSearchTerm = (text, searchTerm) => {
   if (!searchTerm || !text) return text;
-
   const regex = new RegExp(`(${searchTerm})`, 'gi');
   return text.replace(regex, '<span class="highlight-match">$1</span>');
 };
@@ -32,163 +29,112 @@ const Shop = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [view, setView] = useState('four');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(12);
-
-  // Move searchTerm initialization to useEffect
+  const [limit] = useState(12);
   const [searchTerm, setSearchTerm] = useState('');
-
-  // Move filters initialization to useEffect
-  const [filters, setFilters] = useState({
-    categories: [],
-    brands: [],
-    priceRange: [100, 60000],
-    stockStatus: {
-      inStock: false,
-      outOfStock: false,
-    },
-  });
-
-  const { data: categoriesData } = useCategories();
-  const { data: brandsData } = useBrands();
-
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // Initialize filters from URL params
-  const initialFilters = useMemo(
-    () => ({
-      categories:
-        searchParams.get('categories')?.split(',').filter(Boolean) || [],
-      brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
-      priceRange: [
-        Number(searchParams.get('minPrice')) || 100,
-        Number(searchParams.get('maxPrice')) || 60000,
-      ],
-      stockStatus: {
-        inStock: searchParams.get('inStock') === 'true',
-        outOfStock: searchParams.get('outOfStock') === 'true',
-      },
-    }),
-    [searchParams]
-  );
+  // Memoize initial filters
+  const initialFilters = useMemo(() => ({
+    categories: searchParams.get('categories')?.split(',').filter(Boolean) || [],
+    brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
+    priceRange: [
+      Number(searchParams.get('minPrice')) || 100,
+      Number(searchParams.get('maxPrice')) || 60000,
+    ],
+    stockStatus: {
+      inStock: searchParams.get('inStock') === 'true',
+      outOfStock: searchParams.get('outOfStock') === 'true',
+    },
+  }), [searchParams]);
 
-  // Reset filters on page refresh
+  const [filters, setFilters] = useState(initialFilters);
+
+  // Fetch data with React Query hooks
+  const { data: categoriesData } = useCategories();
+  const { data: brandsData } = useBrands();
+  const { data: productsData, isLoading } = useProducts({
+    page,
+    limit,
+    search: searchTerm,
+    ...filters,
+  });
+
+  // Memoize URL params update
+  const updateUrlParams = useCallback((newFilters) => {
+    const params = new URLSearchParams(searchParams);
+    
+    if (newFilters.categories?.length) {
+      params.set('categories', newFilters.categories.join(','));
+    } else {
+      params.delete('categories');
+    }
+    
+    if (newFilters.brands?.length) {
+      params.set('brands', newFilters.brands.join(','));
+    } else {
+      params.delete('brands');
+    }
+    
+    params.set('minPrice', newFilters.priceRange[0]);
+    params.set('maxPrice', newFilters.priceRange[1]);
+    
+    if (newFilters.stockStatus.inStock) {
+      params.set('inStock', 'true');
+    } else {
+      params.delete('inStock');
+    }
+    
+    if (newFilters.stockStatus.outOfStock) {
+      params.set('outOfStock', 'true');
+    } else {
+      params.delete('outOfStock');
+    }
+    
+    setSearchParams(params);
+  }, [searchParams, setSearchParams]);
+
+  // Handle filter changes
+  const handleFilterChange = useCallback((newFilters) => {
+    setFilters(newFilters);
+    setPage(1);
+    updateUrlParams(newFilters);
+  }, [updateUrlParams]);
+
+  // Handle search
+  const handleSearch = useCallback((e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setPage(1);
+    
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set('search', value);
+    } else {
+      params.delete('search');
+    }
+    setSearchParams(params);
+  }, [searchParams, setSearchParams]);
+
+  // Handle mobile filter toggle
+  const toggleMobileFilter = useCallback(() => {
+    setIsMobileFilterOpen(prev => !prev);
+  }, []);
+
+  // Reset filters on unmount
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      sessionStorage.removeItem('shop_filters');
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      sessionStorage.removeItem('shop_filters');
     };
   }, []);
 
-  // Initialize state from URL params
+  // Initialize state from URL params on mount
   useEffect(() => {
     const search = searchParams.get('search') || '';
-    const categories =
-      searchParams.get('categories')?.split(',').filter(Boolean) || [];
-    const brands = searchParams.get('brands')?.split(',').filter(Boolean) || [];
-    const minPrice = Number(searchParams.get('minPrice')) || 100;
-    const maxPrice = Number(searchParams.get('maxPrice')) || 60000;
-    const inStock = searchParams.get('inStock') === 'true';
-    const outOfStock = searchParams.get('outOfStock') === 'true';
-
     setSearchTerm(search);
-    setFilters({
-      categories,
-      brands,
-      priceRange: [minPrice, maxPrice],
-      stockStatus: {
-        inStock,
-        outOfStock,
-      },
-    });
-  }, [searchParams]);
+    setFilters(initialFilters);
+  }, [searchParams, initialFilters]);
 
-  // Memoize filter parameters
-  const filterParams = useMemo(
-    () => ({
-      page,
-      limit,
-      search: searchTerm,
-      sort: 'createdAt',
-      order: 'desc',
-      category: filters.categories.join(','),
-      brand: filters.brands.join(','),
-      minPrice: filters.priceRange[0],
-      maxPrice: filters.priceRange[1],
-      inStock: filters.stockStatus.inStock,
-      outOfStock: filters.stockStatus.outOfStock,
-    }),
-    [page, limit, searchTerm, filters]
-  );
-
-  // Handle filter changes
-  const handleFilterChange = useCallback(
-    newFilters => {
-      setSearchParams(
-        prev => {
-          // Update categories
-          if (newFilters.categories.length) {
-            prev.set('categories', newFilters.categories.join(','));
-          } else {
-            prev.delete('categories');
-          }
-
-          // Update brands
-          if (newFilters.brands.length) {
-            prev.set('brands', newFilters.brands.join(','));
-          } else {
-            prev.delete('brands');
-          }
-
-          // Update price range
-          if (
-            newFilters.priceRange[0] !== 100 ||
-            newFilters.priceRange[1] !== 60000
-          ) {
-            prev.set('minPrice', newFilters.priceRange[0].toString());
-            prev.set('maxPrice', newFilters.priceRange[1].toString());
-          } else {
-            prev.delete('minPrice');
-            prev.delete('maxPrice');
-          }
-
-          // Update stock status
-          if (newFilters.stockStatus.inStock) {
-            prev.set('inStock', 'true');
-          } else {
-            prev.delete('inStock');
-          }
-
-          if (newFilters.stockStatus.outOfStock) {
-            prev.set('outOfStock', 'true');
-          } else {
-            prev.delete('outOfStock');
-          }
-
-          // Reset to page 1 when filters change
-          prev.set('page', '1');
-          setPage(1);
-
-          return prev;
-        },
-        { replace: true }
-      );
-
-      // Save filters to session storage
-      sessionStorage.setItem('shop_filters', JSON.stringify(newFilters));
-
-      // Close mobile filter drawer if open
-      setIsMobileFilterOpen(false);
-    },
-    [setSearchParams]
-  );
-
-  const { data: productsData, isLoading } = useProducts(filterParams);
-
-  // Update URL when page changes
+  // Handle page change
   const handlePageChange = (event, value) => {
     setPage(value);
     setSearchParams(
@@ -200,42 +146,24 @@ const Shop = () => {
     );
   };
 
+  // Handle limit change
   const handleLimitChange = newLimit => {
     setLimit(newLimit);
     setPage(1);
     handleClose();
   };
 
-  const openDropdown = Boolean(anchorEl);
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
+  // Handle close dropdown
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // Handle search input change
-  const handleSearchChange = e => {
-    const newSearch = e.target.value;
-    setSearchTerm(newSearch);
-
-    // Update URL params
-    setSearchParams(
-      prev => {
-        if (newSearch.trim()) {
-          prev.set('search', newSearch.trim());
-        } else {
-          prev.delete('search');
-        }
-        prev.set('page', '1');
-        return prev;
-      },
-      { replace: true }
-    );
-
-    setPage(1);
+  // Handle dropdown click
+  const handleClick = event => {
+    setAnchorEl(event.currentTarget);
   };
 
+  // Clear all filters
   const clearAllFilters = () => {
     setSearchParams(
       prev => {
@@ -274,7 +202,7 @@ const Shop = () => {
                 className='search-input'
                 placeholder='Search products...'
                 value={searchTerm}
-                onChange={handleSearchChange}
+                onChange={handleSearch}
                 variant='outlined'
                 fullWidth
                 InputProps={{
@@ -290,7 +218,7 @@ const Shop = () => {
                 <Button
                   variant='outlined'
                   className='filter-button'
-                  onClick={() => setIsMobileFilterOpen(true)}
+                  onClick={toggleMobileFilter}
                   startIcon={<FiFilter />}
                 >
                   Filter
@@ -325,12 +253,12 @@ const Shop = () => {
           <Drawer
             anchor='bottom'
             open={isMobileFilterOpen}
-            onClose={() => setIsMobileFilterOpen(false)}
+            onClose={toggleMobileFilter}
             className='mobile-filter-drawer'
           >
             <div className='mobile-filter-header'>
               <h5>Filters</h5>
-              <IconButton onClick={() => setIsMobileFilterOpen(false)}>
+              <IconButton onClick={toggleMobileFilter}>
                 ×
               </IconButton>
             </div>

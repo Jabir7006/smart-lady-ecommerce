@@ -1,10 +1,10 @@
 const express = require("express");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
-const { uploadPhoto, resizeImages } = require("../middlewares/uploadImages");
 const {
   uploadImages,
   deleteImages,
 } = require("../controllers/uploadController");
+const { uploadPhoto } = require("../middlewares/uploadImages");
 
 const uploadRouter = express.Router();
 
@@ -13,7 +13,6 @@ uploadRouter.post(
   authMiddleware,
   isAdmin,
   uploadPhoto.array("images", 10),
-  resizeImages,
   uploadImages
 );
 
@@ -22,7 +21,6 @@ uploadRouter.post(
   authMiddleware,
   isAdmin,
   uploadPhoto.single("image"),
-  resizeImages,
   uploadImages
 );
 

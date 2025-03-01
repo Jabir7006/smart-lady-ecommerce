@@ -22,7 +22,7 @@ import calculateDiscountPercentage from '../../utils/discountPercentage';
 import generateShortDescription from '../../utils/generateShortDescription';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '../../hooks/useWishlist';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import ProductColorSelector from '../../components/ui/ProductColorSelector';
 import ProductSizeSelector from '../../components/ui/ProductSizeSelector';
 import { toast } from 'react-hot-toast';
@@ -37,23 +37,28 @@ const ProductDetails = () => {
 
   const product = data?.data;
 
-  const [selectedColor, setSelectedColor] = useState(
-    product?.colors[0]?.title || ''
-  );
-  const [selectedSize, setSelectedSize] = useState(
-    product?.sizes[0]?.title || ''
-  );
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+
+  // Initialize color and size when product data loads
+  useEffect(() => {
+    if (product) {
+      setSelectedColor(product.colors[0]?.title || '');
+      setSelectedSize(product.sizes[0]?.title || '');
+    }
+  }, [product]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  if (isLoading) {
-    return <ThemedSuspense />;
-  }
+  const discountPercentage = useMemo(() => 
+    calculateDiscountPercentage(product?.regularPrice, product?.discountPrice),
+    [product?.regularPrice, product?.discountPrice]
+  );
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     if (!selectedColor || !selectedSize) {
       toast.error('Please select both color and size.');
       return;
@@ -65,11 +70,19 @@ const ProductDetails = () => {
       color: selectedColor,
       size: selectedSize,
     });
-  };
+  }, [product?._id, quantity, selectedColor, selectedSize, addToCart]);
 
-  const handleAddToWishlist = () => {
+  const handleAddToWishlist = useCallback(() => {
     addToWishlist(product._id);
-  };
+  }, [product?._id, addToWishlist]);
+
+  const handleQuantityChange = useCallback((newQuantity) => {
+    setQuantity(newQuantity);
+  }, []);
+
+  if (isLoading) {
+    return <ThemedSuspense />;
+  }
 
   return (
     <section className='productDetails section'>
@@ -78,10 +91,7 @@ const ProductDetails = () => {
           <div className='col-12 col-md-4'>
             <ProductZoom
               images={product?.images}
-              discountPercentage={calculateDiscountPercentage(
-                product?.regularPrice,
-                product?.discountPrice
-              )}
+              discountPercentage={discountPercentage}
             />
           </div>
           <div className='col-12 col-md-7'>
@@ -153,7 +163,7 @@ const ProductDetails = () => {
             <div className='d-flex align-items-center mt-4'>
               <QuantityBox
                 defaultValue={1}
-                onChange={value => setQuantity(value)}
+                onChange={handleQuantityChange}
               />
               <Button
                 className='btn-blue btn-lg btn-big btn-round btn-cart'

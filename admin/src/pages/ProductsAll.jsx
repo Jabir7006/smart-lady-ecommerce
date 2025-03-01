@@ -271,7 +271,7 @@ const ProductsAll = () => {
               </Label>
 
               <Label className="mr-8">
-                {/* <!-- focus-within sets the color for the icon when input is focused --> */}
+               
                 <div className="relative text-gray-500 focus-within:text-purple-600 dark:focus-within:text-purple-400">
                   <input
                     className="py-3 pr-5 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input"
@@ -330,7 +330,7 @@ const ProductsAll = () => {
                       <div className="flex items-center text-sm">
                         <Avatar
                           className="hidden mr-4 md:block"
-                          src={product?.images[0]?.url}
+                          src={product?.thumbnail}
                           alt="Product image"
                         />
                         <div>
@@ -349,7 +349,7 @@ const ProductsAll = () => {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm">
-                      {genRating(product.rating || 0, 0, 5)}
+                      {genRating(product.totalRating || 0, 0, 5)}
                     </TableCell>
                     <TableCell className="text-sm">
                       {product.quantity}
@@ -416,7 +416,7 @@ const ProductsAll = () => {
                 <Card className="h-full flex flex-col">
                   <img
                     className="object-cover w-full h-48"
-                    src={product?.images[0]?.url}
+                    src={product?.thumbnail}
                     alt="product"
                   />
                   <CardBody className="flex flex-col flex-grow">

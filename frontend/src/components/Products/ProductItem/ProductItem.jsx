@@ -2,61 +2,70 @@ import { Rating, Tooltip, Button } from '@mui/material';
 import { IoMdHeartEmpty } from 'react-icons/io';
 import { TfiFullscreen } from 'react-icons/tfi';
 import { Link, useSearchParams } from 'react-router-dom';
-import { memo, useCallback, useContext, useState } from 'react';
+import { memo, useCallback, useContext, useState, useMemo } from 'react';
 import GlobalContext from '../../../context/GlobalContext';
 import calculateDiscountPercentage from '../../../utils/discountPercentage';
 import { BiCartAdd } from 'react-icons/bi';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
-
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import placeholderImage from '../../../assets/images/placeholder.png';
 
-export default function ProductItem({ product, itemView }) {
+const ProductItem = memo(({ product, itemView }) => {
   const { setisOpenProductModal, setProductId } = useContext(GlobalContext);
   const { addToCart, isLoading: isAddingToCart } = useCart();
   const { addToWishlist, isLoading: isAddingToWishlist } = useWishlist();
   const [searchParams] = useSearchParams();
   const searchTerm = searchParams.get('search') || '';
-  const [selectedColor, setSelectedColor] = useState(
-    product?.colors[0] || ''
-  );
-  const [selectedSize, setSelectedSize] = useState(
-    product?.sizes[0] || ''
+  
+  const [selectedColor, setSelectedColor] = useState(product?.colors[0] || '');
+  const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
+
+  const discountPercentage = useMemo(() => 
+    calculateDiscountPercentage(product?.regularPrice, product?.discountPrice),
+    [product?.regularPrice, product?.discountPrice]
   );
 
   const viewProductDetails = useCallback(
     e => {
-      e.preventDefault(); // Prevent default behavior
+      e.preventDefault();
       setisOpenProductModal(true);
       setProductId(product?._id);
     },
     [product?._id, setisOpenProductModal, setProductId]
   );
 
-  const discountPercentage = calculateDiscountPercentage(
-    product?.regularPrice,
-    product?.discountPrice
-  );
-
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     addToCart({
       productId: product._id,
       quantity: 1,
       color: selectedColor,
       size: selectedSize,
     });
-  };
+  }, [product._id, selectedColor, selectedSize, addToCart]);
 
-  const handleAddToWishlist = () => {
+  const handleAddToWishlist = useCallback(() => {
     addToWishlist(product._id);
-  };
+  }, [product._id, addToWishlist]);
+
+  // Memoize product URL
+  const productUrl = useMemo(() => 
+    `/product/${product?._id}`,
+    [product?._id]
+  );
+
+  // Memoize highlighted title
+  const highlightedTitle = useMemo(() => {
+    if (!searchTerm || !product?.title) return product?.title;
+    const regex = new RegExp(`(${searchTerm})`, 'gi');
+    return product.title.replace(regex, '<mark class="highlight-match">$1</mark>');
+  }, [product?.title, searchTerm]);
 
   return (
     <>
       <div className={`productItem ${itemView}`}>
         <div className='img_rapper'>
-          <Link to={`/product/${product?._id}`}>
+          <Link to={productUrl}>
             <div className='productItemSliderWrapper'>
               <div className='img1 transition'>
                 <span className='lazy-load-image-background blur lazy-load-image-loaded'>
@@ -106,8 +115,8 @@ export default function ProductItem({ product, itemView }) {
           </div>
         </div>
         <div className='info'>
-          <Link to={`/product/${product?._id}`}>
-            <h4>{product?.title}</h4>
+          <Link to={productUrl}>
+            <h4 dangerouslySetInnerHTML={{ __html: highlightedTitle }}></h4>
           </Link>
           <span className='text-success d-block'>In Stock</span>
           <Rating
@@ -128,4 +137,6 @@ export default function ProductItem({ product, itemView }) {
       </div>
     </>
   );
-}
+});
+
+export default ProductItem;
