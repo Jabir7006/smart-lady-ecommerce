@@ -1,0 +1,308 @@
+/* Header styles */
+.headerWrapper {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.headerWrapper .top-strip {
+  padding: 8px 0px;
+}
+
+.headerWrapper .top-strip p {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.delivery-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.delivery-icon {
+  font-size: 16px;
+  animation: bounce 1s infinite alternate;
+}
+
+.delivery-text {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3px);
+  }
+}
+
+/* Responsive styles for HeaderWarn */
+@media (max-width: 768px) {
+  .headerWrapper .top-strip p {
+    font-size: 11px;
+  }
+
+  .delivery-icon {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerWrapper .top-strip {
+    padding: 6px 0px;
+  }
+
+  .headerWrapper .top-strip p {
+    font-size: 10px;
+  }
+
+  .delivery-icon {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .delivery-message {
+    gap: 4px;
+  }
+
+  .headerWrapper .top-strip p {
+    font-size: 9px;
+  }
+
+  .delivery-text {
+    letter-spacing: 0;
+  }
+}
+
+.headerWrapper .header {
+  width: 100%;
+  height: auto;
+  padding: 15px 0px;
+}
+
+.logoWrapper img {
+  width: 85%;
+}
+
+/* Main Header Styles */
+.header {
+  padding: 15px 0;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  flex: 0 0 auto;
+}
+
+.logo-wrapper img {
+  height: 50px;
+  width: auto;
+}
+
+.header-center {
+  flex: 1 1 auto;
+  max-width: 600px;
+  margin: 0 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.login-btn {
+  margin-right: 10px !important;
+}
+
+.header-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-icon-btn {
+  color: #333;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+
+.header-icon-btn:hover {
+  background-color: #e8e8e8;
+}
+
+.header-badge .MuiBadge-badge {
+  background-color: #ea2b0f;
+  font-size: 10px;
+  min-width: 18px;
+  height: 18px;
+}
+
+.cart-total {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 8px;
+}
+
+@media (max-width: 1200px) {
+  .header-center {
+    max-width: 450px;
+    margin: 0 15px;
+  }
+
+  .logo-wrapper img {
+    height: 45px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header {
+    padding: 12px 0;
+  }
+
+  .header-center {
+    max-width: 400px;
+    margin: 0 10px;
+  }
+
+  .logo-wrapper img {
+    height: 40px;
+  }
+
+  .login-btn {
+    padding: 6px 16px !important;
+    font-size: 13px !important;
+  }
+
+  .header-icon-btn {
+    padding: 8px;
+  }
+
+  .cart-total {
+    font-size: 13px;
+  }
+}
+
+/* Mobile Header Styles */
+.mobile-header {
+  display: none;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.mobile-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  position: relative;
+}
+
+.mobile-header-left,
+.mobile-header-right {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.mobile-header-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.mobile-logo img {
+  height: 40px;
+  width: auto;
+}
+
+.mobile-icon-btn {
+  color: #333;
+  padding: 8px;
+}
+
+.mobile-icon-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobile-badge .MuiBadge-badge {
+  background-color: #ea2b0f;
+  font-size: 10px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0;
+}
+
+.mobile-avatar {
+  background-color: #6d4aae;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .mobile-logo img {
+    height: 40px;
+  }
+
+  .mobile-icon-btn {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobile-header-content {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .mobile-icon-btn {
+    padding: 3px !important;
+    margin: 0 !important;
+  }
+
+  .mobile-header-right {
+    display: flex;
+    gap: 0;
+    margin-left: auto;
+  }
+
+  .mobile-logo img {
+    height: 38px;
+    width: auto;
+  }
+
+  .mobile-badge .MuiBadge-badge {
+    font-size: 8px !important;
+    min-width: 12px !important;
+    height: 12px !important;
+    padding: 0 !important;
+    top: 2px !important;
+    right: 2px !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mobile-header {
+    display: block;
+  }
+}

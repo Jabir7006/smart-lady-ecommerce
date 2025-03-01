@@ -1,0 +1,16 @@
+/* Main CSS file that imports all modular CSS files */
+@import './base.css';
+@import './header.css';
+@import './search.css';
+@import './navigation.css';
+@import './banner.css';
+@import './categories.css';
+@import './product.css';
+@import './product-listing.css';
+@import './product-details.css';
+@import './cart.css';
+@import './wishlist.css';
+@import './newsletter.css';
+@import './footer.css';
+@import './auth.css';
+@import './modal.css';

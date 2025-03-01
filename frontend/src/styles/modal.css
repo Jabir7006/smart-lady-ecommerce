@@ -1,0 +1,278 @@
+/* Modal styles */
+.close_,
+.close_ svg {
+  color: #000000 !important;
+}
+
+.close_ {
+  background: #f1f1f1 !important;
+  border-radius: 50% !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  position: absolute !important;
+  right: 10px;
+  top: 10px;
+  width: 40px !important;
+}
+
+.close_ svg {
+  font-size: 22px;
+  opacity: 0.7;
+}
+
+.productDetailsModal p {
+  font-size: 14px;
+  line-height: 25px;
+  opacity: 0.8;
+}
+
+.productModal .MuiPaper-elevation {
+  max-width: 1100px !important;
+  width: 95% !important;
+  margin: 20px;
+  border-radius: 12px !important;
+  overflow-x: hidden;
+  overflow-y: auto !important;
+}
+
+.MuiDialog-container .MuiPaper-root {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.productModal .close_ {
+  background: #f8f9fa !important;
+  border-radius: 50% !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.productModal .close_:hover {
+  background: #e9ecef !important;
+  transform: scale(1.05);
+}
+
+.productModal .close_ svg {
+  font-size: 20px;
+  color: #495057;
+}
+
+.productDetailsModal p {
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.productModal .btn-blue {
+  background: #6d4aae !important;
+  color: white !important;
+  text-transform: none !important;
+  font-weight: 600 !important;
+  padding: 10px 24px !important;
+  transition: all 0.2s ease !important;
+}
+
+.productModal .btn-blue:hover {
+  background: #5b3d94 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(109, 74, 174, 0.2);
+}
+
+.productModal .btn-round {
+  border-radius: 8px !important;
+}
+
+.productModal .btn-sml {
+  text-transform: none !important;
+  font-size: 14px !important;
+  color: #495057 !important;
+  border-color: #dee2e6 !important;
+  padding: 8px 16px !important;
+}
+
+.productModal .btn-sml:hover {
+  background: #f8f9fa !important;
+  border-color: #adb5bd !important;
+}
+
+.productModal .actions button svg {
+  font-size: 18px !important;
+  margin-right: 8px;
+}
+
+.productZoom {
+  position: relative;
+  width: 100%;
+}
+
+.productZoomBig {
+  position: relative;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.productZoomBig .item {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.productZoomBig .badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  background-color: #ea2b0f;
+  color: white;
+}
+
+.zoomSlider {
+  margin-top: 15px;
+}
+
+.zoomSlider .item {
+  border: 2px solid transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.zoomSlider .item:hover {
+  border-color: #6d4aae;
+}
+
+.zoomSlider .item_active {
+  border-color: #6d4aae;
+}
+
+@media (max-width: 768px) {
+  .productZoomBig {
+    margin-bottom: 0.5rem;
+  }
+
+  .productZoomBig .badge {
+    top: 8px;
+    left: 8px;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .zoomSlider {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .productZoomBig .badge {
+    top: 6px;
+    left: 6px;
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+}
+
+.productModal .actions button {
+  border: 1px solid #0000001a !important;
+  color: #000 !important;
+  font-size: 10px !important;
+}
+
+.productModal .actions button {
+  opacity: 1 !important;
+}
+
+.productModal .actions button svg.text-danger {
+  color: #ed174a !important;
+  opacity: 1 !important;
+}
+
+.productModal .actions button svg {
+  color: #000 !important;
+  font-size: 15px !important;
+}
+
+.productModal .item_active {
+  border: 2px solid rgba(0, 0, 0, 0.4) !important;
+}
+
+@media (max-width: 768px) {
+  .productModal .MuiPaper-elevation {
+    margin: 16px;
+    padding: 16px !important;
+  }
+
+  .productZoomBig {
+    height: 300px;
+  }
+
+  .zoomSlider {
+    padding: 12px 0;
+  }
+
+  .productModal .btn-blue {
+    padding: 12px 20px !important;
+  }
+
+  .productModal .btn-sml {
+    padding: 8px 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .productModal .MuiPaper-elevation {
+    margin: 12px;
+    padding: 12px !important;
+  }
+
+  .productZoomBig {
+    height: 350px;
+  }
+
+  .zoomSlider {
+    padding: 8px 0;
+  }
+
+  .productModal .close_ {
+    height: 36px !important;
+    min-width: 36px !important;
+  }
+
+  .productModal .close_ svg {
+    font-size: 18px;
+  }
+}
+
+.productModal .MuiDialog-paper {
+  transition: opacity 0.3s ease-in-out !important;
+  opacity: 1;
+}
+
+.productModal .MuiDialog-paper.MuiDialog-paperScrollPaper {
+  max-height: calc(100% - 64px);
+  margin: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .productModal .MuiDialog-paper.MuiDialog-paperScrollPaper {
+    margin: 16px;
+    max-height: calc(100% - 32px);
+  }
+}
+
+.productModal .MuiSkeleton-root {
+  transform: scale(1);
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.productModal .MuiSkeleton-text {
+  transform-origin: 0 0;
+}

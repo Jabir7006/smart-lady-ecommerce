@@ -1,0 +1,243 @@
+/* Product Details styles */
+.productDetails .hd {
+  font-size: 26px !important;
+}
+
+.btn-cart {
+  background-color: #6d4aae !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-cart:hover {
+  background-color: #5a469c !important;
+  transform: translateY(-2px);
+}
+
+.btn-wishlist {
+  background-color: #218838 !important;
+  color: #ffffff !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-wishlist:hover {
+  background-color: #1e7a34 !important;
+  transform: translateY(-2px);
+}
+
+.detailsPageTabs {
+  border-radius: 25px !important;
+  background: #f7f2ff !important;
+}
+
+.detailsPageTabs .table th,
+.detailsPageTabs .table td {
+  vertical-align: middle !important;
+  font-size: 14px !important;
+}
+
+.detailsPageTabs .table td p {
+  margin-bottom: 0 !important;
+}
+
+.customTabs ul li {
+  margin-right: 10px !important;
+}
+
+.customTabs ul li button {
+  padding: 6px 25px !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;
+  font-size: 14px !important;
+  text-transform: capitalize !important;
+  border-radius: 30px !important;
+  color: #000 !important;
+}
+
+.customTabs ul li button.activeTab {
+  background: #6d4aae !important;
+  color: #ffffff !important;
+}
+
+.reviewsCard {
+  margin-bottom: 25px !important;
+}
+
+.reviewsCard .image {
+  width: 100px;
+}
+
+.reviewsCard .rounded-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+}
+
+.reviewsCard .rounded-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.reviewsCard .info {
+  width: 85%;
+}
+
+.reviewForm h4 {
+  font-size: 20px !important;
+  margin-bottom: 15px !important;
+  font-weight: 700;
+}
+
+.reviewForm .form-group {
+  margin-bottom: 25px;
+}
+
+.reviewForm .form-group .form-control {
+  height: 50px;
+  font-size: 16px;
+  border-radius: 7px !important;
+  padding-left: 20px;
+}
+
+.reviewForm .form-group textarea.form-control {
+  height: 200px;
+  padding-top: 25px;
+}
+
+.reviewsCard .info p {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+/* Remove old size selector styles */
+.productSize {
+  height: auto;
+  padding: 16px 0;
+}
+
+/* New size selector styles */
+.size-selector {
+  width: 100%;
+}
+
+.size-selector .MuiToggleButtonGroup-root {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .size-selector .MuiToggleButton-root {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .size-selector .MuiToggleButton-root {
+    min-width: 35px;
+    height: 35px;
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  .size-selector .MuiToggleButtonGroup-root {
+    gap: 6px;
+  }
+}
+
+/* Color Selector Styles */
+.productColor {
+  margin-bottom: 20px;
+}
+
+.productColor span,
+.productSize span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  min-width: 50px;
+}
+
+.productColor .list-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.productColor .list-inline-item {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.productColor .tag {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  position: relative;
+  transition: all 0.2s ease;
+  color: transparent;
+}
+
+.productColor .color-title {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
+.productColor .tag:hover {
+  transform: scale(1.1);
+}
+
+.productColor .tag.active {
+  border: 2px solid #6d4aae;
+}
+
+.productColor .tag.active::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  font-size: 16px;
+}
+
+/* Container styles */
+.color-size-selector-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.98);
+  padding: 25px;
+  border-radius: 12px;
+  z-index: 100;
+  width: 100%;
+  max-width: 300px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(5px);
+}
+
+.color-size-selector-container .productColor,
+.color-size-selector-container .productSize {
+  margin-bottom: 20px;
+}
+
+.color-size-selector-container .productColor:last-child,
+.color-size-selector-container .productSize:last-child {
+  margin-bottom: 0;
+}

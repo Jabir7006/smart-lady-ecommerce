@@ -1,0 +1,304 @@
+/* Authentication styles */
+.signInPage {
+  height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.signInPage .shape-bottom {
+  bottom: -6px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: auto;
+  z-index: 1;
+}
+
+.signInPage:after {
+  background-image: linear-gradient(#46277e, #583991);
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: 0.9;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+.signInPage .box {
+  background: #fff;
+  border-radius: 10px !important;
+  height: auto;
+  margin: auto;
+  position: relative;
+  width: 400px;
+  z-index: 100;
+}
+
+.card {
+  word-wrap: break-word;
+  background-clip: initial;
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  position: relative;
+}
+
+.signInPage .box form {
+  padding: 20px 30px;
+}
+
+.signInPage .box h2 {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.signInPage .box .form-group {
+  margin-bottom: 15px;
+}
+
+.signInPage .box .txt {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.border-effect {
+  color: #337ab7;
+  position: relative;
+  text-decoration: none;
+}
+
+.border-effect:after {
+  background-color: #102a44;
+  bottom: -2px;
+  content: '';
+  display: block;
+  height: 1px;
+  left: 0;
+  position: absolute;
+  transition: width 0.2s ease;
+  width: 0;
+}
+
+.border-effect:hover:after {
+  width: 100%;
+}
+
+.loginWithGoogle {
+  color: #000c !important;
+  font-weight: 700 !important;
+  width: 100%;
+}
+
+.loginWithGoogle img {
+  margin-right: 10px;
+  width: 30px;
+}
+
+.signUpPage .box {
+  width: 500px;
+}
+
+/* Responsive styles for login/register pages */
+@media (max-width: 576px) {
+  .signInPage {
+    min-height: 100vh;
+    height: auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .signInPage:after {
+    display: none;
+  }
+
+  .signInPage .container {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+  }
+
+  .signInPage .box {
+    width: 100% !important;
+    margin: 0;
+    max-width: 100%;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+
+  .signInPage .box form {
+    padding: 0;
+  }
+
+  .signInPage .box img.logo-img {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .signInPage .box h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .signInPage .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .signInPage .btn-big {
+    width: 100%;
+    margin: 5px 0 !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+  }
+
+  .signInPage .txt {
+    margin-top: 1.5rem;
+    font-size: 15px;
+  }
+
+  .signInPage .card,
+  .signUpPage .card {
+    border: none;
+    box-shadow: none !important;
+  }
+
+  .signInPage .shape-bottom {
+    display: none;
+  }
+}
+
+/* Additional responsive fixes */
+@media (max-width: 768px) {
+  .signUpPage .box {
+    width: 100% !important;
+    margin: 0;
+    max-width: 100%;
+    border-radius: 0 !important;
+  }
+
+  .signUpPage .container {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .signUpPage .row {
+    margin: 0;
+  }
+
+  .signUpPage .col-md-6 {
+    padding: 0 10px;
+    margin-bottom: 15px;
+  }
+
+  .signInPage .card,
+  .signUpPage .card {
+    border: none;
+    box-shadow: none !important;
+  }
+}
+
+/* Add background color for better contrast */
+.signInPage:after {
+  opacity: 1;
+}
+
+/* Login/Register page styles */
+.signInPage .logo-img {
+  width: 180px;
+  max-width: 60%;
+  height: auto;
+  margin: 0 auto;
+}
+
+@media (min-width: 577px) {
+  .signInPage .box {
+    width: 400px !important;
+    margin: auto;
+  }
+
+  .signUpPage .box {
+    width: 500px !important;
+    margin: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .signInPage {
+    min-height: 100vh;
+    height: auto;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  .signInPage:after {
+    display: none;
+  }
+
+  .signInPage .container {
+    width: 100%;
+    padding: 20px;
+    margin: 0;
+  }
+
+  .signInPage .box {
+    width: 100% !important;
+    margin: 0;
+    max-width: 100%;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+
+  .signInPage .box form {
+    padding: 0;
+  }
+
+  .signInPage .box img.logo-img {
+    width: 150px;
+    margin-bottom: 1rem;
+  }
+
+  .signInPage .box h2 {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .signInPage .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .signInPage .btn-big {
+    width: 100%;
+    margin: 5px 0 !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+  }
+
+  .signInPage .txt {
+    margin-top: 1.5rem;
+    font-size: 15px;
+  }
+
+  .signInPage .card,
+  .signUpPage .card {
+    border: none;
+    box-shadow: none !important;
+  }
+
+  .signInPage .shape-bottom {
+    display: none;
+  }
+}

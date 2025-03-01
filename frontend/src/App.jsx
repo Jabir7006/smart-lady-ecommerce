@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, lazy, Suspense } from 'react';
+import './styles/index.css'
 import GlobalContext from './context/GlobalContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ThemedSuspense from './components/ThemedSuspense';

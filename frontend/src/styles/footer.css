@@ -1,0 +1,129 @@
+/* Footer styles */
+footer {
+  width: 100%;
+  background: linear-gradient(to right, #f8f9fa, #e9ecef);
+  padding: 60px 0 0px;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+}
+
+footer .topInfo {
+  border-bottom: 2px solid rgba(109, 74, 174, 0.2);
+  padding-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+footer .topInfo .col {
+  flex: 1;
+  min-width: 200px;
+  padding: 15px;
+  margin: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+footer .topInfo .col:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+footer .topInfo .col svg {
+  font-size: 30px;
+  color: #6d4aae;
+}
+
+footer .topInfo .col span {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
+
+footer .linksWrap {
+  padding: 40px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+footer .linksWrap h5 {
+  font-size: 18px;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #6d4aae;
+  text-transform: uppercase;
+}
+
+footer .linksWrap ul {
+  padding: 0;
+}
+
+footer .linksWrap ul li {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+footer .linksWrap ul li a {
+  color: #555;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+footer .linksWrap ul li a::before {
+  content: '→';
+  position: absolute;
+  left: -20px;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+footer .linksWrap ul li a:hover {
+  color: #6d4aae;
+  padding-left: 20px;
+}
+
+footer .linksWrap ul li a:hover::before {
+  opacity: 1;
+  left: 0;
+}
+
+footer .copyright {
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+footer .copyright ul {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-top: 20px;
+}
+
+footer .copyright ul li {
+  margin: 0 10px;
+}
+
+footer .copyright ul li a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #6d4aae;
+  transition: all 0.3s ease;
+}
+
+footer .copyright ul li a svg {
+  font-size: 18px;
+  color: #fff;
+}
+
+footer .copyright ul li a:hover {
+  transform: translateY(-3px) rotate(5deg);
+  box-shadow: 0 5px 15px rgba(109, 74, 174, 0.3);
+}

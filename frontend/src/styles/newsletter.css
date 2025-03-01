@@ -1,0 +1,259 @@
+/* Newsletter styles */
+.newsLetterSection {
+  background: linear-gradient(135deg, #7a55c1 0%, #6d4aae 100%);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+  margin: 40px 0;
+}
+
+.newsletter-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.newsletter-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.newsletter-text {
+  flex: 1;
+  max-width: 600px;
+  position: relative;
+  z-index: 2;
+}
+
+.newsletter-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.newsletter-text h2 {
+  color: #fff;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.newsletter-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.newsletter-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.input-wrapper {
+  flex: 1;
+  position: relative;
+  max-width: 400px;
+}
+
+.mail-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6d4aae;
+  font-size: 20px;
+}
+
+.newsletter-form input {
+  width: 100%;
+  padding: 14px 14px 14px 48px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fff;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.newsletter-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.newsletter-form input::placeholder {
+  color: #999;
+}
+
+.subscribe-btn {
+  background: #fff !important;
+  color: #6d4aae !important;
+  padding: 12px 28px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+  text-transform: none !important;
+  transition: all 0.3s ease !important;
+  min-width: 120px !important;
+}
+
+.subscribe-btn:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-2px);
+}
+
+.subscribe-btn:disabled {
+  background: rgba(255, 255, 255, 0.7) !important;
+  color: #6d4aae !important;
+  cursor: not-allowed;
+}
+
+.message {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+.message.success {
+  background: rgba(0, 255, 0, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.message.error {
+  background: rgba(255, 0, 0, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.newsletter-features {
+  display: flex;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.feature {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feature span {
+  color: #fff;
+  font-weight: bold;
+}
+
+.newsletter-image {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  z-index: 1;
+}
+
+.newsletter-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.newsletter-image:hover img {
+  transform: translateY(-5px);
+}
+
+/* Newsletter Responsive Styles */
+@media (max-width: 1024px) {
+  .newsLetterSection {
+    padding: 60px 0;
+  }
+
+  .newsletter-text h2 {
+    font-size: 32px;
+  }
+
+  .newsletter-image {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .newsletter-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .newsletter-text {
+    max-width: 100%;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+    max-width: 400px;
+    margin: 0 auto 24px;
+  }
+
+  .input-wrapper {
+    max-width: 100%;
+  }
+
+  .subscribe-btn {
+    width: 100%;
+  }
+
+  .newsletter-features {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .newsletter-image {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .newsLetterSection {
+    padding: 40px 0;
+    margin: 20px 0;
+  }
+
+  .newsletter-text h2 {
+    font-size: 24px;
+  }
+
+  .newsletter-description {
+    font-size: 14px;
+  }
+
+  .newsletter-badge {
+    font-size: 12px;
+    padding: 4px 12px;
+  }
+
+  .newsletter-features {
+    gap: 16px;
+  }
+
+  .feature {
+    font-size: 13px;
+  }
+
+  .newsletter-image {
+    max-width: 240px;
+  }
+}
