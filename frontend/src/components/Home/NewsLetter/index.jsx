@@ -2,6 +2,7 @@ import { Button } from '@mui/material';
 
 import { IoMailOutline } from 'react-icons/io5';
 import { useState } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const NewsLetter = () => {
   const [email, setEmail] = useState('');
@@ -76,10 +77,13 @@ const NewsLetter = () => {
           </div>
 
           <div className='newsletter-image'>
-            <img
+            <LazyLoadImage
               src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/uvufgu1k5phix1593anb'
               alt='Subscribe to Newsletter'
               loading='lazy'
+              width={100}
+              height={300}
+          
             />
           </div>
         </div>

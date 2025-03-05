@@ -19,7 +19,7 @@ const Header = () => {
   const { isAuthenticated, user, logout, loading } = useAuth();
   const { cart } = useCart();
   const { wishlist } = useWishlist();
-  const { data: categories } = useCategories({
+  const { data: categories, isLoading } = useCategories({
     limit: 10,
   });
 
@@ -55,7 +55,7 @@ const Header = () => {
               <div className='header-content'>
                 <div className='header-left'>
                   <Link to='/' className='logo-wrapper'>
-                    <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='logo' />
+                    <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='logo' width={50} height={50} />
                   </Link>
                 </div>
 
@@ -113,7 +113,7 @@ const Header = () => {
             </Container>
           </header>
 
-          <Navigation categories={categories} />
+          <Navigation categories={categories} isLoading={isLoading}/>
         </div>
       </div>
       <div className='res-show'>

@@ -19,12 +19,21 @@ const imageConfigs = {
       { quality: "auto", fetch_format: "webp" },
     ],
   },
+  banner_mobile: {
+    folder: "banners",
+    format: "webp",
+    quality: "auto",
+    transformation: [
+      { width: 768, height: 300, crop: "limit" },
+      { quality: "auto", fetch_format: "webp" },
+    ],
+  },
   category: {
     folder: "categories",
     format: "webp",
     quality: "auto",
     transformation: [
-      { width: 400, height: 400, crop: "fill" },
+      { width: 300, height: 300, crop: "fill" },
       { quality: "auto", fetch_format: "webp" },
     ],
   },
@@ -32,6 +41,50 @@ const imageConfigs = {
 
 const uploadOnCloudinary = async (buffer, type = "product") => {
   try {
+    if (type === "banner") {
+      // Upload both desktop and mobile versions for banners
+      const [desktopResult, mobileResult] = await Promise.all([
+        new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            imageConfigs.banner,
+            (error, result) => {
+              if (error) {
+                console.error("Cloudinary desktop upload error:", error);
+                reject(error);
+                return;
+              }
+              resolve(result);
+            }
+          );
+          const bufferStream = require("stream").Readable.from(buffer);
+          bufferStream.pipe(uploadStream);
+        }),
+        new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            imageConfigs.banner_mobile,
+            (error, result) => {
+              if (error) {
+                console.error("Cloudinary mobile upload error:", error);
+                reject(error);
+                return;
+              }
+              resolve(result);
+            }
+          );
+          const bufferStream = require("stream").Readable.from(buffer);
+          bufferStream.pipe(uploadStream);
+        }),
+      ]);
+
+      return {
+        public_id: desktopResult.public_id,
+        url: desktopResult.secure_url,
+        mobile_url: mobileResult.secure_url,
+        mobile_public_id: mobileResult.public_id,
+      };
+    }
+
+    // For other types, proceed with single upload
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         imageConfigs[type],

@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import { useEffect, useState } from 'react';
 import { useHomeBanners } from '../../../hooks/useHomeBanners';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
+import { Skeleton } from '@mui/material';
 
 const HomeBanner = () => {
   const { data: homeBanners, isLoading } = useHomeBanners();
@@ -18,20 +18,9 @@ const HomeBanner = () => {
     };
 
     window.addEventListener('resize', handleResize);
+    handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  if (isLoading)
-    return (
-      <div className='banner-loading-container'>
-        <LazyLoadImage
-          src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/np3ohwpg2f5vvizw5yfm"
-          alt='banner loading'
-          className='banner-loading-image'
-          effect="opacity"
-        />
-      </div>
-    );
 
   return (
     <section className='homeBannerSection'>
@@ -52,26 +41,34 @@ const HomeBanner = () => {
           effect='fade'
           fadeEffect={{ crossFade: true }}
         >
-          {homeBanners?.banners?.length > 0 ? (
+          {isLoading ? (
+            Array(3) // Simulate 3 banners loading
+              .fill(0)
+              .map((_, index) => (
+                <SwiperSlide key={index}>
+                  <div className='banner-item'>
+                    <Skeleton
+                      variant='rectangular'
+                      width='100%'
+                      height={isMobile ? 140 : 400}
+                      animation='wave'
+                    />
+                  </div>
+                </SwiperSlide>
+              ))
+          ) : homeBanners?.banners?.length > 0 ? (
             homeBanners.banners.map(banner => (
               <SwiperSlide key={banner._id}>
                 <div className='banner-item'>
                   <picture>
-                    <source
-                      media='(max-width: 768px)'
-                      srcSet={banner?.image?.mobile_url || banner?.image?.url}
+                    <source media='(max-width: 768px)' srcSet={banner?.image?.mobile_url} />
+                    <source media='(min-width: 769px)' srcSet={banner?.image?.url} />
+                    <LazyLoadImage
+                      src={isMobile ? banner?.image?.mobile_url : banner?.image?.url}
+                      alt={banner?.image?.alt || 'Banner Image'}
+                      className='banner-image'
+                      effect='opacity'
                     />
-                    <source
-                      media='(min-width: 769px)'
-                      srcSet={banner?.image?.url}
-                    />
-                  <LazyLoadImage
-  src={banner?.image?.url}
-  alt={banner?.image?.alt || 'Banner Image'}
-  className='banner-image'
-  effect="opacity" // Keep the effect but remove lazy loading
-/>
-
                   </picture>
                 </div>
               </SwiperSlide>
@@ -80,11 +77,11 @@ const HomeBanner = () => {
             <SwiperSlide>
               <div className='banner-item'>
                 <LazyLoadImage
-                  src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/np3ohwpg2f5vvizw5yfm"
+                  src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/np3ohwpg2f5vvizw5yfm'
                   alt='banner image'
                   className='banner-image'
                   loading='lazy'
-                  effect="opacity"
+                  effect='opacity'
                 />
               </div>
             </SwiperSlide>

@@ -89,7 +89,7 @@ export default function MobileHeader({ categories }) {
 
             <div className='mobile-header-center'>
               <Link to='/' className='mobile-logo'>
-                <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='Logo' />
+                <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='Logo' width={50} height={50} />
               </Link>
             </div>
 

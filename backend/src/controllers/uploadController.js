@@ -1,4 +1,3 @@
-
 const asyncHandler = require("express-async-handler");
 const { uploadOnCloudinary, deleteImgFromCloudinary } = require("../utils/cloudinary");
 const createError = require("http-errors");
@@ -11,21 +10,26 @@ const uploadImages = asyncHandler(async (req, res) => {
       throw createError(400, "Invalid image type");
     }
 
+
+
     // Handle single file upload
     if (req.file) {
       const result = await uploadOnCloudinary(req.file.buffer, imageType);
+
       return res.json({
         success: true,
         data: {
           url: result.url,
-          public_id: result.public_id
+          ...(imageType === "banner" && { mobile_url: result.mobile_url }),
+          public_id: result.public_id,
+          ...(imageType === "banner" && { mobile_public_id: result.mobile_public_id }),
         }
       });
     }
 
     // Handle multiple files upload
     if (req.files && req.files.length > 0) {
-      const uploadPromises = req.files.map(file => 
+      const uploadPromises = req.files.map(file =>
         uploadOnCloudinary(file.buffer, imageType)
       );
       const results = await Promise.all(uploadPromises);
@@ -33,6 +37,7 @@ const uploadImages = asyncHandler(async (req, res) => {
         success: true,
         data: results.map(result => ({
           url: result.url,
+          ...(imageType === "banner" && { mobile_url: result.mobile_url }),
           public_id: result.public_id
         }))
       });

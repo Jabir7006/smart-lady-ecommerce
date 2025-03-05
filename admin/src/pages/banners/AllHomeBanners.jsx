@@ -74,6 +74,7 @@ const AllHomeBanners = () => {
                         height: "auto",
                       }}
                     >
+                      {console.log(banner)}
                       <div
                         className="img card shadow m-0 h-auto"
                         style={{

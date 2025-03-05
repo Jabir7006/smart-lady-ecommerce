@@ -6,10 +6,16 @@ const bannerSliderSchema = new mongoose.Schema({
       type: String,
       required: true,
     },
-
+    mobile_public_id: {
+      type: String,
+    },
     url: {
       type: String,
       required: true,
+    },
+    mobile_url: {
+      type: String,
+
     },
     alt: {
       type: String,

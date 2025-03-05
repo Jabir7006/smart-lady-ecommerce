@@ -5,7 +5,9 @@
   margin: 0 auto;
   max-width: 1920px;
   padding: 0 15px;
+  padding-bottom: 30px;
 }
+
 
 .banner-loading-container {
   width: 100%;
@@ -115,16 +117,24 @@
   .homeBannerSection {
     min-height: 250px;
   }
+ 
 }
 
 @media (max-width: 768px) {
   .homeBannerSection {
     min-height: 200px;
-    padding: 0 10px 20px;
+    padding: 0 5px 20px;
   }
 
   .banner-loading-container {
     height: 200px;
+  }
+
+  .banner-image {
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    object-fit: fill;
   }
 
   .homeBannerSection .swiper-button-next,
@@ -144,11 +154,15 @@
 
 @media (max-width: 480px) {
   .homeBannerSection {
-    min-height: 150px;
+    min-height: 140px;
   }
 
   .banner-loading-container {
-    height: 150px;
+    height: 140px;
+  }
+
+  .banner-image {
+    min-height: 140px;
   }
 
   .homeBannerSection .swiper-pagination {

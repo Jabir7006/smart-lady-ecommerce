@@ -135,6 +135,8 @@ const Home = () => {
                     src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/p9wromwgl2irhamas5it'
                     alt='product offer'
                     className='cursor-pointer w-100 transition'
+                    width={100}
+                    height={300}
                   />
                 </div>
                 <div className='banner mb-3'>
@@ -142,6 +144,8 @@ const Home = () => {
                     src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/svnlwy9g8ulpwz2ht0mj'
                     alt='product offer'
                     className='cursor-pointer w-100 transition'
+                    width={100}
+                    height={300}
                   />
                 </div>
               </div>

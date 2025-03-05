@@ -8,6 +8,7 @@ exports.getHomeBanners = async (req, res) => {
 
 exports.createHomeBanner = async (req, res) => {
   const { image } = req.body;
+
   const banner = await BannerSlider.create({ image });
   res.status(201).json({ banner });
 };
@@ -22,8 +23,15 @@ exports.updateHomeBanner = async (req, res) => {
 exports.deleteHomeBanner = async (req, res) => {
   const { id } = req.params;
   const banner = await BannerSlider.findById(id);
+  console.log(banner);
+
+  if (!banner) return res.status(404).json({ message: "Banner not found" });
+
   //delete from cloudinary
-  await deleteImgFromCloudinary(banner.image.public_id);
+  Promise.all([
+    deleteImgFromCloudinary(banner.image.public_id),
+    deleteImgFromCloudinary(banner.image.mobile_public_id),
+  ]);
   await BannerSlider.findByIdAndDelete(id);
   res.sendStatus(204);
 };
