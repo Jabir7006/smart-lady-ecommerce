@@ -21,12 +21,8 @@ const ProductItem = memo(({ product, itemView }) => {
   const [selectedColor, setSelectedColor] = useState(product?.colors[0] || '');
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] || '');
 
-  const discountPercentage = useMemo(
-    () =>
-      calculateDiscountPercentage(
-        product?.regularPrice,
-        product?.discountPrice
-      ),
+  const discountPercentage = useMemo(() =>
+    calculateDiscountPercentage(product?.regularPrice, product?.discountPrice),
     [product?.regularPrice, product?.discountPrice]
   );
 
@@ -53,16 +49,16 @@ const ProductItem = memo(({ product, itemView }) => {
   }, [product._id, addToWishlist]);
 
   // Memoize product URL
-  const productUrl = useMemo(() => `/product/${product?._id}`, [product?._id]);
+  const productUrl = useMemo(() =>
+    `/product/${product?._id}`,
+    [product?._id]
+  );
 
   // Memoize highlighted title
   const highlightedTitle = useMemo(() => {
     if (!searchTerm || !product?.title) return product?.title;
     const regex = new RegExp(`(${searchTerm})`, 'gi');
-    return product.title.replace(
-      regex,
-      '<mark class="highlight-match">$1</mark>'
-    );
+    return product.title.replace(regex, '<mark class="highlight-match">$1</mark>');
   }, [product?.title, searchTerm]);
 
   return (

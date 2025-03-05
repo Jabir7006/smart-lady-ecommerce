@@ -1,72 +1,37 @@
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { useEffect, useState, useCallback, memo } from 'react';
+import { useEffect, useState } from 'react';
 import { useHomeBanners } from '../../../hooks/useHomeBanners';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import bannerLoading from '../../../assets/images/bannerLoading.jpeg';
 
-// Optimize image loading with preload hints
-const preloadImage = (src) => {
-  const link = document.createElement('link');
-  link.rel = 'preload';
-  link.as = 'image';
-  link.href = src;
-  document.head.appendChild(link);
-};
-
-const HomeBanner = memo(() => {
+const HomeBanner = () => {
   const { data: homeBanners, isLoading } = useHomeBanners();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Optimize resize listener with RAF
   useEffect(() => {
-    let frameId;
     const handleResize = () => {
-      cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(() => {
-        setIsMobile(window.innerWidth <= 768);
-      });
+      setIsMobile(window.innerWidth <= 768);
     };
 
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(frameId);
-    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Preload first banner image
-  useEffect(() => {
-    if (homeBanners?.banners?.[0]?.image?.public_id) {
-      const firstBanner = homeBanners.banners[0];
-      const cloudinaryBaseUrl = 'https://res.cloudinary.com/dshdu9ptb/image/upload';
-      const desktopUrl = `${cloudinaryBaseUrl}/w_1920,h_600,q_auto,f_webp/${firstBanner.image.public_id}.webp`;
-      preloadImage(desktopUrl);
-    }
-  }, [homeBanners]);
-
-  const getOptimizedImageUrl = useCallback((publicId, width, height) => {
-    return `https://res.cloudinary.com/dshdu9ptb/image/upload/w_${width},h_${height},q_auto,f_webp/${publicId}.webp`;
-  }, []);
-
-  if (isLoading) {
+  if (isLoading)
     return (
-      <div className='banner-loading-container' role="progressbar" aria-busy="true">
+      <div className='banner-loading-container'>
         <LazyLoadImage
           src={bannerLoading}
-          alt="Loading banner"
+          alt='banner loading'
           className='banner-loading-image'
-          width="100%"
-          height="auto"
-          loading="eager"
+          effect="opacity"
         />
       </div>
     );
-  }
 
   return (
     <section className='homeBannerSection'>
@@ -84,40 +49,50 @@ const HomeBanner = memo(() => {
           loop={true}
           className='banner-slider'
           grabCursor={true}
-          lazy={{ loadPrevNext: true }}
-          preloadImages={false}
+          effect='fade'
+          fadeEffect={{ crossFade: true }}
         >
-          {homeBanners?.banners?.map(banner => (
-            <SwiperSlide key={banner._id}>
+          {homeBanners?.banners?.length > 0 ? (
+            homeBanners.banners.map(banner => (
+              <SwiperSlide key={banner._id}>
+                <div className='banner-item'>
+                  <picture>
+                    <source
+                      media='(max-width: 768px)'
+                      srcSet={banner?.image?.mobile_url || banner?.image?.url}
+                    />
+                    <source
+                      media='(min-width: 769px)'
+                      srcSet={banner?.image?.url}
+                    />
+                    <LazyLoadImage
+                      src={banner?.image?.url}
+                      alt={banner?.image?.alt || 'Banner Image'}
+                      className='banner-image'
+                      loading='lazy'
+                      effect="opacity"
+                    />
+                  </picture>
+                </div>
+              </SwiperSlide>
+            ))
+          ) : (
+            <SwiperSlide>
               <div className='banner-item'>
-                <picture>
-                  <source
-                    media="(max-width: 768px)"
-                    srcSet={getOptimizedImageUrl(banner.image.public_id, 768, 400)}
-                    type="image/webp"
-                  />
-                  <source
-                    media="(min-width: 769px)"
-                    srcSet={getOptimizedImageUrl(banner.image.public_id, 1920, 600)}
-                    type="image/webp"
-                  />
-                  <LazyLoadImage
-                    src={getOptimizedImageUrl(banner.image.public_id, 1920, 600)}
-                    alt={banner.image.alt || 'Banner'}
-                    className='banner-image'
-                    effect="opacity"
-                    width="100%"
-                    height="auto"
-                    loading={banner._id === homeBanners.banners[0]._id ? 'eager' : 'lazy'}
-                  />
-                </picture>
+                <LazyLoadImage
+                  src={bannerLoading}
+                  alt='banner image'
+                  className='banner-image'
+                  loading='lazy'
+                  effect="opacity"
+                />
               </div>
             </SwiperSlide>
-          ))}
+          )}
         </Swiper>
       </div>
     </section>
   );
-});
+};
 
 export default HomeBanner;
