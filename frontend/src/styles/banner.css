@@ -5,6 +5,7 @@
   margin: 0 auto;
   max-width: 1920px;
   padding: 0 15px;
+  contain: content; /* Add GPU acceleration */
 }
 
 .banner-loading-container {
@@ -15,6 +16,15 @@
   justify-content: center;
   background: #f5f5f5;
   border-radius: 10px;
+  /* Add a loading skeleton animation */
+  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 .banner-loading-image {
@@ -40,6 +50,9 @@
   width: 100%;
   height: auto;
   object-fit: cover;
+  will-change: transform; /* Optimize transform animations */
+  transform: translateZ(0); /* Force GPU acceleration */
+  backface-visibility: hidden;
   transition: transform 0.3s ease;
 }
 
@@ -55,15 +68,17 @@
 
 .homeBannerSection .swiper-button-next,
 .homeBannerSection .swiper-button-prev {
+  --button-size: 45px;
+  width: var(--button-size) !important;
+  height: var(--button-size) !important;
   color: #6d4aae;
   background: #ffffff;
-  width: 45px !important;
-  height: 45px !important;
   border-radius: 50%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   opacity: 0;
   visibility: hidden;
+  transform: translateZ(0);
 }
 
 .homeBannerSection:hover .swiper-button-next,
@@ -111,53 +126,30 @@
   transform: scale(1.2);
 }
 
-@media (max-width: 1200px) {
+/* Use more efficient media queries */
+@media screen and (max-width: 1200px) {
   .homeBannerSection {
     min-height: 250px;
   }
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .homeBannerSection {
     min-height: 200px;
     padding: 0 10px 20px;
   }
-
+  
   .banner-loading-container {
     height: 200px;
   }
-
-  .homeBannerSection .swiper-button-next,
-  .homeBannerSection .swiper-button-prev {
-    display: none;
-  }
-
-  .homeBannerSection .swiper-pagination {
-    bottom: 10px !important;
-  }
-
-  .homeBannerSection .swiper-pagination-bullet {
-    width: 8px;
-    height: 8px;
-  }
 }
 
-@media (max-width: 480px) {
+@media screen and (max-width: 480px) {
   .homeBannerSection {
     min-height: 150px;
   }
-
+  
   .banner-loading-container {
     height: 150px;
-  }
-
-  .homeBannerSection .swiper-pagination {
-    bottom: 5px !important;
-  }
-
-  .homeBannerSection .swiper-pagination-bullet {
-    width: 6px;
-    height: 6px;
-    margin: 0 4px !important;
   }
 }

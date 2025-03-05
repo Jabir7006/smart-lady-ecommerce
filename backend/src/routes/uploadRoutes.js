@@ -1,13 +1,11 @@
 const express = require("express");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
-const {
-  uploadImages,
-  deleteImages,
-} = require("../controllers/uploadController");
+const { uploadImages, deleteImages } = require("../controllers/uploadController");
 const { uploadPhoto } = require("../middlewares/uploadImages");
 
 const uploadRouter = express.Router();
 
+// Multiple images upload
 uploadRouter.post(
   "/",
   authMiddleware,
@@ -16,8 +14,9 @@ uploadRouter.post(
   uploadImages
 );
 
+// Single image upload with type
 uploadRouter.post(
-  "/single",
+  "/single/:type(product|banner|category)?",
   authMiddleware,
   isAdmin,
   uploadPhoto.single("image"),

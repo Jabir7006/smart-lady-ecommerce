@@ -1,4 +1,5 @@
 const BannerSlider = require("../models/BannerSlider");
+const { deleteImgFromCloudinary } = require("../utils/cloudinary");
 
 exports.getHomeBanners = async (req, res) => {
   const banners = await BannerSlider.find();
@@ -20,6 +21,9 @@ exports.updateHomeBanner = async (req, res) => {
 
 exports.deleteHomeBanner = async (req, res) => {
   const { id } = req.params;
-  const banner = await BannerSlider.findByIdAndDelete(id);
-  res.status(200).json({ banner });
+  const banner = await BannerSlider.findById(id);
+  //delete from cloudinary
+  await deleteImgFromCloudinary(banner.image.public_id);
+  await BannerSlider.findByIdAndDelete(id);
+  res.sendStatus(204);
 };

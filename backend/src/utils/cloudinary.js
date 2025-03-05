@@ -1,15 +1,40 @@
 const cloudinary = require("../config/cloudinaryConfig");
 
-const uploadOnCloudinary = async (buffer) => {
+const imageConfigs = {
+  product: {
+    folder: "products",
+    format: "webp",
+    quality: "auto",
+    transformation: [
+      { width: 800, height: 800, crop: "limit" },
+      { quality: "auto", fetch_format: "webp" },
+    ],
+  },
+  banner: {
+    folder: "banners",
+    format: "webp",
+    quality: "auto",
+    transformation: [
+      { width: 1920, height: 600, crop: "fill" },
+      { quality: "auto", fetch_format: "webp" },
+    ],
+  },
+  category: {
+    folder: "categories",
+    format: "webp",
+    quality: "auto",
+    transformation: [
+      { width: 400, height: 400, crop: "fill" },
+      { quality: "auto", fetch_format: "webp" },
+    ],
+  },
+};
+
+const uploadOnCloudinary = async (buffer, type = "product") => {
   try {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "image",
-          folder: "products",
-          format: "webp",  
-          quality: "auto", 
-        },
+        imageConfigs[type],
         (error, result) => {
           if (error) {
             console.error("Cloudinary upload error:", error);
@@ -19,12 +44,11 @@ const uploadOnCloudinary = async (buffer) => {
 
           resolve({
             public_id: result.public_id,
-            url: result.secure_url, // Use secure CDN URL
+            url: result.secure_url,
           });
         }
       );
 
-      // Pipe buffer to Cloudinary upload stream
       const bufferStream = require("stream").Readable.from(buffer);
       bufferStream.pipe(uploadStream);
     });
@@ -33,7 +57,6 @@ const uploadOnCloudinary = async (buffer) => {
     throw new Error(`Error uploading to Cloudinary: ${error.message}`);
   }
 };
-
 
 const deleteImgFromCloudinary = async (fileToDelete) => {
   try {
@@ -57,7 +80,6 @@ const deleteImgFromCloudinary = async (fileToDelete) => {
     throw new Error(`Error deleting from Cloudinary: ${error.message}`);
   }
 };
-
 
 module.exports = {
   uploadOnCloudinary,

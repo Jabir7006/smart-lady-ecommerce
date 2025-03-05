@@ -15,6 +15,9 @@ export default defineConfig({
         },
       },
     },
+    cssCodeSplit: true,
+    cssMinify: true,
+    assetsInlineLimit: 4096,
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
     minify: 'terser',
@@ -24,6 +27,9 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
+  },
+  optimizeDeps: {
+    include: ['swiper', 'swiper/react'],
   },
   server: {
     open: false,

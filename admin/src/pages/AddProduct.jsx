@@ -464,7 +464,7 @@ const AddProduct = () => {
     try {
       if (selectedFiles.length > 0) {
         const files = selectedFiles.map((file) => file.file);
-        const uploadResult = await uploadImages.mutateAsync(files);
+        const uploadResult = await uploadImages.mutateAsync(files, "product");
 
         const slug = productData.title
           .toLowerCase()

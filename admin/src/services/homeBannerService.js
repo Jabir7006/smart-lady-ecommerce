@@ -10,17 +10,21 @@ export const homeBannerApi = {
       const imageFormData = new FormData();
       imageFormData.append("image", formData.get("image"));
 
-      const uploadResponse = await api.post("/uploads/single", imageFormData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const uploadResponse = await api.post(
+        "/uploads/single?type=banner ",
+        imageFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       imageUrl = uploadResponse.data.url;
       imageId = uploadResponse.data.public_id;
     }
 
-    // Then create the category with the image URL and ID
+    // Then create the banner with the image URL and ID
     const homeBannerData = {
       image: {
         url: imageUrl,
