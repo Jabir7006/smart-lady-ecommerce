@@ -9,7 +9,7 @@ import { BiCartAdd } from 'react-icons/bi';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import placeholderImage from '../../../assets/images/placeholder.png';
+
 
 const ProductItem = memo(({ product, itemView }) => {
   const { setisOpenProductModal, setProductId } = useContext(GlobalContext);
@@ -73,7 +73,7 @@ const ProductItem = memo(({ product, itemView }) => {
                     alt='image'
                     src={product?.thumbnail}
                     effect='opacity'
-                    placeholderSrc={placeholderImage}
+                    placeholderSrc="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/uofezgmknqytyytg95ah"
                     className='w-100'
                   />
                 </span>
@@ -84,7 +84,7 @@ const ProductItem = memo(({ product, itemView }) => {
                     alt='image'
                     src={product?.secondaryImage || product?.thumbnail}
                     effect='opacity'
-                    placeholderSrc={placeholderImage}
+                    placeholderSrc="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/uofezgmknqytyytg95ah"
                     className='w-100'
                   />
                 </span>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../../../assets/images/logo.png';
+
 import HeaderSearch from './HeaderSearch';
 import { Button, Badge, IconButton, Container } from '@mui/material';
 
@@ -30,7 +30,7 @@ const Header = () => {
       return (
         total +
         (item.product.discountPrice || item.product.regularPrice) *
-          parseInt(item.quantity)
+        parseInt(item.quantity)
       );
     }, 0) || 0;
 
@@ -55,7 +55,7 @@ const Header = () => {
               <div className='header-content'>
                 <div className='header-left'>
                   <Link to='/' className='logo-wrapper'>
-                    <img src={logo} alt='logo' />
+                    <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='logo' />
                   </Link>
                 </div>
 

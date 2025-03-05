@@ -6,7 +6,7 @@ import GlobalContext from '../../context/GlobalContext';
 import { registerSchema } from '../../validations/authSchema';
 import { TextField, Button, Alert, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
-import logo from '../../assets/images/logo.png';
+
 
 const Register = () => {
   const {
@@ -45,7 +45,7 @@ const Register = () => {
       <div className='container'>
         <div className='box card p-3 shadow border-8'>
           <div className='text-center mb-4'>
-            <img src={logo} className='logo-img' alt='logo' />
+            <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" className='logo-img' alt='logo' />
           </div>
 
           {registerError && (

@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 import { useEffect, useState } from 'react';
 import { useHomeBanners } from '../../../hooks/useHomeBanners';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import bannerLoading from '../../../assets/images/bannerLoading.jpeg';
+
 
 const HomeBanner = () => {
   const { data: homeBanners, isLoading } = useHomeBanners();
@@ -25,7 +25,7 @@ const HomeBanner = () => {
     return (
       <div className='banner-loading-container'>
         <LazyLoadImage
-          src={bannerLoading}
+          src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/np3ohwpg2f5vvizw5yfm"
           alt='banner loading'
           className='banner-loading-image'
           effect="opacity"
@@ -80,7 +80,7 @@ const HomeBanner = () => {
             <SwiperSlide>
               <div className='banner-item'>
                 <LazyLoadImage
-                  src={bannerLoading}
+                  src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/np3ohwpg2f5vvizw5yfm"
                   alt='banner image'
                   className='banner-image'
                   loading='lazy'

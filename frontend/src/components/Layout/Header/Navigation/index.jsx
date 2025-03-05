@@ -8,8 +8,6 @@ import { IoIosMenu } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 import './Navigation.css';
 
-import home from '../../../../assets/images/home.png';
-import shop from '../../../../assets/images/shop.png';
 
 const CategoryButton = styled(Button)`
   display: flex;
@@ -108,7 +106,7 @@ const Navigation = ({ categories }) => {
                 <Link to='/' className='d-flex align-items-center'>
                   <Button css={uppercaseButtonStyle}>
                     <img
-                      src={home}
+                      src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/uv2lhcerznmov2pvuvwg'
                       alt='logo'
                       width={25}
                       height={25}
@@ -122,7 +120,7 @@ const Navigation = ({ categories }) => {
                 <Link to='/shop' className='d-flex align-items-center'>
                   <Button css={uppercaseButtonStyle}>
                     <img
-                      src={shop}
+                      src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/hwvombsazvlunklawrg7'
                       alt='logo'
                       width={25}
                       height={25}

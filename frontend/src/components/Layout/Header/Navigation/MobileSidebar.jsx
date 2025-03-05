@@ -3,7 +3,6 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../../../assets/images/logo.png';
 import {
   Button,
   List,
@@ -59,7 +58,7 @@ export default function MobileSidebar({ categories }) {
     <div className='mobile-sidebar'>
       <SidebarHeader className='mobile-sidebar-header'>
         <Link className='logo' to='/'>
-          <img alt='logo' src={logo} className='mobile-sidebar-logo' css={css`max-height: 30px;`} />
+          <img alt='logo' src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" className='mobile-sidebar-logo' css={css`max-height: 30px;`} />
         </Link>
       </SidebarHeader>
 

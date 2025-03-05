@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuth } from '../../context/AuthContext';
 import GlobalContext from '../../context/GlobalContext';
 import { loginSchema } from '../../validations/authSchema';
-import logo from '../../assets/images/logo.png';
+
 import { Button, TextField, Alert, CircularProgress } from '@mui/material';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -43,7 +43,7 @@ const Login = () => {
       <div className='container'>
         <div className='box card p-3 shadow border-8'>
           <div className='text-center'>
-            <img src={logo} className='w-50' alt='logo' />
+            <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" className='w-50' alt='logo' />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className='mt-3'>

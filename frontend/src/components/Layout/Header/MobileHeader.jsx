@@ -13,7 +13,7 @@ import {
 } from '@mui/icons-material';
 import MobileSidebar from './Navigation/MobileSidebar';
 import Drawer from '@mui/material/Drawer';
-import logo from '../../../assets/images/logo.png';
+
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
 import { useAuth } from '../../../context/AuthContext';
@@ -89,7 +89,7 @@ export default function MobileHeader({ categories }) {
 
             <div className='mobile-header-center'>
               <Link to='/' className='mobile-logo'>
-                <img src={logo} alt='Logo' />
+                <img src="https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/qhmsunu1zekm6a2l1you" alt='Logo' />
               </Link>
             </div>
 

@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import NewsLetterImage from '../../../assets/images/newsLetter.webp';
+
 import { IoMailOutline } from 'react-icons/io5';
 import { useState } from 'react';
 
@@ -77,7 +77,7 @@ const NewsLetter = () => {
 
           <div className='newsletter-image'>
             <img
-              src={NewsLetterImage}
+              src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/uvufgu1k5phix1593anb'
               alt='Subscribe to Newsletter'
               loading='lazy'
             />
