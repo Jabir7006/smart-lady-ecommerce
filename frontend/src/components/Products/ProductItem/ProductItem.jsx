@@ -9,7 +9,7 @@ import { BiCartAdd } from 'react-icons/bi';
 import { useCart } from '../../../hooks/useCart';
 import { useWishlist } from '../../../hooks/useWishlist';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
+import 'react-lazy-load-image-component/src/effects/opacity.css';
 
 const ProductItem = memo(({ product, itemView }) => {
   const { setisOpenProductModal, setProductId } = useContext(GlobalContext);

@@ -65,13 +65,13 @@ const HomeBanner = () => {
                       media='(min-width: 769px)'
                       srcSet={banner?.image?.url}
                     />
-                    <LazyLoadImage
-                      src={banner?.image?.url}
-                      alt={banner?.image?.alt || 'Banner Image'}
-                      className='banner-image'
-                      loading='lazy'
-                      effect="opacity"
-                    />
+                  <LazyLoadImage
+  src={banner?.image?.url}
+  alt={banner?.image?.alt || 'Banner Image'}
+  className='banner-image'
+  effect="opacity" // Keep the effect but remove lazy loading
+/>
+
                   </picture>
                 </div>
               </SwiperSlide>

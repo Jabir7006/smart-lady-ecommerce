@@ -11,6 +11,7 @@ import { useProducts, useFeaturedProducts } from '../../hooks/useProducts';
 import ThemedSuspense from '../../components/ThemedSuspense';
 import ScrollableTabs from '../../components/Home/ScrollableTabs';
 import { useSearchParams } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -130,16 +131,16 @@ const Home = () => {
             <div className='col-md-3 d-none d-md-block'>
               <div className='sticky'>
                 <div className='banner mb-3'>
-                  <img
-                    src='https://api.spicezgold.com/download/file_1734525757507_NewProject(34).jpg'
-                    alt='product'
+                  <LazyLoadImage
+                    src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/p9wromwgl2irhamas5it'
+                    alt='product offer'
                     className='cursor-pointer w-100 transition'
                   />
                 </div>
                 <div className='banner mb-3'>
-                  <img
-                    src='https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg'
-                    alt='product'
+                  <LazyLoadImage
+                    src='https://res.cloudinary.com/dshdu9ptb/image/upload/f_auto,q_auto/svnlwy9g8ulpwz2ht0mj'
+                    alt='product offer'
                     className='cursor-pointer w-100 transition'
                   />
                 </div>
