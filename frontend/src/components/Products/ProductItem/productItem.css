@@ -12,25 +12,6 @@
   list-style: outside none none;
 }
 
-.productItem {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  background: rgb(241, 241, 241);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: 0.2s;
-  color: rgb(0, 0, 0);
-  cursor: pointer;
-  display: block;
-  height: auto;
-  position: relative;
-  width: 100%;
-  text-decoration: none;
-  border-radius: 10px;
-  border-right: 1px solid rgba(0, 0, 0, 0);
-}
-
 .img_rapper {
   box-sizing: border-box;
   margin: 0;
@@ -88,64 +69,4 @@
   top: 0;
   width: 100%;
   z-index: 1000;
-}
-
-.badge.badge-primary {
-  box-sizing: border-box;
-  margin: 0;
-  transition:
-    color 0.15s ease-in-out,
-    background-color 0.15s ease-in-out,
-    border-color 0.15s ease-in-out,
-    box-shadow 0.15s ease-in-out;
-  white-space: nowrap;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
-  vertical-align: initial;
-  color: rgb(255, 255, 255);
-  border-radius: 20px;
-  padding: 7px 10px;
-  display: inline-block;
-  left: 10px;
-  position: absolute;
-  top: 10px;
-  z-index: 100;
-  background: rgb(43, 190, 249);
-}
-
-.actions {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  gap: 10px;
-  transition: 0.5s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  opacity: 0;
-  position: absolute;
-  right: 0;
-  top: 20px;
-  width: 50px;
-  z-index: 1000;
-}
-
-.info {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 15px;
-}
-
-.oldPrice {
-  text-decoration: line-through;
-  color: rgba(0, 0, 0, 0.4);
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.netPrice {
-  margin-left: 0.5rem;
-  color: rgb(220, 53, 69);
 }
