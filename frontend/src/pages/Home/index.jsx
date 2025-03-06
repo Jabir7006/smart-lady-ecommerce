@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import HomeBanner from '../../components/Home/HomeBanner';
-import { Button } from '@mui/material';
+import { Button, Skeleton } from '@mui/material';
 import ProductItem from '../../components/Products/ProductItem/ProductItem';
 import HomeCat from '../../components/Home/HomeCat';
 import NewsLetter from '../../components/Home/NewsLetter';
@@ -12,6 +12,7 @@ import ThemedSuspense from '../../components/ThemedSuspense';
 import ScrollableTabs from '../../components/Home/ScrollableTabs';
 import { useSearchParams } from 'react-router-dom';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import ProductCardSkeleton from '../../components/ui/ProductCardSkeleton';
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -153,16 +154,7 @@ const Home = () => {
 
             <div className='col-md-9 productRow pr-0'>
               {featuredLoading ? (
-                <div
-                  css={css`
-                    min-height: 200px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                  `}
-                >
-                  <ThemedSuspense />
-                </div>
+                <ProductCardSkeleton />
               ) : (
                 featuredProducts?.products && (
                   <ProductSlider
@@ -200,21 +192,9 @@ const Home = () => {
                 `}
               >
                 {productsLoading ? (
-                  <div
-                    css={css`
-                      position: absolute;
-                      top: 0;
-                      left: 0;
-                      right: 0;
-                      bottom: 0;
-                      display: flex;
-                      align-items: center;
-                      justify-content: center;
-                      background: rgba(255, 255, 255, 0.8);
-                    `}
-                  >
-                    <ThemedSuspense />
-                  </div>
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <ProductCardSkeleton key={index} />
+                  ))
                 ) : newProducts?.products?.length > 0 ? (
                   newProducts.products.map(product => (
                     <ProductItem

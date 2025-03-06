@@ -3,17 +3,15 @@ const cloudinary = require("../config/cloudinaryConfig");
 const imageConfigs = {
   product: {
     folder: "products",
-    format: "webp",
-    quality: "auto",
+
     transformation: [
-      { width: 800, height: 800, crop: "limit" },
+      { width: 500, crop: "fill", gravity: "auto" },
       { quality: "auto", fetch_format: "webp" },
     ],
   },
   banner: {
     folder: "banners",
-    format: "webp",
-    quality: "auto",
+
     transformation: [
       { width: 1920, height: 600, crop: "fill" },
       { quality: "auto", fetch_format: "webp" },
@@ -21,8 +19,7 @@ const imageConfigs = {
   },
   banner_mobile: {
     folder: "banners",
-    format: "webp",
-    quality: "auto",
+
     transformation: [
       { width: 768, height: 300, crop: "limit" },
       { quality: "auto", fetch_format: "webp" },
@@ -30,8 +27,7 @@ const imageConfigs = {
   },
   category: {
     folder: "categories",
-    format: "webp",
-    quality: "auto",
+
     transformation: [
       { width: 300, height: 300, crop: "fill" },
       { quality: "auto", fetch_format: "webp" },
