@@ -16,22 +16,23 @@ export const productsApi = {
     rating,
   }) => {
     try {
-      const { data } = await axiosInstance.get('/products', {
-        params: {
-          page,
-          limit,
-          search,
-          sort,
-          order,
-          category,
-          brand,
-          minPrice,
-          maxPrice,
-          inStock,
-          outOfStock,
-          rating,
-        },
-      });
+      // Clean up empty values before sending
+      const params = {
+        page,
+        limit,
+        ...(search && { search }),
+        ...(sort && { sort }),
+        ...(order && { order }),
+        ...(category && { category }),
+        ...(brand && { brand }),
+        ...(minPrice && { minPrice }),
+        ...(maxPrice && { maxPrice }),
+        ...(inStock !== undefined && { inStock }),
+        ...(outOfStock !== undefined && { outOfStock }),
+        ...(rating !== undefined && { rating }),
+      };
+
+      const { data } = await axiosInstance.get('/products', { params });
       return data;
     } catch (error) {
       if (error.code === 'ECONNABORTED') {

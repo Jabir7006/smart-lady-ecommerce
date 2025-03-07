@@ -60,85 +60,81 @@ const createProduct = asyncHandler(async (req, res) => {
 const findAllProducts = asyncHandler(async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10)); // Limit to a maximum of 100
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
     const skip = (page - 1) * limit;
 
     // Build query
-    const queryObj = { ...req.query };
-    const excludeFields = ["page", "sort", "limit", "fields", "search", "order"];
-    excludeFields.forEach((el) => delete queryObj[el]);
-
-    // Base query object
     const query = {};
 
-    // Handle search
+    // Handle search - search in title, description, and brand title
     if (req.query.search) {
       const searchRegex = new RegExp(req.query.search, "i");
       query.$or = [
         { title: searchRegex },
+        { description: searchRegex },
         { "brand.title": searchRegex },
       ];
     }
 
-    // Handle categories filter
+    // Handle categories filter - support multiple categories
     if (req.query.category) {
-      const categoryIds = req.query.category.split(",").filter(Boolean);
-      if (categoryIds.length) {
-        query.category = { $in: categoryIds };
+      const categories = req.query.category.split(",").filter(Boolean);
+      if (categories.length > 0) {
+        query.category = { $in: categories };
       }
     }
 
-    // Handle brands filter
+    // Handle brands filter - support multiple brands
     if (req.query.brand) {
-      const brandIds = req.query.brand.split(",").filter(Boolean);
-      if (brandIds.length) {
-        query.brand = { $in: brandIds };
+      const brands = req.query.brand.split(",").filter(Boolean);
+      if (brands.length > 0) {
+        query.brand = { $in: brands };
       }
     }
 
     // Handle price range
     if (req.query.minPrice || req.query.maxPrice) {
       query.regularPrice = {};
-      if (req.query.minPrice) query.regularPrice.$gte = Number(req.query.minPrice);
-      if (req.query.maxPrice) query.regularPrice.$lte = Number(req.query.maxPrice);
+      if (req.query.minPrice)
+        query.regularPrice.$gte = Number(req.query.minPrice);
+      if (req.query.maxPrice)
+        query.regularPrice.$lte = Number(req.query.maxPrice);
     }
 
     // Handle stock status
     if (req.query.inStock === "true" || req.query.outOfStock === "true") {
-      const stockConditions = [];
-      if (req.query.inStock === "true") stockConditions.push({ quantity: { $gt: 0 } });
-      if (req.query.outOfStock === "true") stockConditions.push({ quantity: 0 });
-      if (stockConditions.length) {
-        query.$or = stockConditions;
+      if (req.query.inStock === "true" && req.query.outOfStock === "true") {
+        // Both selected, no need for filter
+      } else if (req.query.inStock === "true") {
+        query.quantity = { $gt: 0 };
+      } else if (req.query.outOfStock === "true") {
+        query.quantity = 0;
       }
-    }
-
-    // Handle featured products
-    if (req.query.isFeatured === "true") {
-      query.isFeatured = true;
-    }
-
-    // Handle rating filter
-    if (req.query.rating) {
-      query.rating = { $gte: Number(req.query.rating) };
     }
 
     // Execute count query
     const total = await Product.countDocuments(query);
 
-    // Build the main query with selected fields
+    // Build main query with population
     const productQuery = Product.find(query)
-      .select('_id title description images colors sizes regularPrice discountPrice totalRating isFeatured quantity')
-      .populate("sizes", "title")
+      .populate("category", "name")
+      .populate("brand", "title")
       .populate("colors", "title")
+      .populate("sizes", "title")
       .skip(skip)
       .limit(limit)
-      .lean(); // Use lean for better performance
+      .lean();
 
     // Handle sorting
     if (req.query.sort) {
       const sortOrder = req.query.order === "desc" ? -1 : 1;
-      const sortField = req.query.sort === "price" ? { discountPrice: sortOrder, regularPrice: sortOrder } : { [req.query.sort]: sortOrder };
+      const sortField = {};
+      if (req.query.sort === "price") {
+        sortField.regularPrice = sortOrder;
+        sortField.discountPrice = sortOrder;
+      } else {
+        sortField[req.query.sort] = sortOrder;
+      }
       productQuery.sort(sortField);
     } else {
       productQuery.sort("-createdAt");
@@ -147,33 +143,33 @@ const findAllProducts = asyncHandler(async (req, res) => {
     // Execute query
     const products = await productQuery;
 
-    // Calculate pagination info
-    const pages = Math.ceil(total / limit);
-    const hasNextPage = page < pages;
-    const hasPrevPage = page > 1;
-
-    const transformedProducts = products.map(({ _id, title, images, colors, sizes, regularPrice, discountPrice, totalRating, isFeatured, quantity }) => ({
-      _id,
-      title,
-      thumbnail: images[0]?.url,
-      secondaryImage: images[1]?.url || null,
-      colors: colors.map(color => color.title),
-      sizes: sizes.map(size => size.title),
-      regularPrice,
-      discountPrice,
-      totalRating,
-      isFeatured,
-      quantity,
+    // Transform products for response
+    const transformedProducts = products.map((product) => ({
+      _id: product._id,
+      title: product.title,
+      description: product.description,
+      thumbnail: product.images[0]?.url,
+      secondaryImage: product.images[1]?.url || null,
+      colors: product.colors?.map((color) => color.title) || [],
+      sizes: product.sizes?.map((size) => size.title) || [],
+      regularPrice: product.regularPrice,
+      discountPrice: product.discountPrice,
+      quantity: product.quantity,
+      category: product.category?.name,
+      brand: product.brand?.title,
+      totalRating: product.totalRating,
+      isFeatured: product.isFeatured,
     }));
 
+    // Send response
     res.status(200).json({
       success: true,
       currentPage: page,
-      pages,
+      pages: Math.ceil(total / limit),
       limit,
       total,
-      hasNextPage,
-      hasPrevPage,
+      hasNextPage: page < Math.ceil(total / limit),
+      hasPrevPage: page > 1,
       products: transformedProducts,
     });
   } catch (error) {
@@ -181,7 +177,6 @@ const findAllProducts = asyncHandler(async (req, res) => {
     throw error;
   }
 });
-
 
 // @desc    Get single product
 // @route   GET /api/products/:id

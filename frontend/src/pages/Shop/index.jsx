@@ -34,18 +34,22 @@ const Shop = () => {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Memoize initial filters
-  const initialFilters = useMemo(() => ({
-    categories: searchParams.get('categories')?.split(',').filter(Boolean) || [],
-    brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
-    priceRange: [
-      Number(searchParams.get('minPrice')) || 100,
-      Number(searchParams.get('maxPrice')) || 60000,
-    ],
-    stockStatus: {
-      inStock: searchParams.get('inStock') === 'true',
-      outOfStock: searchParams.get('outOfStock') === 'true',
-    },
-  }), [searchParams]);
+  const initialFilters = useMemo(
+    () => ({
+      categories:
+        searchParams.get('categories')?.split(',').filter(Boolean) || [],
+      brands: searchParams.get('brands')?.split(',').filter(Boolean) || [],
+      priceRange: [
+        Number(searchParams.get('minPrice')) || 100,
+        Number(searchParams.get('maxPrice')) || 60000,
+      ],
+      stockStatus: {
+        inStock: searchParams.get('inStock') === 'true',
+        outOfStock: searchParams.get('outOfStock') === 'true',
+      },
+    }),
+    [searchParams]
+  );
 
   const [filters, setFilters] = useState(initialFilters);
 
@@ -56,64 +60,91 @@ const Shop = () => {
     page,
     limit,
     search: searchTerm,
-    ...filters,
+    category: filters.categories.join(','),
+    brand: filters.brands.join(','),
+    minPrice: filters.priceRange[0],
+    maxPrice: filters.priceRange[1],
+    inStock: filters.stockStatus.inStock,
+    outOfStock: filters.stockStatus.outOfStock,
   });
 
   // Memoize URL params update
-  const updateUrlParams = useCallback((newFilters) => {
-    const params = new URLSearchParams(searchParams);
-    
-    if (newFilters.categories?.length) {
-      params.set('categories', newFilters.categories.join(','));
-    } else {
-      params.delete('categories');
-    }
-    
-    if (newFilters.brands?.length) {
-      params.set('brands', newFilters.brands.join(','));
-    } else {
-      params.delete('brands');
-    }
-    
-    params.set('minPrice', newFilters.priceRange[0]);
-    params.set('maxPrice', newFilters.priceRange[1]);
-    
-    if (newFilters.stockStatus.inStock) {
-      params.set('inStock', 'true');
-    } else {
-      params.delete('inStock');
-    }
-    
-    if (newFilters.stockStatus.outOfStock) {
-      params.set('outOfStock', 'true');
-    } else {
-      params.delete('outOfStock');
-    }
-    
-    setSearchParams(params);
-  }, [searchParams, setSearchParams]);
+  const updateUrlParams = useCallback(
+    newFilters => {
+      const params = new URLSearchParams(searchParams);
+
+      if (newFilters.categories?.length) {
+        params.set('categories', newFilters.categories.join(','));
+      } else {
+        params.delete('categories');
+      }
+
+      if (newFilters.brands?.length) {
+        params.set('brands', newFilters.brands.join(','));
+      } else {
+        params.delete('brands');
+      }
+
+      params.set('minPrice', newFilters.priceRange[0]);
+      params.set('maxPrice', newFilters.priceRange[1]);
+
+      if (newFilters.stockStatus.inStock) {
+        params.set('inStock', 'true');
+      } else {
+        params.delete('inStock');
+      }
+
+      if (newFilters.stockStatus.outOfStock) {
+        params.set('outOfStock', 'true');
+      } else {
+        params.delete('outOfStock');
+      }
+
+      setSearchParams(params);
+    },
+    [searchParams, setSearchParams]
+  );
 
   // Handle filter changes
-  const handleFilterChange = useCallback((newFilters) => {
-    setFilters(newFilters);
-    setPage(1);
-    updateUrlParams(newFilters);
-  }, [updateUrlParams]);
+  const handleFilterChange = useCallback(
+    newFilters => {
+      setFilters(newFilters);
+      setPage(1); // Reset page when filters change
+
+      const params = new URLSearchParams();
+      if (newFilters.categories.length)
+        params.set('categories', newFilters.categories.join(','));
+      if (newFilters.brands.length)
+        params.set('brands', newFilters.brands.join(','));
+      if (newFilters.priceRange[0] !== 100)
+        params.set('minPrice', newFilters.priceRange[0]);
+      if (newFilters.priceRange[1] !== 60000)
+        params.set('maxPrice', newFilters.priceRange[1]);
+      if (newFilters.stockStatus.inStock) params.set('inStock', 'true');
+      if (newFilters.stockStatus.outOfStock) params.set('outOfStock', 'true');
+
+      setSearchParams(params);
+    },
+    [setSearchParams]
+  );
 
   // Handle search
-  const handleSearch = useCallback((e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    setPage(1);
-    
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set('search', value);
-    } else {
-      params.delete('search');
-    }
-    setSearchParams(params);
-  }, [searchParams, setSearchParams]);
+  const handleSearch = useCallback(
+    e => {
+      const value = e.target.value;
+      setSearchTerm(value);
+      setPage(1); // Reset page when search changes
+
+      const params = new URLSearchParams(searchParams);
+      if (value) {
+        params.set('search', value);
+      } else {
+        params.delete('search');
+      }
+      setSearchParams(params);
+    },
+    [searchParams, setSearchParams]
+  );
 
   // Handle mobile filter toggle
   const toggleMobileFilter = useCallback(() => {
@@ -258,9 +289,7 @@ const Shop = () => {
           >
             <div className='mobile-filter-header'>
               <h5>Filters</h5>
-              <IconButton onClick={toggleMobileFilter}>
-                ×
-              </IconButton>
+              <IconButton onClick={toggleMobileFilter}>×</IconButton>
             </div>
             <div className='mobile-filter-content'>
               <Sidebar
