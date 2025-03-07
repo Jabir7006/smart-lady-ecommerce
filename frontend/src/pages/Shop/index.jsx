@@ -18,9 +18,9 @@ import './Shop.css';
 import { BsInboxes } from 'react-icons/bs';
 
 const highlightSearchTerm = (text, searchTerm) => {
-  if (!searchTerm || !text) return text;
+  if (!searchTerm || !text || typeof text !== 'string') return text;
   const regex = new RegExp(`(${searchTerm})`, 'gi');
-  return text.replace(regex, '<span class="highlight-match">$1</span>');
+  return text.replace(regex, '<mark class="highlight-match">$1</mark>');
 };
 
 const Shop = () => {
@@ -324,30 +324,15 @@ const Shop = () => {
                         key={product._id}
                         product={{
                           ...product,
-                          title: searchTerm ? (
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: highlightSearchTerm(
-                                  product.title,
-                                  searchTerm
-                                ),
-                              }}
-                            />
-                          ) : (
-                            product.title
-                          ),
-                          description: searchTerm ? (
-                            <span
-                              dangerouslySetInnerHTML={{
-                                __html: highlightSearchTerm(
-                                  product.description,
-                                  searchTerm
-                                ),
-                              }}
-                            />
-                          ) : (
-                            product.description
-                          ),
+                          title: searchTerm
+                            ? highlightSearchTerm(product.title, searchTerm)
+                            : product.title,
+                          description: searchTerm
+                            ? highlightSearchTerm(
+                                product.description,
+                                searchTerm
+                              )
+                            : product.description,
                         }}
                         itemView={view}
                       />
