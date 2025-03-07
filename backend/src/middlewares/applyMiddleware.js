@@ -2,12 +2,13 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const compression = require("compression");
 
 const applyMiddleware = (app) => {
-  // Logger should be first to log all requests
-  app.use(morgan("dev"));
 
-  // Parse cookies before CORS to handle credentials
+  app.use(morgan("dev"));
+  app.use(compression());
+ 
   app.use(cookieParser());
 
   // TODO: CORS configuration
@@ -26,12 +27,20 @@ const applyMiddleware = (app) => {
     })
   );
 
-  // Enable pre-flight requests
-  app.options("*", cors());
+ // Enable pre-flight requests
+ app.options("*", cors());
 
-  // Body parsers after CORS
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+ // Body parsers after CORS
+ app.use(express.json());
+ app.use(express.urlencoded({ extended: true }));
+
+ // Set Cache-Control headers
+ app.use((req, res, next) => {
+   if (req.method === "GET") {
+     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+   }
+   next();
+ });
 };
 
 module.exports = applyMiddleware;
