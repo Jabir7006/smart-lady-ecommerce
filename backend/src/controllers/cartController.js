@@ -92,6 +92,25 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
+// Clear cart
+exports.clearCart = async (req, res) => {
+  const userId = req.user?.id || null;
+  const sessionId = req.sessionID;
+
+  try {
+    let cart = await getCartByUserOrSession(userId, sessionId);
+    if (cart) {
+      cart.items = [];
+      await cart.save();
+      res.json({ success: true, cart });
+    } else {
+      res.json({ success: true, cart: { items: [] } });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Merge guest cart on login
 exports.mergeCartOnLogin = async (req, res) => {
   const userId = req.user.id;

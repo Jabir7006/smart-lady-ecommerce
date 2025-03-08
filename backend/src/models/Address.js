@@ -6,6 +6,7 @@ const addressSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true, // Add index for better query performance
     },
     fullName: {
       type: String,
@@ -73,6 +74,9 @@ addressSchema.pre("save", async function (next) {
   }
   next();
 });
+
+// Ensure addresses are always queried with user context
+addressSchema.index({ user: 1, _id: 1 });
 
 const Address = mongoose.model("Address", addressSchema);
 module.exports = Address;

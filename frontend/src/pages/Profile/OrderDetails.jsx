@@ -289,6 +289,7 @@ const OrderDetails = () => {
               '& .MuiChip-icon': {
                 color: `${theme.palette[getStatusColor(order.status)].main} !important`,
               },
+              color: `${theme.palette[getStatusColor(order.status)].main} !important`,
             }}
           />
         </Box>

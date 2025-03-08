@@ -5,6 +5,7 @@ const {
   getCart,
   mergeCartOnLogin,
   updateCartQuantity,
+  clearCart,
 } = require("../controllers/cartController");
 
 const { authMiddleware } = require("../middlewares/authMiddleware");
@@ -16,5 +17,6 @@ cartRouter.delete("/remove/:productId", removeFromCart); // Allow guest users
 cartRouter.get("/", getCart); // Allow guest users
 cartRouter.post("/merge", authMiddleware, mergeCartOnLogin); // Merge on login
 cartRouter.patch("/update/:productId", updateCartQuantity); // Add this line
+cartRouter.post("/clear", clearCart);
 
 module.exports = cartRouter;

@@ -67,12 +67,26 @@ const Orders = () => {
 
   const handleOrderStatusUpdate = async (orderId, newStatus) => {
     try {
+      // Update the order status in the backend
       await updateOrderStatus(orderId, newStatus);
-      // Refresh orders and stats after status update
-      await Promise.all([fetchOrders(), fetchStats()]);
+      
+      // Update the local state immediately
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order._id === orderId 
+            ? { ...order, status: newStatus }
+            : order
+        )
+      );
+      
+      // Fetch updated stats since they might have changed
+      await fetchStats();
+      
       toast.success("Order status updated successfully");
     } catch (error) {
       toast.error("Failed to update order status");
+      // Refresh orders to ensure consistency
+      await fetchOrders();
     }
   };
 
@@ -233,6 +247,7 @@ const Orders = () => {
         resultsPerPage={resultsPerPage}
         filter={filter}
         loading={loading}
+        setLoading={setLoading}
         onStatusUpdate={handleOrderStatusUpdate}
       />
     </div>

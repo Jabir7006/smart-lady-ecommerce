@@ -35,12 +35,12 @@ const applyMiddleware = (app) => {
  app.use(express.urlencoded({ extended: true }));
 
  // Set Cache-Control headers
- app.use((req, res, next) => {
-   if (req.method === "GET") {
-     res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
-   }
-   next();
- });
+//  app.use((req, res, next) => {
+//    if (req.method === "GET") {
+//      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+//    }
+//    next();
+//  });
 };
 
 module.exports = applyMiddleware;

@@ -53,7 +53,7 @@ const OrderDetailsPage = () => {
       case "processing":
         return "primary";
       case "shipped":
-        return "info";
+        return "success";
       case "delivered":
         return "success";
       case "cancelled":

@@ -13,7 +13,6 @@ import {
   Button,
   Select,
 } from "@windmill/react-ui";
-import { updateOrderStatus } from "../services/orderService";
 import toast from "react-hot-toast";
 import { EyeIcon } from "../icons";
 
@@ -37,8 +36,8 @@ const OrdersTable = ({
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-      await updateOrderStatus(orderId, newStatus);
-      toast.success("Order status updated successfully");
+      // Call the parent's onStatusUpdate function
+      await onStatusUpdate(orderId, newStatus);
     } catch (error) {
       toast.error("Failed to update order status");
     }
@@ -51,7 +50,7 @@ const OrdersTable = ({
       case "processing":
         return "primary";
       case "shipped":
-        return "info";
+        return "success";
       case "delivered":
         return "success";
       case "cancelled":
