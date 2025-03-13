@@ -15,7 +15,6 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    
     extensions: [".js", ".jsx", ".json"],
   },
   optimizeDeps: {
@@ -29,7 +28,7 @@ export default defineConfig({
     port: 3000,
   },
   build: {
-    outDir: "build",
+    outDir: "dist",
     sourcemap: false,
     chunkSizeWarningLimit: 1600,
   },
